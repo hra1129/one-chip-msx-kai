@@ -1,0 +1,10 @@
+# vsim -c -t 1ps -do "run.do" tb 
+# Start time: 06:52:16 on Feb 16,2020
+# Loading sv_std.std
+# Loading work.tb
+# Loading work.i8253_counter
+# do run.do
+# ** Note: $finish    : tb.sv(397)
+#    Time: 79105 ps  Iteration: 2  Instance: /tb
+# End time: 06:52:17 on Feb 16,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

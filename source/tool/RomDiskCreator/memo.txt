@@ -1,0 +1,31 @@
+BS_JmpBoot		0	3	EB xx xx ブート用のジャンプコード(※i80x86コード)
+BS_OEMName		3	8	"ROM disk"
+BPB_BytsPerSec	11	2	セクタサイズ (byte単位): 512
+BPB_SecPerClus	13	1	クラスタサイズ(セクタ単位): 1
+BPB_RsvdSecCnt	14	2	予約領域のセクタ数: 1
+BPB_NumFATs		16	1	FATの数: 1 (一般的には 2 だが、ROM disk なので破損のリスク低＆容量節約のためかな？)
+BPB_RootEntCnt	17	2	ルートディレクトリエントリの数: 32。
+						1エントリは 32byte なので BPB_RootEntCnt * 32 がルートディレクトリエントリのサイズになる。
+						(BPB_RootEntCnt * 32) / BPB_BytsPerSec は偶数が良いらしい。
+BPB_TotSec16	19	2	ボリュームの総セクタ数
+BPB_Media		21	1	(FAT[0] & 255) と一致するらしい: FFh
+BPB_FATSz16		22	2	FAT 1個のサイズ(セクター数): 6
+BPB_SecPerTrk	24	2	1トラックのセクタ数: 2050
+BPB_NumHeads	26	2	面の数
+BPB_HiddSec		28	2	隠されたセクタの数
+BPB_????		30	2	??
+
++--------------------------+
+| Sector0                  |	Boot Sector
++--------------------------+
+| Sector1                  |	Reserved Area
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| Sector(BPB_RsvdSecCnt-1) |
++--------------------------+
+| Sector(BPB_RsvdSecCnt)   |	FAT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| Sector(BPB_FATSz16 -     |
+| BPB_RsvdSecCnt)          |
++--------------------------+
+|                          |	Directory Entry (BPB_RootEntCnt[sectors])
++--------------------------+

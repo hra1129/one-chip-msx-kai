@@ -1,0 +1,10 @@
+# vsim -c -t 1ps -do "run.do" tb 
+# Start time: 13:15:59 on May 10,2020
+# Loading sv_std.std
+# Loading work.tb
+# Loading work.emsx_sdram_controller
+# do run.do
+# ** Note: $finish    : tb.sv(183)
+#    Time: 34973557465 ps  Iteration: 1  Instance: /tb
+# End time: 13:16:28 on May 10,2020, Elapsed time: 0:00:29
+# Errors: 0, Warnings: 0

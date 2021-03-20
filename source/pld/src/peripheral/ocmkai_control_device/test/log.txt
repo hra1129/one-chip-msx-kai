@@ -1,0 +1,10 @@
+# vsim -c -t 1ps -do "run.do" tb 
+# Start time: 21:31:59 on May 11,2020
+# Loading sv_std.std
+# Loading work.tb
+# Loading work.ocmkai_control_decice
+# do run.do
+# ** Note: $finish    : tb.sv(107)
+#    Time: 5842527 ps  Iteration: 1  Instance: /tb
+# End time: 21:31:59 on May 11,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ocm_bios_converter", "ocm_bios_converter.vcxproj", "{4067DBFA-FE71-43E8-81E2-FF050FF42233}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4067DBFA-FE71-43E8-81E2-FF050FF42233}.Debug|x64.ActiveCfg = Debug|x64
+		{4067DBFA-FE71-43E8-81E2-FF050FF42233}.Debug|x64.Build.0 = Debug|x64
+		{4067DBFA-FE71-43E8-81E2-FF050FF42233}.Debug|x86.ActiveCfg = Debug|Win32
+		{4067DBFA-FE71-43E8-81E2-FF050FF42233}.Debug|x86.Build.0 = Debug|Win32
+		{4067DBFA-FE71-43E8-81E2-FF050FF42233}.Release|x64.ActiveCfg = Release|x64
+		{4067DBFA-FE71-43E8-81E2-FF050FF42233}.Release|x64.Build.0 = Release|x64
+		{4067DBFA-FE71-43E8-81E2-FF050FF42233}.Release|x86.ActiveCfg = Release|Win32
+		{4067DBFA-FE71-43E8-81E2-FF050FF42233}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16AE235A-BA59-4430-85E6-BDBAF890755B}
+	EndGlobalSection
+EndGlobal

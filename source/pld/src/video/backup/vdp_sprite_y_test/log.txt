@@ -1,0 +1,10 @@
+# vsim -c -t 1ps -do "run.do" tb 
+# Start time: 06:02:28 on Jan 11,2020
+# Loading sv_std.std
+# Loading work.tb
+# Loading work.vdp_sprite_y_test
+# do run.do
+# ** Note: $finish    : tb.sv(171)
+#    Time: 274552215 ps  Iteration: 1  Instance: /tb
+# End time: 06:02:28 on Jan 11,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

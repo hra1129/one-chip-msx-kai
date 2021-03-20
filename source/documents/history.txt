@@ -1,0 +1,198 @@
+1chipMSX-Kai Update History
+
+xx/xx/2021 (ocmkai-xxxxxxxx.zip)
+    (1) Fixed a bug that caused the RTC time to deviate by about one second per minute.
+    (2) Rewrote RTC from VHDL to Verilog (Reduced circuit size)
+    (3) Rewrote MemoryMapper from VHDL to Verilog (Reduced circuit size)
+    (4) Added internal ROM/RAM mapping function to PanaMegaCon.
+    (5) Added the ability to make MapperRAM's BIOS copy location write-protected.
+    (6) Added DRAM mode.
+    (7) Changed the unused LED8 to a turbo mode indicator.
+    (8) The unused DIP-SW9 was changed to a built-in software switching switch.
+    (9) Implemented the CR bit in register 15 of the RTC.
+    (10) Fixed a1gt.cfg/a1st.cfg in BIOS Image Maker so that it does not load unnecessarily.
+
+    Known issue:
+      When using FS-A1GT BIOS, A1 cockpit does not start with "CALL MWP".
+      The built-in software switch doesn't work either.
+
+    Memo:
+      Using FS-A1ST BIOS, the A1 cockpit is activated by a built-in software switch. 
+      Word processing software is also available. "CALL HIRO" also works.
+
+2nd/September/2020 (ocmkai-20200902.zip)
+    (1) modified opll/voicerom.vhd
+        Changed the notation of ROM to hexadecimal numbers.
+        Copy the ROM data from YM2413Burczynski.cc in OpenMSX 16.0.
+
+    (2) modified ocm-kai_default.cof
+        Fixed a part of the absolute path description.
+
+    (3) modified Japanese keymap in keymap.vhd.LANGUAGE.
+
+11th/August/2020 (ocmkai-20200811.zip)
+    (1) Fixed a bug in ocm_bus_selector.
+        Modified JIS Kanji Level1 I/O port address.
+        Fixed a bug that caused a wrong I/O address when separating from emsx_top.
+
+    (2) Modified 'tool/bios_image_maker/roms/*.cfg'.
+        Fixed the bug that the address of KanjiROM data allocation was wrong.
+        Added a setting to enable JIS Kanji Level 2.
+
+10th/August/2020 (ocmkai-20200810.zip)
+    (1) Fixed a bug in PanasonicMegaROM.
+        Modified write register address for memory bank 5 and 6.
+
+    (2) The VDP was reverted to the OCM-PLD 3.8.1 version.
+        The new VDP core has added a number of bugs in exchange for 
+        subtle sprite display improvements. For that reason, 
+        we decided to bring it back once. 
+        The new VDP core has been moved to video/backup.
+
+    (3) Modified 'tool/bios_image_maker/roms/fsa1gt.cfg'.
+        Because there was a mistake that the ROM of the start-up logo 
+        was not placed in slot0-3 and the kanji driver was not 
+        installed, it was corrected.
+
+5th/August/2020 2nd (ocmkai-20200805_2.zip)
+    (1) Fixed a bug that may cause the app to hang at startup.
+
+    (2) Added LinearROM mode to PanasonicMegaROM.
+        LinearROM is default.
+
+5th/August/2020 (ocmkai-20200805.zip)
+    (1) Improved the behavior of S1990.
+        Fixed how to switch between the two T80a's.
+
+    (2) PanasonicMegaROM is impremented and connected to slot3-3.
+
+    (3) Fixed a wiring error due to Verilogization of emsx_top (BugFIX)
+
+    (4) Fixed the detachment method of IPL-ROM.
+        Changed the timing of access to the primary slot register 
+        so that it is separated from the primary slot register 
+        not at the access timing of the primary slot register, 
+        but at the time of 0000h reading after IPL-ROM execution 
+        is completed.
+
+    (5) Impremented I/O port A7h.
+        Implemented only the pause related latch part of TurboR.
+
+    (6) IPL-ROM v4.0.2
+        Support for new IPL-ROM detachment and the primary slot initializing methods.
+
+    (7) Added step execution for debug.
+
+    (8) Added a method of initializing the primary slot register (A8h) to 00h at first startup.
+
+27th/June/2020 (ocmkai-20200627.zip)
+    *** There are no functional changes in this version. ***
+
+    (1) Organize the source code hierarchy.
+
+25th/June/2020 (ocmkai-20200625.zip)
+    *** There are no functional changes in this version. ***
+
+    (1) Organize the source code hierarchy.
+
+6th/June/2020 (ocmkai-20200606.zip)
+    *** There are no functional changes in this version. ***
+
+    (1) Organize the source code hierarchy.
+
+30th/May/2020 (ocmkai-20200530.zip)
+    *** There are no functional changes in this version. ***
+
+    (1) Organize the source code hierarchy.
+
+23th/May/2020 (ocmkai-20200523.zip)
+    (1) OCM-PLD3.7.1 to 3.8 fixes have been incorporated.
+    (2) Several circuits that had been laid flat on the emsx_top were separated into separate levels.
+    (3) Corrected a misstatement of MSX-MUSIC BIOS in bluemsx_*.cfg, which is a sample setting value of bios_image_maker.
+
+20th/May/2020 (ocmkai-20200520.zip)
+    (1) Added "OCM-Kai control device"
+    (2) Expanded available SDRAM space from 8MB to 32MB
+    (3) Added support for CHANGE_ESERAM_MEMORY in IPLROM4.
+    (4) Change the arrangement on SDRAM.
+    (5) Update the cfg file for bios_image_maker to match the new SDRAM map.
+
+        -- SDRAM is divided into 32 areas in 1MB units and assigned a number corresponding to eseram_memory_id.
+        -- The OCM-Kai control device is equipped with a register to select the area to be connected to the MegaSDHC.
+        -- tool\bios_image_maker\roms\*.cfg
+           [WARNING] The BIOS image file on the SD card and on the EPCS must be updated to match the new deployment.
+
+7th/May/2020 (ocmkai-20200507.zip)
+    (1) Added new SDRAM clearing circuit.
+
+        -- This is an initialization circuit that sets only the first two bytes of 
+           ESE-RAM, ESE-SCC1, ESE-SCC2, and MAIN-RAM to 0000h.
+
+5th/May/2020 (ocmkai-20200505.zip)
+    (1) Modified vdp_registers.vhd
+          REG_SP_OFF initial parameter changed to 0 from 1.
+
+    (2) SDRAM controller is separated from the emsx_top hierarchy.
+    (3) Removed the circuit that clears SDRAM at startup.
+
+        -- A circuit to clear a part of SDRAM (MainRAM, ESERAM, etc.) 
+           to zero at startup was included, but it was not functioning 
+           properly and only the first 1 byte was cleared.
+        -- The real MSX does not have the hardware to zero-clear DRAM/VRAM.
+
+2nd/May/2020 (ocmkai-20200502.zip)
+    (1) Modified keymap.vhd for Japanese 106 keyboard.
+
+          PS/2 Keyboard --> MSX Key
+          [Zen/Han]     --> [ESC]
+          [F6]          --> [STOP]
+          [F7]          --> [CLS/HOME]
+          [LeftWIN]     --> [Kana]
+          [Menu]        --> [INS]
+
+1st/May/2020 (ocmkai-20200501.zip)
+    (1) The Kana indicator was changed from NumLk LED to ScrLk LED.
+    (2) Add the description of NumLk status maintenance.
+
+          Some compact keyboards without numeric keypad use NumLk LED ON/OFF 
+          to switch the right side of the full keypad to numeric keypad mode. 
+          When using the NumLk LED as a kana LED, the right side of the keyboard 
+          changed to the numeric keypad when it was in kana mode, and it did not 
+          work as expected.
+    (3) Added sample of BIOS Image Maker.
+          tool\bios_image_maker\roms\*.cfg
+          tool\bios_image_maker\roms\make_all.bat
+
+28th/Apr./2020 (ocmkai-20200428.zip)
+    (1) IPLROM has been updated.
+        IPLROM v4.00
+          The structure of BIOS images placed in the serial ROM and SD card is changed.
+          It works as long as only the necessary ROM is recorded.
+          The ON/OFF of IPLROM message at the time of starting can be controlled.
+          PAL and NTSC selectable.
+          The ROM area where FFh is laid out can be processed at high speed.
+          Can write to I/O ports.
+    (2) The MSX-MIDI receiver is still under construction.
+
+23th/Feb./2020 (ocmkai-20200223.zip)
+    (1) Added MSX-MIDI interface.
+        -- But not impremented the MIDI-IN yet.
+    (2) Modified external interrupt signal.
+        -- pSltInt changed from input / output port to input port.
+        -- Changed to notify the CPU of the interrupt signal input from pSltInt.
+
+26th/Jan./2020 (ocmkai-20200126.zip)
+    (1) Adjust V-sync interrupt timing.
+
+25th/Jan./2020 (ocmkai-20200125.zip)
+    (1) Provide feedback on corrections to OCM-PLD v3.8.
+    (2) Verilog conversion of some circuits of vdp.
+        vdp_vga, vdp_hvcounter, vdp_ssg, vdp_sprite, vdp_linebuf, vdp_doublebuf.
+    (3) Updated vdp_sprite. Fixed a bug that MSX2 + logo display was distorted.
+
+16th/Jan./2020 (ocmkai-20200116.zip)
+    (1) Added BIOS reading progress display function to IPL-ROM. [by caro]
+    (2) The vdp_sprite has been significantly overhauled, 
+        and fixed two lines from register switching to display.
+        However, the bug that MSX2 + logo display is disturbed remains.
+    (3) Added 1chipMSX-Kai Logo.

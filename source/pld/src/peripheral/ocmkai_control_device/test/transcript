@@ -1,0 +1,2 @@
+# OpenFile D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/peripheral/ocmkai_control_device/test/vsim.wlf
+add wave -position end vsim:/tb/u_dut/*

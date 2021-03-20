@@ -1,0 +1,10 @@
+# vsim -c -t 1ps -do "run.do" tb 
+# Start time: 21:36:11 on Feb 19,2020
+# Loading sv_std.std
+# Loading work.tb
+# Loading work.i8251_transmitter
+# do run.do
+# ** Note: $finish    : tb.sv(412)
+#    Time: 95345 ps  Iteration: 2  Instance: /tb
+# End time: 21:36:12 on Feb 19,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

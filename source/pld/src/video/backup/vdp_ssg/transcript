@@ -1,0 +1,7 @@
+# OpenFile C:/Users/hra/Downloads/DE0-CV/OCM-PLD/emsxcv/pld/src/video/vdp_ssg/vsim.wlf
+add wave -position end  vsim:/tb/u_dut/predotcounter_x
+add wave -position end  vsim:/tb/u_dut/predotcounter_y
+add wave -position end  vsim:/tb/u_dut/predotcounter_yp
+add wave -position end  vsim:/tb/u_old/PREDOTCOUNTER_X
+add wave -position end  vsim:/tb/u_old/PREDOTCOUNTER_Y
+add wave -position end  vsim:/tb/u_old/PREDOTCOUNTER_YP

@@ -1,0 +1,2 @@
+# OpenFile C:/Users/hra/Downloads/DE0-CV/OCM-PLD/emsxcv/pld/src/video/vdp_sprite/vsim.wlf
+add wave -position end vsim:/tb/u_dut/u_sprite_display/*

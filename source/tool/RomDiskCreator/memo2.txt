@@ -1,0 +1,4 @@
+000000: Boot Sector
+000200: FAT
+000E00: Root Directory
+001200: Data

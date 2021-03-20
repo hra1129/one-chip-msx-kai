@@ -1,0 +1,5 @@
+Download Nextor's ROM image from the following location.
+https://www.konamiman.com/msx/msx-e.html#nextor
+
+Download "For MegaFlashROM with 1 SD card slot".
+File name is "Nextor-2.1.0.MegaFlashSDSCC.1-slot.ROM".

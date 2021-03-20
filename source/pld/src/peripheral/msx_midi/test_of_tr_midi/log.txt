@@ -1,0 +1,17 @@
+# vsim -c -t 1ps -do "run.do" tb 
+# Start time: 21:15:31 on May 20,2020
+# Loading sv_std.std
+# Loading work.tb
+# Loading work.tr_midi
+# Loading work.i8251
+# Loading work.i8251_clk_en
+# Loading work.i8251_transmitter
+# ** Error: (vsim-3037) ../../i8251/i8251.v(409): Missing instance name in instantiation of 'i8251_receiver'.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_tr_midi/u_8251 File: ../../i8251/i8251.v
+# Loading work.i8253
+# Loading work.i8253_clk_en
+# Loading work.i8253_control
+# Loading work.i8253_counter
+# Error loading design
+# End time: 21:15:31 on May 20,2020, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0

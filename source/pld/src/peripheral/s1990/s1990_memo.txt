@@ -1,0 +1,29 @@
+ハードリセット後のブート処理
+
+	in		a, [ 0xF4 ]
+	→ A: 0x00
+
+	or		a, 0x20
+	out		[ 0xF4 ], a			R800 boot にする旨を F4 に記録
+
+	ld		a, 0x06
+	out		[ 0xE4 ], a			S1990 の RegisterSelect に 6 をセット
+
+	ld		hl, 0x04E5
+	ld		bc, 0x02E5
+	otir
+
+		0x04E5: 0x40 0x60
+
+
+	S1990 Reg#6
+		0x60: Z80 mode			0110 0000
+		0x40: R800 ROM mode		0100 0000
+		0x00: R800 DRAM mode	0000 0000
+
+------------------------------
+S1990 R#5
+　bit6: 内蔵ソフト切替スイッチ 0:OFF, 1:ON
+
+松下デバイス (I/O 41h) [turboRには存在しない]
+　bit7: 内蔵ソフト切替スイッチ 0:ON, 1:OFF

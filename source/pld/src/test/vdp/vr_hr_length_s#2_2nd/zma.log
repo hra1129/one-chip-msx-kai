@@ -1,0 +1,1074 @@
+Z80 Macro Assembler ZMA v1.0.8
+=====================================================
+Programmed by t.hara
+
+<< code >>
+[	INCLUDE "..\..\..\..\..\tool\assembler/include//msx.asm"] begin
+Define macro {ROM_HEADER MACRO INIT}
+
+Define macro {BSAVE_HEADER MACRO SADDR , EADDR , EXEC}
+
+Define macro {ROM_ALIGN MACRO}
+
+Define macro {USE_WAIT_VDP_COMMAND MACRO INTR_CTRL}
+
+Define macro {USE_VDP_COMMAND MACRO INTR_CTRL}
+
+[	INCLUDE "..\..\..\..\..\tool\assembler/include//msx.asm"] end
+
+((BSAVE_HEADER START_ADDRESS , END_ADDRESS , ENTRY_POINT))
+	Scope path: @MACRO0:
+[	DEFB 0XFE]
+000000: fe
+
+[	DEFW START_ADDRESS]
+000001: 00 c0
+
+[	DEFW END_ADDRESS]
+000003: 66 c1
+
+[	DEFW ENTRY_POINT]
+000005: 00 c0
+
+[	ORG 0XC000]
+	code address: 0x00c000
+
+[START_ADDRESS :]
+	label address: 0x00c000
+
+[	SCOPE ENTRY_POINT]
+	Scope path: ENTRY_POINT:
+
+[ENTRY_POINT ::]
+	global label address: 0x00c000
+
+[	CALL CHECK_CPU] Z80:18cyc, R800:5cyc
+00c000: cd 07 c0
+
+[	CALL POLLING_S2] Z80:18cyc, R800:5cyc
+00c003: cd 12 c0
+
+[	RET] Z80:11cyc, R800:5cyc
+00c006: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE CHECK_CPU]
+	Scope path: CHECK_CPU:
+
+[CHECK_CPU ::]
+	global label address: 0x00c007
+
+[	LD A , 0X002D] Z80:8cyc, R800:2cyc
+00c007: 3e 2d
+
+[	CP A , 3] Z80:8cyc, R800:2cyc
+00c009: fe 03
+
+[	RET C] Z80:12cyc(branch), 6cyc(through), R800:5cyc(branch), 1cyc(through)
+00c00b: d8
+
+[	LD A , 0X80] Z80:8cyc, R800:2cyc
+00c00c: 3e 80
+
+[	CALL 0X0180] Z80:18cyc, R800:5cyc
+00c00e: cd 80 01
+
+[	RET] Z80:11cyc, R800:5cyc
+00c011: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE POLLING_S2]
+	Scope path: POLLING_S2:
+
+[POLLING_S2 ::]
+	global label address: 0x00c012
+
+[	LD HL , 0X4000] Z80:11cyc, R800:3cyc
+00c012: 21 00 40
+
+[	LD A , 0B10000011] Z80:8cyc, R800:2cyc
+00c015: 3e 83
+
+[	CALL ENASLT] Z80:18cyc, R800:5cyc
+00c017: cd 24 00
+
+[	LD HL , 0X4000] Z80:11cyc, R800:3cyc
+00c01a: 21 00 40
+
+[	LD B , 0] Z80:8cyc, R800:2cyc
+00c01d: 06 00
+
+[MEASURE_VR_LOOP :]
+	label address: 0x00c01f
+
+[	LD A , 2] Z80:8cyc, R800:2cyc
+00c01f: 3e 02
+
+[	OUT [ 0X99 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c021: d3 99
+
+[	LD A , 0X80 | 15] Z80:8cyc, R800:2cyc
+00c023: 3e 8f
+
+[	OUT [ 0X99 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c025: d3 99
+
+[WAIT_VR_LOW1 :]
+	label address: 0x00c027
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c027: db 99
+
+[	AND A , 0X40] Z80:8cyc, R800:2cyc
+00c029: e6 40
+
+[	JP NZ , WAIT_VR_LOW1] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c02b: c2 27 c0
+
+[WAIT_VR_HIGH :]
+	label address: 0x00c02e
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c02e: db 99
+
+[	AND A , 0X40] Z80:8cyc, R800:2cyc
+00c030: e6 40
+
+[	JP Z , WAIT_VR_HIGH] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c032: ca 2e c0
+
+[DUMP_LOOP :]
+	label address: 0x00c035
+
+[REPEAT I , 64]
+	Scope path: POLLING_S2:@REPEAT1:
+
+	repeat begin
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c035: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c037: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c038: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c039: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c03b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c03c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c03d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c03f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c040: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c041: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c043: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c044: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c045: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c047: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c048: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c049: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c04b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c04c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c04d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c04f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c050: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c051: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c053: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c054: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c055: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c057: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c058: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c059: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c05b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c05c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c05d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c05f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c060: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c061: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c063: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c064: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c065: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c067: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c068: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c069: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c06b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c06c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c06d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c06f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c070: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c071: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c073: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c074: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c075: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c077: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c078: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c079: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c07b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c07c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c07d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c07f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c080: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c081: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c083: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c084: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c085: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c087: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c088: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c089: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c08b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c08c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c08d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c08f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c090: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c091: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c093: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c094: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c095: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c097: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c098: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c099: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c09b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c09c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c09d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c09f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0a0: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0a1: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0a3: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0a4: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0a5: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0a7: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0a8: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0a9: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0ab: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0ac: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0ad: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0af: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0b0: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0b1: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0b3: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0b4: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0b5: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0b7: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0b8: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0b9: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0bb: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0bc: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0bd: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0bf: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0c0: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0c1: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0c3: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0c4: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0c5: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0c7: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0c8: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0c9: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0cb: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0cc: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0cd: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0cf: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0d0: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0d1: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0d3: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0d4: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0d5: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0d7: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0d8: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0d9: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0db: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0dc: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0dd: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0df: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0e0: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0e1: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0e3: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0e4: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0e5: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0e7: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0e8: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0e9: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0eb: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0ec: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0ed: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0ef: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0f0: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0f1: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0f3: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0f4: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0f5: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0f7: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0f8: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0f9: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0fb: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0fc: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c0fd: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c0ff: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c100: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c101: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c103: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c104: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c105: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c107: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c108: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c109: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c10b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c10c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c10d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c10f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c110: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c111: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c113: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c114: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c115: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c117: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c118: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c119: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c11b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c11c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c11d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c11f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c120: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c121: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c123: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c124: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c125: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c127: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c128: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c129: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c12b: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c12c: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c12d: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c12f: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c130: 23
+
+[	IN A , [ 0X99 ]] Z80:12cyc, R800:10 or 9cyc
+00c131: db 99
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c133: 77
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c134: 23
+
+	repeat end
+	Scope path: POLLING_S2:
+
+
+
+[	DEC B] Z80:5cyc, R800:1cyc
+00c135: 05
+
+[	JP NZ , DUMP_LOOP] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c136: c2 35 c0
+
+[	XOR A , A] Z80:5cyc, R800:1cyc
+00c139: af
+
+[	OUT [ 0X99 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c13a: d3 99
+
+[	LD A , 0X80 | 15] Z80:8cyc, R800:2cyc
+00c13c: 3e 8f
+
+[	OUT [ 0X99 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c13e: d3 99
+
+[TRANSFER_TO_VRAM :]
+	label address: 0x00c140
+
+[	XOR A , A] Z80:5cyc, R800:1cyc
+00c140: af
+
+[	OUT [ 0X99 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c141: d3 99
+
+[	LD A , 0X80 | 14] Z80:8cyc, R800:2cyc
+00c143: 3e 8e
+
+[	OUT [ 0X99 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c145: d3 99
+
+[	XOR A , A] Z80:5cyc, R800:1cyc
+00c147: af
+
+[	OUT [ 0X99 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c148: d3 99
+
+[	LD A , 0X40] Z80:8cyc, R800:2cyc
+00c14a: 3e 40
+
+[	OUT [ 0X99 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c14c: d3 99
+
+[	LD D , 0X40] Z80:8cyc, R800:2cyc
+00c14e: 16 40
+
+[	LD HL , 0X4000] Z80:11cyc, R800:3cyc
+00c150: 21 00 40
+
+[TRANSFER_TO_VRAM_LOOP :]
+	label address: 0x00c153
+
+[	LD BC , 0X0098] Z80:11cyc, R800:3cyc
+00c153: 01 98 00
+
+[	OTIR] Z80:23 or 18cyc, R800:? or 12 or 11cyc
+00c156: ed b3
+
+[	DEC D] Z80:5cyc, R800:1cyc
+00c158: 15
+
+[	JP NZ , TRANSFER_TO_VRAM_LOOP] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c159: c2 53 c1
+
+[	LD HL , 0X4000] Z80:11cyc, R800:3cyc
+00c15c: 21 00 40
+
+[	LD A , 0B10000000] Z80:8cyc, R800:2cyc
+00c15f: 3e 80
+
+[	CALL ENASLT] Z80:18cyc, R800:5cyc
+00c161: cd 24 00
+
+[	EI] Z80:5cyc, R800:1cyc
+00c164: fb
+
+[	RET] Z80:11cyc, R800:5cyc
+00c165: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[END_ADDRESS ::]
+	global label address: 0x00c166
+
+<< label >>
+BAKCLR 62442 ( 0xf3ea )
+BDOS_FUNC_ABS_SECTOR_READ 47 ( 0x2f )
+BDOS_FUNC_ABS_SECTOR_WRITE 48 ( 0x30 )
+BDOS_FUNC_ALLOC_SECTOR_BUFFER 105 ( 0x69 )
+BDOS_FUNC_BUF_LINE_INPUT 10 ( 0xa )
+BDOS_FUNC_CON_STATUS 11 ( 0xb )
+BDOS_FUNC_DEV_GETC 3 ( 0x3 )
+BDOS_FUNC_DEV_PUTC 4 ( 0x4 )
+BDOS_FUNC_DIRECT_CON_GETC 7 ( 0x7 )
+BDOS_FUNC_DIRECT_CON_GETC_WOE 8 ( 0x8 )
+BDOS_FUNC_DIRECT_CON_IO 6 ( 0x6 )
+BDOS_FUNC_DISK_CHECK_STATUS 110 ( 0x6e )
+BDOS_FUNC_DISK_RESET 13 ( 0xd )
+BDOS_FUNC_FCB_CLOSE_FILE 16 ( 0x10 )
+BDOS_FUNC_FCB_CREATE_FILE 22 ( 0x16 )
+BDOS_FUNC_FCB_DELETE_FILE 19 ( 0x13 )
+BDOS_FUNC_FCB_FIND_1ST 17 ( 0x11 )
+BDOS_FUNC_FCB_FIND_NEXT 18 ( 0x12 )
+BDOS_FUNC_FCB_OPEN_FILE 15 ( 0xf )
+BDOS_FUNC_FCB_RENAME_FILE 23 ( 0x17 )
+BDOS_FUNC_FCB_SEQ_READ 20 ( 0x14 )
+BDOS_FUNC_FCB_SEQ_WRITE 21 ( 0x15 )
+BDOS_FUNC_FILE_HANDLE_CLOSE 69 ( 0x45 )
+BDOS_FUNC_FILE_HANDLE_CREATE 68 ( 0x44 )
+BDOS_FUNC_FILE_HANDLE_DUPLICATE 71 ( 0x47 )
+BDOS_FUNC_FILE_HANDLE_ENSURE 70 ( 0x46 )
+BDOS_FUNC_FILE_HANDLE_OPEN 67 ( 0x43 )
+BDOS_FUNC_FILE_HANDLE_READ 72 ( 0x48 )
+BDOS_FUNC_FILE_HANDLE_TEST 76 ( 0x4c )
+BDOS_FUNC_FILE_HANDLE_WRITE 73 ( 0x49 )
+BDOS_FUNC_FIND_1ST 64 ( 0x40 )
+BDOS_FUNC_FIND_ENV_ITEM 109 ( 0x6d )
+BDOS_FUNC_FIND_NEW 66 ( 0x42 )
+BDOS_FUNC_FIND_NEXT 65 ( 0x41 )
+BDOS_FUNC_FORMAT_DISK 103 ( 0x67 )
+BDOS_FUNC_GETC 1 ( 0x1 )
+BDOS_FUNC_GET_ALLOC_INFO 27 ( 0x1b )
+BDOS_FUNC_GET_CURRENT_DRIVE 25 ( 0x19 )
+BDOS_FUNC_GET_DATE 42 ( 0x2a )
+BDOS_FUNC_GET_DISK_PARAM 49 ( 0x31 )
+BDOS_FUNC_GET_ENV_ITEM 107 ( 0x6b )
+BDOS_FUNC_GET_FILE_SIZE 35 ( 0x23 )
+BDOS_FUNC_GET_LOGIN_VECTOR 24 ( 0x18 )
+BDOS_FUNC_GET_MSXDOS_VERSION 111 ( 0x6f )
+BDOS_FUNC_GET_TIME 44 ( 0x2c )
+BDOS_FUNC_IO_CTRL 75 ( 0x4b )
+BDOS_FUNC_LOGICAL_DRV_ASSIGN 106 ( 0x6a )
+BDOS_FUNC_MOVE_FILE_HANDLE_PTR 74 ( 0x4a )
+BDOS_FUNC_PRT_PUTC 5 ( 0x5 )
+BDOS_FUNC_PUTC 2 ( 0x2 )
+BDOS_FUNC_RAM_DISK 104 ( 0x68 )
+BDOS_FUNC_REDIRECTION_STATUS 112 ( 0x70 )
+BDOS_FUNC_RND_BLOCK_READ 39 ( 0x27 )
+BDOS_FUNC_RND_BLOCK_WRITE 38 ( 0x26 )
+BDOS_FUNC_RND_READ 33 ( 0x21 )
+BDOS_FUNC_RND_WRITE 34 ( 0x22 )
+BDOS_FUNC_RND_WRITE_ZERO_FILL 40 ( 0x28 )
+BDOS_FUNC_SELECT_DISK 14 ( 0xe )
+BDOS_FUNC_SET_DATE 43 ( 0x2b )
+BDOS_FUNC_SET_DTA 26 ( 0x1a )
+BDOS_FUNC_SET_ENV_ITEM 108 ( 0x6c )
+BDOS_FUNC_SET_RND_RECORD 36 ( 0x24 )
+BDOS_FUNC_SET_TIME 45 ( 0x2d )
+BDOS_FUNC_SET_VERIFY_FLAG 46 ( 0x2e )
+BDOS_FUNC_STR_OUT 9 ( 0x9 )
+BDOS_FUNC_SYSTEM_RESET 0 ( 0x0 )
+BDOS_FUNC_VERSION 12 ( 0xc )
+BDOS_ON_DISKBASIC 62333 ( 0xf37d )
+BDOS_ON_MSXDOS 5 ( 0x5 )
+BDRCLR 62443 ( 0xf3eb )
+CALATR 135 ( 0x87 )
+CALBAS 345 ( 0x159 )
+CALLF 48 ( 0x30 )
+CALPAT 132 ( 0x84 )
+CALSLT 28 ( 0x1c )
+CHECK_CPU 49159 ( 0xc007 )
+CHGCLR 98 ( 0x62 )
+CHGMOD 95 ( 0x5f )
+CHKDEV 330 ( 0x14a )
+CHKRAM 0 ( 0x0 )
+CHRGTR 16 ( 0x10 )
+CLRSPR 105 ( 0x69 )
+DCOMPR 32 ( 0x20 )
+DISSCR 65 ( 0x41 )
+ENASCR 71 ( 0x47 )
+ENASLT 36 ( 0x24 )
+END_ADDRESS 49510 ( 0xc166 )
+ENTRY_POINT 49152 ( 0xc000 )
+EXBRSA 64248 ( 0xfaf8 )
+EXPTBL0 64705 ( 0xfcc1 )
+EXPTBL1 64706 ( 0xfcc2 )
+EXPTBL2 64707 ( 0xfcc3 )
+EXPTBL3 64708 ( 0xfcc4 )
+EXTROM 351 ( 0x15f )
+FILVRM 86 ( 0x56 )
+FORCLR 62441 ( 0xf3e9 )
+FORMAT 327 ( 0x147 )
+GETYPR 40 ( 0x28 )
+GICINI 144 ( 0x90 )
+GRPDL 222 ( 0xde )
+GRPPRT 141 ( 0x8d )
+GSPSIZ 138 ( 0x8a )
+GTPAD 219 ( 0xdb )
+GTSTICK 213 ( 0xd5 )
+GTTRIG 216 ( 0xd8 )
+HIMEM 64586 ( 0xfc4a )
+H_KEYI 64922 ( 0xfd9a )
+H_PHYD 65447 ( 0xffa7 )
+H_TIMI 64927 ( 0xfd9f )
+INIFNK 62 ( 0x3e )
+INIGRP 114 ( 0x72 )
+INIMLT 117 ( 0x75 )
+INIT32 111 ( 0x6f )
+INITIO 59 ( 0x3b )
+INITTXT 108 ( 0x6c )
+IO_BASE_SLOT 168 ( 0xa8 )
+IO_MEMMAP0 252 ( 0xfc )
+IO_MEMMAP1 253 ( 0xfd )
+IO_MEMMAP2 254 ( 0xfe )
+IO_MEMMAP3 255 ( 0xff )
+IO_PSG_ADR 160 ( 0xa0 )
+IO_PSG_DATA_RD 162 ( 0xa2 )
+IO_PSG_DATA_WR 161 ( 0xa1 )
+IO_VDP_PORT0 152 ( 0x98 )
+IO_VDP_PORT0_MSX1_ADP 136 ( 0x88 )
+IO_VDP_PORT1 153 ( 0x99 )
+IO_VDP_PORT1_MSX1_ADP 137 ( 0x89 )
+IO_VDP_PORT2 154 ( 0x9a )
+IO_VDP_PORT2_MSX1_ADP 138 ( 0x8a )
+IO_VDP_PORT3 155 ( 0x9b )
+IO_VDP_PORT3_MSX1_ADP 139 ( 0x8b )
+KEYINT 56 ( 0x38 )
+KILBUF 342 ( 0x156 )
+LDIRMV 89 ( 0x59 )
+LDIRVM 92 ( 0x5c )
+NMI 102 ( 0x66 )
+OUTDO 24 ( 0x18 )
+PHYDIO 324 ( 0x144 )
+POLLING_S2 49170 ( 0xc012 )
+POLLING_S2:@REPEAT1:I 63 ( 0x3f )
+POLLING_S2:DUMP_LOOP 49205 ( 0xc035 )
+POLLING_S2:MEASURE_VR_LOOP 49183 ( 0xc01f )
+POLLING_S2:TRANSFER_TO_VRAM 49472 ( 0xc140 )
+POLLING_S2:TRANSFER_TO_VRAM_LOOP 49491 ( 0xc153 )
+POLLING_S2:WAIT_VR_HIGH 49198 ( 0xc02e )
+POLLING_S2:WAIT_VR_LOW1 49191 ( 0xc027 )
+PRINTC 333 ( 0x14d )
+RDPSG 150 ( 0x96 )
+RDSLT 12 ( 0xc )
+RDVRM 74 ( 0x4a )
+REG0SAV 62431 ( 0xf3df )
+REG10SAV 65513 ( 0xffe9 )
+REG11SAV 65514 ( 0xffea )
+REG12SAV 65515 ( 0xffeb )
+REG13SAV 65516 ( 0xffec )
+REG14SAV 65517 ( 0xffed )
+REG15SAV 65518 ( 0xffee )
+REG16SAV 65519 ( 0xffef )
+REG17SAV 65520 ( 0xfff0 )
+REG18SAV 65521 ( 0xfff1 )
+REG19SAV 65522 ( 0xfff2 )
+REG1SAV 62432 ( 0xf3e0 )
+REG20SAV 65523 ( 0xfff3 )
+REG21SAV 65524 ( 0xfff4 )
+REG22SAV 65525 ( 0xfff5 )
+REG23SAV 65526 ( 0xfff6 )
+REG25SAV 65528 ( 0xfff8 )
+REG26SAV 65529 ( 0xfff9 )
+REG27SAV 65530 ( 0xfffa )
+REG2SAV 62433 ( 0xf3e1 )
+REG3SAV 62434 ( 0xf3e2 )
+REG4SAV 62435 ( 0xf3e3 )
+REG5SAV 62436 ( 0xf3e4 )
+REG6SAV 62437 ( 0xf3e5 )
+REG7SAV 62438 ( 0xf3e6 )
+REG8SAV 65511 ( 0xffe7 )
+REG9SAV 65512 ( 0xffe8 )
+SC0_W40_PAT_GEN 2048 ( 0x800 )
+SC0_W40_PAT_NAME 0 ( 0x0 )
+SC0_W80_BLINK 2048 ( 0x800 )
+SC0_W80_PAT_GEN 4096 ( 0x1000 )
+SC0_W80_PAT_NAME 0 ( 0x0 )
+SC1_PAT_GEN 0 ( 0x0 )
+SC1_PAT_NAME 6144 ( 0x1800 )
+SC1_SPR_ATTR 6912 ( 0x1b00 )
+SC1_SPR_GEN 14336 ( 0x3800 )
+SC2_PAT_COL0 8192 ( 0x2000 )
+SC2_PAT_COL1 10240 ( 0x2800 )
+SC2_PAT_COL2 12288 ( 0x3000 )
+SC2_PAT_GEN0 0 ( 0x0 )
+SC2_PAT_GEN1 2048 ( 0x800 )
+SC2_PAT_GEN2 4096 ( 0x1000 )
+SC2_PAT_NAME 6144 ( 0x1800 )
+SC2_SPR_ATTR 6912 ( 0x1b00 )
+SC2_SPR_GEN 14336 ( 0x3800 )
+SC3_PAT_GEN 0 ( 0x0 )
+SC3_PAT_NAME 2048 ( 0x800 )
+SC3_SPR_ATTR 6912 ( 0x1b00 )
+SC3_SPR_GEN 14336 ( 0x3800 )
+SC4_PAT_COL0 8192 ( 0x2000 )
+SC4_PAT_COL1 10240 ( 0x2800 )
+SC4_PAT_COL2 12288 ( 0x3000 )
+SC4_PAT_GEN0 0 ( 0x0 )
+SC4_PAT_GEN1 2048 ( 0x800 )
+SC4_PAT_GEN2 4096 ( 0x1000 )
+SC4_PAT_NAME 6144 ( 0x1800 )
+SC4_SPR_ATTR 7680 ( 0x1e00 )
+SC4_SPR_COL 7168 ( 0x1c00 )
+SC4_SPR_GEN 14336 ( 0x3800 )
+SC5_PAT_NAME 0 ( 0x0 )
+SC5_SPR_ATTR 30208 ( 0x7600 )
+SC5_SPR_COL 29696 ( 0x7400 )
+SC5_SPR_GEN 30720 ( 0x7800 )
+SC6_PAT_NAME 0 ( 0x0 )
+SC6_SPR_ATTR 30208 ( 0x7600 )
+SC6_SPR_COL 29696 ( 0x7400 )
+SC6_SPR_GEN 30720 ( 0x7800 )
+SCRMOD 64687 ( 0xfcaf )
+SETGRP 126 ( 0x7e )
+SETMLT 129 ( 0x81 )
+SETRD 80 ( 0x50 )
+SETT32 123 ( 0x7b )
+SETTXT 120 ( 0x78 )
+SETWRT 83 ( 0x53 )
+START_ADDRESS 49152 ( 0xc000 )
+STATFL 62439 ( 0xf3e7 )
+STRTMS 153 ( 0x99 )
+SUBROM 348 ( 0x15c )
+SYNCHR 8 ( 0x8 )
+VDPCMD_HMMC 240 ( 0xf0 )
+VDPCMD_HMMM 208 ( 0xd0 )
+VDPCMD_HMMV 192 ( 0xc0 )
+VDPCMD_LINE 112 ( 0x70 )
+VDPCMD_LMCM 160 ( 0xa0 )
+VDPCMD_LMMC 176 ( 0xb0 )
+VDPCMD_LMMM 144 ( 0x90 )
+VDPCMD_LMMV 128 ( 0x80 )
+VDPCMD_POINT 64 ( 0x40 )
+VDPCMD_PSET 80 ( 0x50 )
+VDPCMD_SRCH 96 ( 0x60 )
+VDPCMD_STOP 0 ( 0x0 )
+VDPCMD_YMMM 224 ( 0xe0 )
+VDPROP_AND 1 ( 0x1 )
+VDPROP_EOR 17 ( 0x11 )
+VDPROP_IMP 0 ( 0x0 )
+VDPROP_NOT 256 ( 0x100 )
+VDPROP_OR 16 ( 0x10 )
+VDPROP_TAND 4097 ( 0x1001 )
+VDPROP_TEOR 4113 ( 0x1011 )
+VDPROP_TIMP 4096 ( 0x1000 )
+VDPROP_TNOT 4352 ( 0x1100 )
+VDPROP_TOR 4112 ( 0x1010 )
+WRSLT 20 ( 0x14 )
+WRTPSG 147 ( 0x93 )
+WRVRM 77 ( 0x4d )
