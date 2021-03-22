@@ -31,6 +31,10 @@
 //
 // ----------------------------------------------------------------------------
 //	Update history
+//	22nd, March, 2021
+//		Modified by KdL
+//		PreScaler with lfsr counter.
+//
 //	04th, December, 2019
 //		Modified by t.hara
 //		Initial value of ff_da0 and ff_da1 changed to 127 (level=0).
@@ -61,18 +65,19 @@ module tr_pcm (
 	wire	[ 7:0]	w_filter_out;
 	reg		[ 7:0]	ff_sample_hold;
 	reg		[ 7:0]	ff_wave_out;
-	reg		[10:0]	ff_counter_low;		//	0...1363
+	reg		[10:0]	ff_counter_low;		//	0...1363 (PreScaler by LFSR algorithm)
+	wire			w_lfsr_d0;
 	wire			w_counter_low_end;
 	wire	[ 7:0]	w_active_buffer;
 	reg		[ 1:0]	ff_counter;			//	2bit counter (63.5usec)
-	reg				ff_adda;			//	ADDA buffer type select   0: double buffer, 1: single buffer
-	reg				ff_mute_off;		//	mute control              0: mute, 1: active
+	reg				ff_adda;			//	ADDA buffer type select	  0: double buffer, 1: single buffer
+	reg				ff_mute_off;		//	mute control			  0: mute, 1: active
 	reg				ff_filt;			//	sample hold signal select 0: base signal, 1: filter signal
-	reg				ff_sel;				//	filter input select       0: D/A converter output, 1: wave_in
-	reg				ff_smpl;			//	sample hold               0: disable, 1: enable
+	reg				ff_sel;				//	filter input select		  0: D/A converter output, 1: wave_in
+	reg				ff_smpl;			//	sample hold				  0: disable, 1: enable
 	reg		[ 7:0]	ff_da0;				//	wave data 1st
 	reg		[ 7:0]	ff_da1;				//	wave data 2nd
-	wire			w_comp;				//	result of comparison      0: D/A out > sample hold, 1: D/A out < sample hold
+	wire			w_comp;				//	result of comparison	  0: D/A out > sample hold, 1: D/A out < sample hold
 
 	//--------------------------------------------------------------
 	// latch
@@ -106,20 +111,17 @@ module tr_pcm (
 	//--------------------------------------------------------------
 	// base counter
 	//--------------------------------------------------------------
+	xnor(w_lfsr_d0,ff_counter_low[10],ff_counter_low[8]);
+	assign w_counter_low_end = (ff_counter_low == 11'd67);	// LFSR count = 1364 clock ticks
+
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
 			ff_counter_low <= 11'd0;
 		end
 		else begin
-			if( w_counter_low_end ) begin
-				ff_counter_low <= 11'd0;
-			end
-			else begin
-				ff_counter_low <= ff_counter_low + 11'd1;
-			end
+			ff_counter_low <= w_counter_low_end ? 11'd0 : {ff_counter_low[9:0],w_lfsr_d0};
 		end
 	end
-	assign w_counter_low_end	= (ff_counter_low == 'd1363) ? 1'b1 : 1'b0;
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
@@ -166,7 +168,7 @@ module tr_pcm (
 		end
 	end
 
-	assign w_sample_hold_in	= ( ff_filt ) ? ff_wave_out : w_filter_out;
+	assign w_sample_hold_in = ( ff_filt ) ? ff_wave_out : w_filter_out;
 	assign w_wave_in		= 8'd127 - wave_in;
 
 	//--------------------------------------------------------------
@@ -232,7 +234,7 @@ module tr_pcm (
 	// digital filter (T.B.D.: currently through)
 	//--------------------------------------------------------------
 	assign w_filter_in	= ( ff_sel == 1'b0 ) ? ff_wave_out : w_wave_in;
-	assign w_filter_out	= w_filter_in;
+	assign w_filter_out = w_filter_in;
 
 	//--------------------------------------------------------------
 	// comparison for PCM recode
@@ -261,6 +263,6 @@ module tr_pcm (
 		end
 	end
 
-	assign wave_out		= (ff_mute_off == 1'b0 ) ? 8'd0 : w_filter_out;	//	range: -128...127
+	assign wave_out		= (ff_mute_off == 1'b0 ) ? 8'd0 : w_filter_out; //	range: -128...127
 	assign ack			= req;
 endmodule
