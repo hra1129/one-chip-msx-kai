@@ -1,6 +1,9 @@
 1chipMSX-Kai Update History
 
-xx/xx/2021 (ocmkai-xxxxxxxx.zip)
+xx/xx/2021
+    (1) Changed the division counter of tr_pcm to LFSR. (by KdL)
+
+28th/February/2021 (ocmkai-20210228.zip)
     (1) Fixed a bug that caused the RTC time to deviate by about one second per minute.
     (2) Rewrote RTC from VHDL to Verilog (Reduced circuit size)
     (3) Rewrote MemoryMapper from VHDL to Verilog (Reduced circuit size)
