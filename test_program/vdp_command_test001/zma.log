@@ -1,0 +1,968 @@
+Z80 Macro Assembler ZMA v1.0.15
+=====================================================
+Programmed by t.hara
+
+<< code >>
+[	DB 0XFE]
+000000: fe
+
+[	DW START_ADDRESS]
+000001: 00 c0
+
+[	DW END_ADDRESS]
+000003: 9e c3
+
+[	DW START_ADDRESS]
+000005: 00 c0
+
+[	ORG 0XC000]
+	code address: 0x00c000
+
+[START_ADDRESS ::]
+	global label address: 0x00c000
+
+[	LD C , VDP_IO_PORT1] Z80:8cyc, R800:2cyc
+00c000: 0e 99
+
+[	LD A , [ RG8SAV ]] Z80:14cyc, R800:6cyc
+00c002: 3a e7 ff
+
+[	OR A , 0X02] Z80:8cyc, R800:2cyc
+00c005: f6 02
+
+[	DI] Z80:5cyc, R800:2cyc
+00c007: f3
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c008: ed 79
+
+[	LD A , 8 | 0X80] Z80:8cyc, R800:2cyc
+00c00a: 3e 88
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c00c: ed 79
+
+[	LD A , [ RG9SAV ]] Z80:14cyc, R800:6cyc
+00c00e: 3a e8 ff
+
+[	AND A , 0X7F] Z80:8cyc, R800:2cyc
+00c011: e6 7f
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c013: ed 79
+
+[	LD A , 9 | 0X80] Z80:8cyc, R800:2cyc
+00c015: 3e 89
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c017: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c019: fb
+
+[	LD HL , VC_COPY_P0_TO_P1] Z80:11cyc, R800:3cyc
+00c01a: 21 32 c1
+
+[	CALL EXEC_VDPC] Z80:18cyc, R800:5cyc
+00c01d: cd 1f c1
+
+[	LD HL , VC_SAVE_BACKGROUND] Z80:11cyc, R800:3cyc
+00c020: 21 41 c1
+
+[	CALL EXEC_VDPC] Z80:18cyc, R800:5cyc
+00c023: cd 1f c1
+
+[	LD HL , VC_CLEAR_MESSAGE_AREA] Z80:11cyc, R800:3cyc
+00c026: 21 50 c1
+
+[	CALL EXEC_VDPC] Z80:18cyc, R800:5cyc
+00c029: cd 1f c1
+
+[	LD HL , MESSAGE_TOP] Z80:11cyc, R800:3cyc
+00c02c: 21 9b c1
+
+[MAIN_LOOP ::]
+	global label address: 0x00c02f
+
+[	PUSH HL] Z80:12cyc, R800:6cyc
+00c02f: e5
+
+[	LD A , [ DRAW_PAGE ]] Z80:14cyc, R800:6cyc
+00c030: 3a 9c c3
+
+[	LD [ VC_CLEAR_BACKGROUND_DRAW_PAGE ] , A] Z80:14cyc, R800:6cyc
+00c033: 32 66 c1
+
+[	LD [ VC_COPY1_MESSAGE_DRAW_PAGE ] , A] Z80:14cyc, R800:6cyc
+00c036: 32 84 c1
+
+[	LD [ VC_COPY2_MESSAGE_DRAW_PAGE ] , A] Z80:14cyc, R800:6cyc
+00c039: 32 93 c1
+
+[	LD HL , VC_CLEAR_BACKGROUND] Z80:11cyc, R800:3cyc
+00c03c: 21 5f c1
+
+[	CALL EXEC_VDPC] Z80:18cyc, R800:5cyc
+00c03f: cd 1f c1
+
+[	POP HL] Z80:11cyc, R800:5cyc
+00c042: e1
+
+[	CALL PUT_ONE_CHAR] Z80:18cyc, R800:5cyc
+00c043: cd c6 c0
+
+[	CALL PUT_ONE_CHAR] Z80:18cyc, R800:5cyc
+00c046: cd c6 c0
+
+[	LD A , [ DELAY_COUNT ]] Z80:14cyc, R800:6cyc
+00c049: 3a 9d c3
+
+[	INC A] Z80:5cyc, R800:1cyc
+00c04c: 3c
+
+[	CP A , 3] Z80:8cyc, R800:2cyc
+00c04d: fe 03
+
+[	JP C , DRAW_3RD_CHAR] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c04f: da 58 c0
+
+[	XOR A , A] Z80:5cyc, R800:1cyc
+00c052: af
+
+[	LD [ DELAY_COUNT ] , A] Z80:14cyc, R800:6cyc
+00c053: 32 9d c3
+
+[	JR SKIP_DELAY_COUNT] Z80:13cyc, R800:3cyc
+00c056: 18 06
+
+[DRAW_3RD_CHAR :]
+	label address: 0x00c058
+
+[	LD [ DELAY_COUNT ] , A] Z80:14cyc, R800:6cyc
+00c058: 32 9d c3
+
+[	CALL PUT_ONE_CHAR] Z80:18cyc, R800:5cyc
+00c05b: cd c6 c0
+
+[SKIP_DELAY_COUNT :]
+	label address: 0x00c05e
+
+[	PUSH HL] Z80:12cyc, R800:6cyc
+00c05e: e5
+
+[	LD A , [ VC_COPY1_MESSAGE_NY ]] Z80:14cyc, R800:6cyc
+00c05f: 3a 87 c1
+
+[	OR A , A] Z80:5cyc, R800:1cyc
+00c062: b7
+
+[	JR Z , SKIP_COPY1] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c063: 28 06
+
+[	LD HL , VC_COPY1_MESSAGE] Z80:11cyc, R800:3cyc
+00c065: 21 7d c1
+
+[	CALL EXEC_VDPC] Z80:18cyc, R800:5cyc
+00c068: cd 1f c1
+
+[SKIP_COPY1 :]
+	label address: 0x00c06b
+
+[	LD A , [ VC_COPY2_MESSAGE_NY ]] Z80:14cyc, R800:6cyc
+00c06b: 3a 96 c1
+
+[	OR A , A] Z80:5cyc, R800:1cyc
+00c06e: b7
+
+[	JR Z , SKIP_COPY2] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c06f: 28 06
+
+[	LD HL , VC_COPY2_MESSAGE] Z80:11cyc, R800:3cyc
+00c071: 21 8c c1
+
+[	CALL EXEC_VDPC] Z80:18cyc, R800:5cyc
+00c074: cd 1f c1
+
+[SKIP_COPY2 :]
+	label address: 0x00c077
+
+[	LD A , [ VC_COPY1_MESSAGE_SY ]] Z80:14cyc, R800:6cyc
+00c077: 3a 7f c1
+
+[	INC A] Z80:5cyc, R800:1cyc
+00c07a: 3c
+
+[	JR NZ , SKIP_REWIND1] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c07b: 20 02
+
+[	LD A , 64] Z80:8cyc, R800:2cyc
+00c07d: 3e 40
+
+[SKIP_REWIND1 :]
+	label address: 0x00c07f
+
+[	LD [ VC_COPY1_MESSAGE_SY ] , A] Z80:14cyc, R800:6cyc
+00c07f: 32 7f c1
+
+[	SUB A , 64] Z80:8cyc, R800:2cyc
+00c082: d6 40
+
+[	LD B , A] Z80:5cyc, R800:2cyc
+00c084: 47
+
+[	LD A , 192] Z80:8cyc, R800:2cyc
+00c085: 3e c0
+
+[	SUB A , B] Z80:5cyc, R800:1cyc
+00c087: 90
+
+[	LD [ VC_COPY1_MESSAGE_NY ] , A] Z80:14cyc, R800:6cyc
+00c088: 32 87 c1
+
+[	CP A , 129] Z80:8cyc, R800:2cyc
+00c08b: fe 81
+
+[	JR C , SKIP_VC_COPY1_MESSAGE_NY] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c08d: 38 05
+
+[	LD A , 128] Z80:8cyc, R800:2cyc
+00c08f: 3e 80
+
+[	LD [ VC_COPY1_MESSAGE_NY ] , A] Z80:14cyc, R800:6cyc
+00c091: 32 87 c1
+
+[SKIP_VC_COPY1_MESSAGE_NY :]
+	label address: 0x00c094
+
+[	ADD A , 32] Z80:8cyc, R800:2cyc
+00c094: c6 20
+
+[	LD [ VC_COPY2_MESSAGE_DY ] , A] Z80:14cyc, R800:6cyc
+00c096: 32 92 c1
+
+[	LD A , [ VC_COPY1_MESSAGE_NY ]] Z80:14cyc, R800:6cyc
+00c099: 3a 87 c1
+
+[	LD B , A] Z80:5cyc, R800:2cyc
+00c09c: 47
+
+[	LD A , 128] Z80:8cyc, R800:2cyc
+00c09d: 3e 80
+
+[	SUB A , B] Z80:5cyc, R800:1cyc
+00c09f: 90
+
+[	LD [ VC_COPY2_MESSAGE_NY ] , A] Z80:14cyc, R800:6cyc
+00c0a0: 32 96 c1
+
+[SKIP_UPDATE_POS :]
+	label address: 0x00c0a3
+
+[	CALL WAIT_VDPC] Z80:18cyc, R800:5cyc
+00c0a3: cd 08 c1
+
+[	LD C , VDP_IO_PORT1] Z80:8cyc, R800:2cyc
+00c0a6: 0e 99
+
+[	LD A , [ DRAW_PAGE ]] Z80:14cyc, R800:6cyc
+00c0a8: 3a 9c c3
+
+[	ADD A , A] Z80:5cyc, R800:1cyc
+00c0ab: 87
+
+[	ADD A , A] Z80:5cyc, R800:1cyc
+00c0ac: 87
+
+[	ADD A , A] Z80:5cyc, R800:1cyc
+00c0ad: 87
+
+[	ADD A , A] Z80:5cyc, R800:1cyc
+00c0ae: 87
+
+[	ADD A , A] Z80:5cyc, R800:1cyc
+00c0af: 87
+
+[	OR A , 0B00011111] Z80:8cyc, R800:2cyc
+00c0b0: f6 1f
+
+[	DI] Z80:5cyc, R800:2cyc
+00c0b2: f3
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0b3: ed 79
+
+[	LD A , 2 | 0X80] Z80:8cyc, R800:2cyc
+00c0b5: 3e 82
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0b7: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c0b9: fb
+
+[	LD A , [ DRAW_PAGE ]] Z80:14cyc, R800:6cyc
+00c0ba: 3a 9c c3
+
+[	XOR A , 1] Z80:8cyc, R800:2cyc
+00c0bd: ee 01
+
+[	LD [ DRAW_PAGE ] , A] Z80:14cyc, R800:6cyc
+00c0bf: 32 9c c3
+
+[	POP HL] Z80:11cyc, R800:5cyc
+00c0c2: e1
+
+[	JP MAIN_LOOP] Z80:11cyc, R800:5cyc
+00c0c3: c3 2f c0
+
+[	SCOPE PUT_ONE_CHAR]
+	Scope path: PUT_ONE_CHAR:
+
+[PUT_ONE_CHAR ::]
+	global label address: 0x00c0c6
+
+[	LD A , [ HL ]] Z80:8cyc, R800:4cyc
+00c0c6: 7e
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c0c7: 23
+
+[	OR A , A] Z80:5cyc, R800:1cyc
+00c0c8: b7
+
+[	JR NZ , SKIP0] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c0c9: 20 04
+
+[	LD HL , MESSAGE_TOP] Z80:11cyc, R800:3cyc
+00c0cb: 21 9b c1
+
+[	LD A , [ HL ]] Z80:8cyc, R800:4cyc
+00c0ce: 7e
+
+[SKIP0 :]
+	label address: 0x00c0cf
+
+[	PUSH HL] Z80:12cyc, R800:6cyc
+00c0cf: e5
+
+[	SUB A , 97] Z80:8cyc, R800:2cyc
+00c0d0: d6 61
+
+[	LD C , 12] Z80:8cyc, R800:2cyc
+00c0d2: 0e 0c
+
+[	JR NC , SKIP1] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c0d4: 30 02
+
+[	LD C , 0] Z80:8cyc, R800:2cyc
+00c0d6: 0e 00
+
+[SKIP1 :]
+	label address: 0x00c0d8
+
+[	AND A , 0X1F] Z80:8cyc, R800:2cyc
+00c0d8: e6 1f
+
+[	ADD A , A] Z80:5cyc, R800:1cyc
+00c0da: 87
+
+[	LD B , A] Z80:5cyc, R800:2cyc
+00c0db: 47
+
+[	ADD A , A] Z80:5cyc, R800:1cyc
+00c0dc: 87
+
+[	ADD A , B] Z80:5cyc, R800:1cyc
+00c0dd: 80
+
+[	LD [ VC_PUT_CHAR_X ] , A] Z80:14cyc, R800:6cyc
+00c0de: 32 6e c1
+
+[	LD A , C] Z80:5cyc, R800:2cyc
+00c0e1: 79
+
+[	LD [ VC_PUT_CHAR_Y ] , A] Z80:14cyc, R800:6cyc
+00c0e2: 32 70 c1
+
+[	LD HL , VC_PUT_CHAR] Z80:11cyc, R800:3cyc
+00c0e5: 21 6e c1
+
+[	CALL EXEC_VDPC] Z80:18cyc, R800:5cyc
+00c0e8: cd 1f c1
+
+[	LD A , [ VC_PUT_CHAR_POS_X ]] Z80:14cyc, R800:6cyc
+00c0eb: 3a 72 c1
+
+[	ADD A , 6] Z80:8cyc, R800:2cyc
+00c0ee: c6 06
+
+[	CP A , 224] Z80:8cyc, R800:2cyc
+00c0f0: fe e0
+
+[	JR C , SKIP2] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c0f2: 38 0f
+
+[	LD A , [ VC_PUT_CHAR_POS_Y ]] Z80:14cyc, R800:6cyc
+00c0f4: 3a 74 c1
+
+[	ADD A , 12] Z80:8cyc, R800:2cyc
+00c0f7: c6 0c
+
+[	JP NZ , SKIP3] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c0f9: c2 fe c0
+
+[	LD A , 64] Z80:8cyc, R800:2cyc
+00c0fc: 3e 40
+
+[SKIP3 :]
+	label address: 0x00c0fe
+
+[	LD [ VC_PUT_CHAR_POS_Y ] , A] Z80:14cyc, R800:6cyc
+00c0fe: 32 74 c1
+
+[	LD A , 32] Z80:8cyc, R800:2cyc
+00c101: 3e 20
+
+[SKIP2 :]
+	label address: 0x00c103
+
+[	LD [ VC_PUT_CHAR_POS_X ] , A] Z80:14cyc, R800:6cyc
+00c103: 32 72 c1
+
+[	POP HL] Z80:11cyc, R800:5cyc
+00c106: e1
+
+[	RET] Z80:11cyc, R800:5cyc
+00c107: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE WAIT_VDPC]
+	Scope path: WAIT_VDPC:
+
+[WAIT_VDPC ::]
+	global label address: 0x00c108
+
+[	LD C , VDP_IO_PORT1] Z80:8cyc, R800:2cyc
+00c108: 0e 99
+
+[	LD DE , 15 | 0X80] Z80:11cyc, R800:3cyc
+00c10a: 11 8f 00
+
+[WAIT_CE_FLAG :]
+	label address: 0x00c10d
+
+[	DI] Z80:5cyc, R800:2cyc
+00c10d: f3
+
+[	LD A , 2] Z80:8cyc, R800:2cyc
+00c10e: 3e 02
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c110: ed 79
+
+[	OUT [ C ] , E] Z80:14cyc, R800:10 or 9cyc
+00c112: ed 59
+
+[	IN A , [ C ]] Z80:14cyc, R800:10 or 9cyc
+00c114: ed 78
+
+[	OUT [ C ] , D] Z80:14cyc, R800:10 or 9cyc
+00c116: ed 51
+
+[	OUT [ C ] , E] Z80:14cyc, R800:10 or 9cyc
+00c118: ed 59
+
+[	EI] Z80:5cyc, R800:1cyc
+00c11a: fb
+
+[	RRCA] Z80:5cyc, R800:1cyc
+00c11b: 0f
+
+[	JR C , WAIT_CE_FLAG] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c11c: 38 ef
+
+[	RET] Z80:11cyc, R800:5cyc
+00c11e: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE EXEC_VDPC]
+	Scope path: EXEC_VDPC:
+
+[EXEC_VDPC ::]
+	global label address: 0x00c11f
+
+[	CALL WAIT_VDPC] Z80:18cyc, R800:5cyc
+00c11f: cd 08 c1
+
+[	LD A , 32] Z80:8cyc, R800:2cyc
+00c122: 3e 20
+
+[	DI] Z80:5cyc, R800:2cyc
+00c124: f3
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c125: ed 79
+
+[	LD A , 17 | 0X80] Z80:8cyc, R800:2cyc
+00c127: 3e 91
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c129: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c12b: fb
+
+[	LD BC , ( 15 << 8 ) | VDP_IO_PORT3] Z80:11cyc, R800:3cyc
+00c12c: 01 9b 0f
+
+[	OTIR] Z80:23 or 18cyc, R800:? or 12 or 11cyc
+00c12f: ed b3
+
+[	RET] Z80:11cyc, R800:5cyc
+00c131: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[VC_COPY_P0_TO_P1 ::]
+	global label address: 0x00c132
+
+[	DW 0]
+00c132: 00 00
+
+[	DW 0]
+00c134: 00 00
+
+[	DW 0]
+00c136: 00 00
+
+[	DW 256 + 0]
+00c138: 00 01
+
+[	DW 256]
+00c13a: 00 01
+
+[	DW 192]
+00c13c: c0 00
+
+[	DB 0]
+00c13e: 00
+
+[	DB 0B0000_0000]
+00c13f: 00
+
+[	DB 0B1101_0000]
+00c140: d0
+
+[VC_SAVE_BACKGROUND ::]
+	global label address: 0x00c141
+
+[	DW 0]
+00c141: 00 00
+
+[	DW 32]
+00c143: 20 00
+
+[	DW 0]
+00c145: 00 00
+
+[	DW 256 + 192]
+00c147: c0 01
+
+[	DW 256]
+00c149: 00 01
+
+[	DW 128]
+00c14b: 80 00
+
+[	DB 0]
+00c14d: 00
+
+[	DB 0B0000_0000]
+00c14e: 00
+
+[	DB 0B1101_0000]
+00c14f: d0
+
+[VC_CLEAR_MESSAGE_AREA ::]
+	global label address: 0x00c150
+
+[	DW 0]
+00c150: 00 00
+
+[	DW 0]
+00c152: 00 00
+
+[	DW 0]
+00c154: 00 00
+
+[	DW 256 + 192 + 128]
+00c156: 40 02
+
+[	DW 256]
+00c158: 00 01
+
+[	DW 192]
+00c15a: c0 00
+
+[	DB 0]
+00c15c: 00
+
+[	DB 0B0000_0000]
+00c15d: 00
+
+[	DB 0B1000_0000]
+00c15e: 80
+
+[VC_CLEAR_BACKGROUND ::]
+	global label address: 0x00c15f
+
+[	DW 0]
+00c15f: 00 00
+
+[	DW 256 + 192]
+00c161: c0 01
+
+[	DW 32]
+00c163: 20 00
+
+[	DB 32]
+00c165: 20
+
+[VC_CLEAR_BACKGROUND_DRAW_PAGE :]
+	label address: 0x00c166
+
+[	DB 0]
+00c166: 00
+
+[	DW 224]
+00c167: e0 00
+
+[	DW 128]
+00c169: 80 00
+
+[	DB 0]
+00c16b: 00
+
+[	DB 0B0000_0000]
+00c16c: 00
+
+[	DB 0B1110_0000]
+00c16d: e0
+
+[VC_PUT_CHAR ::]
+	global label address: 0x00c16e
+
+[VC_PUT_CHAR_X :]
+	label address: 0x00c16e
+
+[	DB 0]
+00c16e: 00
+
+[	DB 0]
+00c16f: 00
+
+[VC_PUT_CHAR_Y :]
+	label address: 0x00c170
+
+[	DB 0]
+00c170: 00
+
+[	DB 3]
+00c171: 03
+
+[VC_PUT_CHAR_POS_X :]
+	label address: 0x00c172
+
+[	DB 32]
+00c172: 20
+
+[	DB 0]
+00c173: 00
+
+[VC_PUT_CHAR_POS_Y :]
+	label address: 0x00c174
+
+[	DB 64 + 144]
+00c174: d0
+
+[	DB 2]
+00c175: 02
+
+[	DW 6]
+00c176: 06 00
+
+[	DW 12]
+00c178: 0c 00
+
+[	DB 0]
+00c17a: 00
+
+[	DB 0B0000_0000]
+00c17b: 00
+
+[	DB 0B1101_0000]
+00c17c: d0
+
+[VC_COPY1_MESSAGE ::]
+	global label address: 0x00c17d
+
+[	DW 32]
+00c17d: 20 00
+
+[VC_COPY1_MESSAGE_SY :]
+	label address: 0x00c17f
+
+[	DB 64]
+00c17f: 40
+
+[	DB 2]
+00c180: 02
+
+[	DW 32]
+00c181: 20 00
+
+[	DB 32]
+00c183: 20
+
+[VC_COPY1_MESSAGE_DRAW_PAGE :]
+	label address: 0x00c184
+
+[	DB 1]
+00c184: 01
+
+[	DW 192]
+00c185: c0 00
+
+[VC_COPY1_MESSAGE_NY :]
+	label address: 0x00c187
+
+[	DB 128]
+00c187: 80
+
+[	DB 0]
+00c188: 00
+
+[	DB 0]
+00c189: 00
+
+[	DB 0B0000_0000]
+00c18a: 00
+
+[	DB 0B1001_1000]
+00c18b: 98
+
+[VC_COPY2_MESSAGE ::]
+	global label address: 0x00c18c
+
+[	DW 32]
+00c18c: 20 00
+
+[	DB 64]
+00c18e: 40
+
+[	DB 2]
+00c18f: 02
+
+[	DW 32]
+00c190: 20 00
+
+[VC_COPY2_MESSAGE_DY :]
+	label address: 0x00c192
+
+[	DB 32]
+00c192: 20
+
+[VC_COPY2_MESSAGE_DRAW_PAGE :]
+	label address: 0x00c193
+
+[	DB 1]
+00c193: 01
+
+[	DW 192]
+00c194: c0 00
+
+[VC_COPY2_MESSAGE_NY :]
+	label address: 0x00c196
+
+[	DB 128]
+00c196: 80
+
+[	DB 0]
+00c197: 00
+
+[	DB 0]
+00c198: 00
+
+[	DB 0B0000_0000]
+00c199: 00
+
+[	DB 0B1001_1000]
+00c19a: 98
+
+[MESSAGE_TOP ::]
+	global label address: 0x00c19b
+
+[	DS "This is a test program          "]
+00c19b: 54 68 69 73 20 69 73 20
+00c1a3: 61 20 74 65 73 74 20 70
+00c1ab: 72 6f 67 72 61 6d 20 20
+00c1b3: 20 20 20 20 20 20 20 20
+
+[	DS "I love the MSX                  "]
+00c1bb: 49 20 6c 6f 76 65 20 74
+00c1c3: 68 65 20 4d 53 58 20 20
+00c1cb: 20 20 20 20 20 20 20 20
+00c1d3: 20 20 20 20 20 20 20 20
+
+[	DS "       Hoooooooooooo            "]
+00c1db: 20 20 20 20 20 20 20 48
+00c1e3: 6f 6f 6f 6f 6f 6f 6f 6f
+00c1eb: 6f 6f 6f 6f 20 20 20 20
+00c1f3: 20 20 20 20 20 20 20 20
+
+[	DS "Moge Moge       Hoge Hoge FooBar"]
+00c1fb: 4d 6f 67 65 20 4d 6f 67
+00c203: 65 20 20 20 20 20 20 20
+00c20b: 48 6f 67 65 20 48 6f 67
+00c213: 65 20 46 6f 6f 42 61 72
+
+[	DS "This is a pen                   "]
+00c21b: 54 68 69 73 20 69 73 20
+00c223: 61 20 70 65 6e 20 20 20
+00c22b: 20 20 20 20 20 20 20 20
+00c233: 20 20 20 20 20 20 20 20
+
+[	DS "I have a pen     hehehehehe     "]
+00c23b: 49 20 68 61 76 65 20 61
+00c243: 20 70 65 6e 20 20 20 20
+00c24b: 20 68 65 68 65 68 65 68
+00c253: 65 68 65 20 20 20 20 20
+
+[	DS "             OTL       orz      "]
+00c25b: 20 20 20 20 20 20 20 20
+00c263: 20 20 20 20 20 4f 54 4c
+00c26b: 20 20 20 20 20 20 20 6f
+00c273: 72 7a 20 20 20 20 20 20
+
+[	DS "        What should I write     "]
+00c27b: 20 20 20 20 20 20 20 20
+00c283: 57 68 61 74 20 73 68 6f
+00c28b: 75 6c 64 20 49 20 77 72
+00c293: 69 74 65 20 20 20 20 20
+
+[	DS "THIS IS A TEST PROGRAM          "]
+00c29b: 54 48 49 53 20 49 53 20
+00c2a3: 41 20 54 45 53 54 20 50
+00c2ab: 52 4f 47 52 41 4d 20 20
+00c2b3: 20 20 20 20 20 20 20 20
+
+[	DS "TEST TEST TEST TEST test TEST TE"]
+00c2bb: 54 45 53 54 20 54 45 53
+00c2c3: 54 20 54 45 53 54 20 54
+00c2cb: 45 53 54 20 74 65 73 74
+00c2d3: 20 54 45 53 54 20 54 45
+
+[	DS "wwwwwwwwwwwww KUSA wwwwwwwwwwwww"]
+00c2db: 77 77 77 77 77 77 77 77
+00c2e3: 77 77 77 77 77 20 4b 55
+00c2eb: 53 41 20 77 77 77 77 77
+00c2f3: 77 77 77 77 77 77 77 77
+
+[	DS "     THIS IS A TEST PROGRAM     "]
+00c2fb: 20 20 20 20 20 54 48 49
+00c303: 53 20 49 53 20 41 20 54
+00c30b: 45 53 54 20 50 52 4f 47
+00c313: 52 41 4d 20 20 20 20 20
+
+[	DS "    THIS IS A TEST PROGRAM      "]
+00c31b: 20 20 20 20 54 48 49 53
+00c323: 20 49 53 20 41 20 54 45
+00c32b: 53 54 20 50 52 4f 47 52
+00c333: 41 4d 20 20 20 20 20 20
+
+[	DS "   THIS IS A TEST PROGRAM       "]
+00c33b: 20 20 20 54 48 49 53 20
+00c343: 49 53 20 41 20 54 45 53
+00c34b: 54 20 50 52 4f 47 52 41
+00c353: 4d 20 20 20 20 20 20 20
+
+[	DS "  THIS IS A TEST PROGRAM        "]
+00c35b: 20 20 54 48 49 53 20 49
+00c363: 53 20 41 20 54 45 53 54
+00c36b: 20 50 52 4f 47 52 41 4d
+00c373: 20 20 20 20 20 20 20 20
+
+[	DS " THIS IS A TEST PROGRAM         "]
+00c37b: 20 54 48 49 53 20 49 53
+00c383: 20 41 20 54 45 53 54 20
+00c38b: 50 52 4f 47 52 41 4d 20
+00c393: 20 20 20 20 20 20 20 20
+
+[	DB 0]
+00c39b: 00
+
+[DRAW_PAGE ::]
+	global label address: 0x00c39c
+
+[	DB 1]
+00c39c: 01
+
+[DELAY_COUNT ::]
+	global label address: 0x00c39d
+
+[	DB 0]
+00c39d: 00
+
+[END_ADDRESS ::]
+	global label address: 0x00c39e
+
+<< label >>
+DELAY_COUNT 50077 ( 0xc39d )
+DRAW_3RD_CHAR 49240 ( 0xc058 )
+DRAW_PAGE 50076 ( 0xc39c )
+END_ADDRESS 50078 ( 0xc39e )
+EXEC_VDPC 49439 ( 0xc11f )
+MAIN_LOOP 49199 ( 0xc02f )
+MESSAGE_TOP 49563 ( 0xc19b )
+PUT_ONE_CHAR 49350 ( 0xc0c6 )
+PUT_ONE_CHAR:SKIP0 49359 ( 0xc0cf )
+PUT_ONE_CHAR:SKIP1 49368 ( 0xc0d8 )
+PUT_ONE_CHAR:SKIP2 49411 ( 0xc103 )
+PUT_ONE_CHAR:SKIP3 49406 ( 0xc0fe )
+RG8SAV 65511 ( 0xffe7 )
+RG9SAV 65512 ( 0xffe8 )
+SKIP_COPY1 49259 ( 0xc06b )
+SKIP_COPY2 49271 ( 0xc077 )
+SKIP_DELAY_COUNT 49246 ( 0xc05e )
+SKIP_REWIND1 49279 ( 0xc07f )
+SKIP_UPDATE_POS 49315 ( 0xc0a3 )
+SKIP_VC_COPY1_MESSAGE_NY 49300 ( 0xc094 )
+START_ADDRESS 49152 ( 0xc000 )
+VC_CLEAR_BACKGROUND 49503 ( 0xc15f )
+VC_CLEAR_BACKGROUND_DRAW_PAGE 49510 ( 0xc166 )
+VC_CLEAR_MESSAGE_AREA 49488 ( 0xc150 )
+VC_COPY1_MESSAGE 49533 ( 0xc17d )
+VC_COPY1_MESSAGE_DRAW_PAGE 49540 ( 0xc184 )
+VC_COPY1_MESSAGE_NY 49543 ( 0xc187 )
+VC_COPY1_MESSAGE_SY 49535 ( 0xc17f )
+VC_COPY2_MESSAGE 49548 ( 0xc18c )
+VC_COPY2_MESSAGE_DRAW_PAGE 49555 ( 0xc193 )
+VC_COPY2_MESSAGE_DY 49554 ( 0xc192 )
+VC_COPY2_MESSAGE_NY 49558 ( 0xc196 )
+VC_COPY_P0_TO_P1 49458 ( 0xc132 )
+VC_PUT_CHAR 49518 ( 0xc16e )
+VC_PUT_CHAR_POS_X 49522 ( 0xc172 )
+VC_PUT_CHAR_POS_Y 49524 ( 0xc174 )
+VC_PUT_CHAR_X 49518 ( 0xc16e )
+VC_PUT_CHAR_Y 49520 ( 0xc170 )
+VC_SAVE_BACKGROUND 49473 ( 0xc141 )
+VDP_IO_PORT1 153 ( 0x99 )
+VDP_IO_PORT2 154 ( 0x9a )
+VDP_IO_PORT3 155 ( 0x9b )
+WAIT_VDPC 49416 ( 0xc108 )
+WAIT_VDPC:WAIT_CE_FLAG 49421 ( 0xc10d )

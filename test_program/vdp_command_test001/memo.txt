@@ -1,0 +1,51 @@
+LMMM TIMP
+	SX 32
+	SY 697	--> Page2 185
+	DX 32
+	DY 68
+	NX 192
+	NY 92
+
+YMMM
+	SX --
+	SY 555	--> Page2 43
+	DX 32
+	DY 395	--> Page1 139
+	NX --
+	NY 21
+
+	→ 背景の ○＋ をコピーして前の文字を消している。
+
+
+Page0, Page1 を交互に表示してスクロールしている。
+
+LMMM TIMP
+	SX 32
+	SY 692	--> Page2 180
+	DX 32
+	DY 141
+	NX 192
+	NY 19
+
+HMMM
+	SX 0
+	SY 809	--> Page3 41
+	DX 140
+	DY 729	--> Page2 217
+	NX 12
+	NY 3
+	→ これは文字の転送
+		なんで NY 3 なんだ？
+
+
+HMMM
+	SX 0
+	SY 803
+	DX 176
+	DY 627
+	NX 12
+	NY 9
+
+
+-------------------------
+Palette
