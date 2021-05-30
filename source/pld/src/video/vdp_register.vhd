@@ -72,6 +72,10 @@
 --      Added the undocumented feature where R1 bit #2 change the blink counter
 --      clock source from VSYNC to HSYNC
 --
+--  30th, May, 2021 by t.hara
+--      In the register writing by address auto-increment mode, 
+--      the bug that the address is incremented even if it exceeds R#47 is corrected.
+--
 
 LIBRARY IEEE;
     USE IEEE.STD_LOGIC_1164.ALL;
@@ -609,7 +613,8 @@ BEGIN
                         END IF;
                         VDPP1DATA <= DBO;
                         VDPREGPTR <= VDPR17REGNUM;
-                        IF( VDPR17INCREGNUM = '1' ) THEN
+                        -- IF( VDPR17INCREGNUM = '1' ) THEN
+                        IF( VDPR17INCREGNUM = '1' AND VDPR17REGNUM /= "101111" ) THEN    -- Modified by t.hara in 2021/May/30th
                             VDPR17REGNUM <= VDPR17REGNUM + 1;
                         END IF;
 
