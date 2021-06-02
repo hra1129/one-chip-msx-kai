@@ -1,0 +1,866 @@
+Z80 Macro Assembler ZMA v1.0.15
+=====================================================
+Programmed by t.hara
+
+<< code >>
+[	DB 0XFE]
+000000: fe
+
+[	DW START_ADDRESS]
+000001: 00 c0
+
+[	DW END_ADDRESS]
+000003: 8b c2
+
+[	DW START_ADDRESS]
+000005: 00 c0
+
+[	ORG 0XC000]
+	code address: 0x00c000
+
+[START_ADDRESS ::]
+	global label address: 0x00c000
+
+[	SCOPE TEST001]
+	Scope path: TEST001:
+
+[TEST001 ::]
+	global label address: 0x00c000
+
+[	LD DE , MESSAGE_TEST001] Z80:11cyc, R800:3cyc
+00c000: 11 07 c2
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c003: cd e4 c1
+
+[	DI] Z80:5cyc, R800:2cyc
+00c006: f3
+
+[	LD A , 24] Z80:8cyc, R800:2cyc
+00c007: 3e 18
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c009: cd d1 c1
+
+[	LD A , 28] Z80:8cyc, R800:2cyc
+00c00c: 3e 1c
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c00e: cd d1 c1
+
+[	LD A , 29] Z80:8cyc, R800:2cyc
+00c011: 3e 1d
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c013: cd d1 c1
+
+[	LD A , 30] Z80:8cyc, R800:2cyc
+00c016: 3e 1e
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c018: cd d1 c1
+
+[	LD A , 31] Z80:8cyc, R800:2cyc
+00c01b: 3e 1f
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c01d: cd d1 c1
+
+[	LD A , 47] Z80:8cyc, R800:2cyc
+00c020: 3e 2f
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c022: cd d1 c1
+
+[	LD A , 48] Z80:8cyc, R800:2cyc
+00c025: 3e 30
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c027: cd d1 c1
+
+[	LD A , 49] Z80:8cyc, R800:2cyc
+00c02a: 3e 31
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c02c: cd d1 c1
+
+[	LD A , 50] Z80:8cyc, R800:2cyc
+00c02f: 3e 32
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c031: cd d1 c1
+
+[	LD A , 51] Z80:8cyc, R800:2cyc
+00c034: 3e 33
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c036: cd d1 c1
+
+[	LD A , 52] Z80:8cyc, R800:2cyc
+00c039: 3e 34
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c03b: cd d1 c1
+
+[	LD A , 53] Z80:8cyc, R800:2cyc
+00c03e: 3e 35
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c040: cd d1 c1
+
+[	LD A , 54] Z80:8cyc, R800:2cyc
+00c043: 3e 36
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c045: cd d1 c1
+
+[	LD A , 55] Z80:8cyc, R800:2cyc
+00c048: 3e 37
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c04a: cd d1 c1
+
+[	LD A , 56] Z80:8cyc, R800:2cyc
+00c04d: 3e 38
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c04f: cd d1 c1
+
+[	LD A , 57] Z80:8cyc, R800:2cyc
+00c052: 3e 39
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c054: cd d1 c1
+
+[	LD A , 58] Z80:8cyc, R800:2cyc
+00c057: 3e 3a
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c059: cd d1 c1
+
+[	LD A , 59] Z80:8cyc, R800:2cyc
+00c05c: 3e 3b
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c05e: cd d1 c1
+
+[	LD A , 60] Z80:8cyc, R800:2cyc
+00c061: 3e 3c
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c063: cd d1 c1
+
+[	LD A , 61] Z80:8cyc, R800:2cyc
+00c066: 3e 3d
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c068: cd d1 c1
+
+[	LD A , 62] Z80:8cyc, R800:2cyc
+00c06b: 3e 3e
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c06d: cd d1 c1
+
+[	LD A , 63] Z80:8cyc, R800:2cyc
+00c070: 3e 3f
+
+[	CALL WRITE_INCREMENT_DATAS] Z80:18cyc, R800:5cyc
+00c072: cd d1 c1
+
+[	EI] Z80:5cyc, R800:1cyc
+00c075: fb
+
+[	LD DE , MESSAGE_OK] Z80:11cyc, R800:3cyc
+00c076: 11 ee c1
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c079: cd e4 c1
+
+[	CALL CHGET] Z80:18cyc, R800:5cyc
+00c07c: cd 9f 00
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE TEST002]
+	Scope path: TEST002:
+
+[TEST002 ::]
+	global label address: 0x00c07f
+
+[	LD DE , MESSAGE_TEST002] Z80:11cyc, R800:3cyc
+00c07f: 11 28 c2
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c082: cd e4 c1
+
+[	DI] Z80:5cyc, R800:2cyc
+00c085: f3
+
+[	LD A , 17] Z80:8cyc, R800:2cyc
+00c086: 3e 11
+
+[	LD B , 23] Z80:8cyc, R800:2cyc
+00c088: 06 17
+
+[	CALL WRITE_VDP_REGISTER] Z80:18cyc, R800:5cyc
+00c08a: cd db c1
+
+[	LD C , VDP_IO_PORT3] Z80:8cyc, R800:2cyc
+00c08d: 0e 9b
+
+[	LD A , 128] Z80:8cyc, R800:2cyc
+00c08f: 3e 80
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c091: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c093: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c095: ed 79
+
+[	LD A , 2] Z80:8cyc, R800:2cyc
+00c097: 3e 02
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c099: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c09b: fb
+
+[	LD DE , MESSAGE_OK] Z80:11cyc, R800:3cyc
+00c09c: 11 ee c1
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c09f: cd e4 c1
+
+[	CALL CHGET] Z80:18cyc, R800:5cyc
+00c0a2: cd 9f 00
+
+[	DI] Z80:5cyc, R800:2cyc
+00c0a5: f3
+
+[	LD A , 23] Z80:8cyc, R800:2cyc
+00c0a6: 3e 17
+
+[	LD B , 0] Z80:8cyc, R800:2cyc
+00c0a8: 06 00
+
+[	CALL WRITE_VDP_REGISTER] Z80:18cyc, R800:5cyc
+00c0aa: cd db c1
+
+[	LD A , 25] Z80:8cyc, R800:2cyc
+00c0ad: 3e 19
+
+[	LD B , 0] Z80:8cyc, R800:2cyc
+00c0af: 06 00
+
+[	CALL WRITE_VDP_REGISTER] Z80:18cyc, R800:5cyc
+00c0b1: cd db c1
+
+[	EI] Z80:5cyc, R800:1cyc
+00c0b4: fb
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE TEST003]
+	Scope path: TEST003:
+
+[TEST003 ::]
+	global label address: 0x00c0b5
+
+[	LD DE , MESSAGE_TEST003] Z80:11cyc, R800:3cyc
+00c0b5: 11 49 c2
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c0b8: cd e4 c1
+
+[	DI] Z80:5cyc, R800:2cyc
+00c0bb: f3
+
+[	LD A , 17] Z80:8cyc, R800:2cyc
+00c0bc: 3e 11
+
+[	LD B , 60] Z80:8cyc, R800:2cyc
+00c0be: 06 3c
+
+[	CALL WRITE_VDP_REGISTER] Z80:18cyc, R800:5cyc
+00c0c0: cd db c1
+
+[	LD C , VDP_IO_PORT3] Z80:8cyc, R800:2cyc
+00c0c3: 0e 9b
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c0c5: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0c7: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c0c9: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0cb: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c0cd: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0cf: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c0d1: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0d3: ed 79
+
+[	LD A , 0] Z80:8cyc, R800:2cyc
+00c0d5: 3e 00
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0d7: ed 79
+
+[	LD A , 0X70] Z80:8cyc, R800:2cyc
+00c0d9: 3e 70
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0db: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c0dd: fb
+
+[	LD DE , MESSAGE_OK] Z80:11cyc, R800:3cyc
+00c0de: 11 ee c1
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c0e1: cd e4 c1
+
+[	CALL CHGET] Z80:18cyc, R800:5cyc
+00c0e4: cd 9f 00
+
+[	DI] Z80:5cyc, R800:2cyc
+00c0e7: f3
+
+[	LD A , 17] Z80:8cyc, R800:2cyc
+00c0e8: 3e 11
+
+[	LD B , 60] Z80:8cyc, R800:2cyc
+00c0ea: 06 3c
+
+[	CALL WRITE_VDP_REGISTER] Z80:18cyc, R800:5cyc
+00c0ec: cd db c1
+
+[	LD C , VDP_IO_PORT3] Z80:8cyc, R800:2cyc
+00c0ef: 0e 9b
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c0f1: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0f3: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c0f5: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0f7: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c0f9: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0fb: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c0fd: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c0ff: ed 79
+
+[	LD A , 0] Z80:8cyc, R800:2cyc
+00c101: 3e 00
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c103: ed 79
+
+[	LD A , 0X60] Z80:8cyc, R800:2cyc
+00c105: 3e 60
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c107: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c109: fb
+
+[	LD DE , MESSAGE_OK] Z80:11cyc, R800:3cyc
+00c10a: 11 ee c1
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c10d: cd e4 c1
+
+[	CALL CHGET] Z80:18cyc, R800:5cyc
+00c110: cd 9f 00
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE TEST004]
+	Scope path: TEST004:
+
+[TEST004 ::]
+	global label address: 0x00c113
+
+[	LD DE , MESSAGE_TEST004] Z80:11cyc, R800:3cyc
+00c113: 11 6a c2
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c116: cd e4 c1
+
+[	DI] Z80:5cyc, R800:2cyc
+00c119: f3
+
+[	LD A , 17] Z80:8cyc, R800:2cyc
+00c11a: 3e 11
+
+[	LD B , 47] Z80:8cyc, R800:2cyc
+00c11c: 06 2f
+
+[	CALL WRITE_VDP_REGISTER] Z80:18cyc, R800:5cyc
+00c11e: cd db c1
+
+[	LD C , VDP_IO_PORT3] Z80:8cyc, R800:2cyc
+00c121: 0e 9b
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c123: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c125: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c127: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c129: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c12b: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c12d: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c12f: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c131: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c133: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c135: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c137: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c139: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c13b: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c13d: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c13f: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c141: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c143: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c145: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c147: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c149: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c14b: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c14d: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c14f: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c151: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c153: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c155: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c157: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c159: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c15b: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c15d: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c15f: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c161: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c163: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c165: ed 79
+
+[	LD A , 0] Z80:8cyc, R800:2cyc
+00c167: 3e 00
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c169: ed 79
+
+[	LD A , 0X70] Z80:8cyc, R800:2cyc
+00c16b: 3e 70
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c16d: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c16f: fb
+
+[	LD DE , MESSAGE_OK] Z80:11cyc, R800:3cyc
+00c170: 11 ee c1
+
+[	CALL PUTS] Z80:18cyc, R800:5cyc
+00c173: cd e4 c1
+
+[	CALL CHGET] Z80:18cyc, R800:5cyc
+00c176: cd 9f 00
+
+[	DI] Z80:5cyc, R800:2cyc
+00c179: f3
+
+[	LD A , 17] Z80:8cyc, R800:2cyc
+00c17a: 3e 11
+
+[	LD B , 47] Z80:8cyc, R800:2cyc
+00c17c: 06 2f
+
+[	CALL WRITE_VDP_REGISTER] Z80:18cyc, R800:5cyc
+00c17e: cd db c1
+
+[	LD C , VDP_IO_PORT3] Z80:8cyc, R800:2cyc
+00c181: 0e 9b
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c183: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c185: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c187: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c189: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c18b: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c18d: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c18f: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c191: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c193: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c195: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c197: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c199: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c19b: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c19d: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c19f: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1a1: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1a3: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1a5: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1a7: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1a9: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1ab: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1ad: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1af: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1b1: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1b3: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1b5: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1b7: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1b9: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1bb: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1bd: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1bf: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1c1: ed 79
+
+[	LD A , 255] Z80:8cyc, R800:2cyc
+00c1c3: 3e ff
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1c5: ed 79
+
+[	LD A , 0] Z80:8cyc, R800:2cyc
+00c1c7: 3e 00
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1c9: ed 79
+
+[	LD A , 0X60] Z80:8cyc, R800:2cyc
+00c1cb: 3e 60
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1cd: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c1cf: fb
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	RET] Z80:11cyc, R800:5cyc
+00c1d0: c9
+
+[	SCOPE WRITE_INCREMENT_DATAS]
+	Scope path: WRITE_INCREMENT_DATAS:
+
+[WRITE_INCREMENT_DATAS ::]
+	global label address: 0x00c1d1
+
+[	LD B , 0] Z80:8cyc, R800:2cyc
+00c1d1: 06 00
+
+[LOOP1 :]
+	label address: 0x00c1d3
+
+[	CALL WRITE_VDP_REGISTER] Z80:18cyc, R800:5cyc
+00c1d3: cd db c1
+
+[	INC B] Z80:5cyc, R800:1cyc
+00c1d6: 04
+
+[	JP NZ , LOOP1] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c1d7: c2 d3 c1
+
+[	RET] Z80:11cyc, R800:5cyc
+00c1da: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE WRITE_VDP_REGISTER]
+	Scope path: WRITE_VDP_REGISTER:
+
+[WRITE_VDP_REGISTER ::]
+	global label address: 0x00c1db
+
+[	LD C , VDP_IO_PORT1] Z80:8cyc, R800:2cyc
+00c1db: 0e 99
+
+[	OUT [ C ] , B] Z80:14cyc, R800:10 or 9cyc
+00c1dd: ed 41
+
+[	OR A , 0X80] Z80:8cyc, R800:2cyc
+00c1df: f6 80
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c1e1: ed 79
+
+[	RET] Z80:11cyc, R800:5cyc
+00c1e3: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE PUTS]
+	Scope path: PUTS:
+
+[PUTS ::]
+	global label address: 0x00c1e4
+
+[	LD A , [ DE ]] Z80:8cyc, R800:4cyc
+00c1e4: 1a
+
+[	OR A , A] Z80:5cyc, R800:1cyc
+00c1e5: b7
+
+[	RET Z] Z80:12cyc(branch), 6cyc(through), R800:5cyc(branch), 1cyc(through)
+00c1e6: c8
+
+[	CALL CHPUT] Z80:18cyc, R800:5cyc
+00c1e7: cd a2 00
+
+[	INC DE] Z80:7cyc, R800:1cyc
+00c1ea: 13
+
+[	JP PUTS] Z80:11cyc, R800:5cyc
+00c1eb: c3 e4 c1
+
+[	ENDSCOPE]
+	Scope path: 
+
+[MESSAGE_OK ::]
+	global label address: 0x00c1ee
+
+[	DS " .... OK\r\n"]
+00c1ee: 20 2e 2e 2e 2e 20 4f 4b
+00c1f6: 0d 0a
+
+[	DS "Press RETURN\r\n"]
+00c1f8: 50 72 65 73 73 20 52 45
+00c200: 54 55 52 4e 0d 0a
+
+[	DB 0]
+00c206: 00
+
+[MESSAGE_TEST001 ::]
+	global label address: 0x00c207
+
+[	DS "TEST001: Write Invalid Registers"]
+00c207: 54 45 53 54 30 30 31 3a
+00c20f: 20 57 72 69 74 65 20 49
+00c217: 6e 76 61 6c 69 64 20 52
+00c21f: 65 67 69 73 74 65 72 73
+
+[	DB 0]
+00c227: 00
+
+[MESSAGE_TEST002 ::]
+	global label address: 0x00c228
+
+[	DS "TEST002: Write R#23-25 with R#17"]
+00c228: 54 45 53 54 30 30 32 3a
+00c230: 20 57 72 69 74 65 20 52
+00c238: 23 32 33 2d 32 35 20 77
+00c240: 69 74 68 20 52 23 31 37
+
+[	DB 0]
+00c248: 00
+
+[MESSAGE_TEST003 ::]
+	global label address: 0x00c249
+
+[	DS "TEST003: Write R#60-01 with R#17"]
+00c249: 54 45 53 54 30 30 33 3a
+00c251: 20 57 72 69 74 65 20 52
+00c259: 23 36 30 2d 30 31 20 77
+00c261: 69 74 68 20 52 23 31 37
+
+[	DB 0]
+00c269: 00
+
+[MESSAGE_TEST004 ::]
+	global label address: 0x00c26a
+
+[	DS "TEST004: Write R#47-01 with R#17"]
+00c26a: 54 45 53 54 30 30 34 3a
+00c272: 20 57 72 69 74 65 20 52
+00c27a: 23 34 37 2d 30 31 20 77
+00c282: 69 74 68 20 52 23 31 37
+
+[	DB 0]
+00c28a: 00
+
+[END_ADDRESS ::]
+	global label address: 0x00c28b
+
+<< label >>
+CHGET 159 ( 0x9f )
+CHPUT 162 ( 0xa2 )
+END_ADDRESS 49803 ( 0xc28b )
+MESSAGE_OK 49646 ( 0xc1ee )
+MESSAGE_TEST001 49671 ( 0xc207 )
+MESSAGE_TEST002 49704 ( 0xc228 )
+MESSAGE_TEST003 49737 ( 0xc249 )
+MESSAGE_TEST004 49770 ( 0xc26a )
+PUTS 49636 ( 0xc1e4 )
+START_ADDRESS 49152 ( 0xc000 )
+TEST001 49152 ( 0xc000 )
+TEST002 49279 ( 0xc07f )
+TEST003 49333 ( 0xc0b5 )
+TEST004 49427 ( 0xc113 )
+VDP_IO_PORT0 152 ( 0x98 )
+VDP_IO_PORT1 153 ( 0x99 )
+VDP_IO_PORT2 154 ( 0x9a )
+VDP_IO_PORT3 155 ( 0x9b )
+WRITE_INCREMENT_DATAS 49617 ( 0xc1d1 )
+WRITE_INCREMENT_DATAS:LOOP1 49619 ( 0xc1d3 )
+WRITE_VDP_REGISTER 49627 ( 0xc1db )

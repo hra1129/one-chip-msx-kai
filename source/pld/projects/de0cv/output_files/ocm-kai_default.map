@@ -1,7 +1,7 @@
 BLOCK		START ADDRESS		END ADDRESS
 
 ocm_msx2.hex		0x00780000		0x007C01FF
-Page_0		0x00000000		0x0010C04C
+Page_0		0x00000000		0x0010C6EF
 
 
 Configuration device: EPCS64
@@ -11,6 +11,6 @@ Quad-Serial configuration device dummy clock cycle: 12
 
 Notes:
 
-- Data checksum for this conversion is 0x6FDFFD7D
+- Data checksum for this conversion is 0x6FAAEB9D
 
 - All the addresses in this file are byte addresses

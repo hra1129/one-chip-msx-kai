@@ -1,5 +1,5 @@
 --
---  vdp_colordec.vhd
+--  vdp_register.vhd
 --
 --  Copyright (C) 2000-2006 Kunihiko Ohnaka
 --  All rights reserved.
@@ -75,6 +75,10 @@
 --  30th, May, 2021 by t.hara
 --      In the register writing by address auto-increment mode, 
 --      the bug that the address is incremented even if it exceeds R#47 is corrected.
+--
+--  2nd, June, 2021 by t.hara
+--      Fixed behavior of address auto-increment.
+--      Fixed the write operation to the invalid register.
 --
 
 LIBRARY IEEE;
@@ -613,8 +617,7 @@ BEGIN
                         END IF;
                         VDPP1DATA <= DBO;
                         VDPREGPTR <= VDPR17REGNUM;
-                        -- IF( VDPR17INCREGNUM = '1' ) THEN
-                        IF( VDPR17INCREGNUM = '1' AND VDPR17REGNUM /= "101111" ) THEN    -- Modified by t.hara in 2021/May/30th
+                        IF( VDPR17INCREGNUM = '1' ) THEN
                             VDPR17REGNUM <= VDPR17REGNUM + 1;
                         END IF;
 
@@ -695,7 +698,7 @@ BEGIN
                             REG_R27_H_SCROLL <= VDPP1DATA( 2 DOWNTO 0 );
                         WHEN OTHERS => NULL;
                     END CASE;
-                ELSE
+                ELSIF ( VDPREGPTR(4) = '0') THEN
                     -- REGISTERS FOR VDP COMMAND
                     VDPCMDREGNUM <= VDPREGPTR(3 DOWNTO 0);
                     VDPCMDREGDATA <= VDPP1DATA;
