@@ -1,0 +1,170 @@
+Z80 Macro Assembler ZMA v1.0.15
+=====================================================
+Programmed by t.hara
+
+<< code >>
+[	DB 0XFE]
+000000: fe
+
+[	DW START_ADDRESS]
+000001: 00 c0
+
+[	DW END_ADDRESS]
+000003: 43 c0
+
+[	DW START_ADDRESS]
+000005: 00 c0
+
+[	ORG 0XC000]
+	code address: 0x00c000
+
+[START_ADDRESS ::]
+	global label address: 0x00c000
+
+[	LD HL , VC_FILL] Z80:11cyc, R800:3cyc
+00c000: 21 34 c0
+
+[	CALL EXEC_VDPC] Z80:18cyc, R800:5cyc
+00c003: cd 21 c0
+
+[	CALL WAIT_VDPC] Z80:18cyc, R800:5cyc
+00c006: cd 0a c0
+
+[	RET] Z80:11cyc, R800:5cyc
+00c009: c9
+
+[	SCOPE WAIT_VDPC]
+	Scope path: WAIT_VDPC:
+
+[WAIT_VDPC ::]
+	global label address: 0x00c00a
+
+[	LD C , VDP_IO_PORT1] Z80:8cyc, R800:2cyc
+00c00a: 0e 99
+
+[	LD DE , 15 | 0X80] Z80:11cyc, R800:3cyc
+00c00c: 11 8f 00
+
+[WAIT_CE_FLAG :]
+	label address: 0x00c00f
+
+[	DI] Z80:5cyc, R800:2cyc
+00c00f: f3
+
+[	LD A , 2] Z80:8cyc, R800:2cyc
+00c010: 3e 02
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c012: ed 79
+
+[	OUT [ C ] , E] Z80:14cyc, R800:10 or 9cyc
+00c014: ed 59
+
+[	IN A , [ C ]] Z80:14cyc, R800:10 or 9cyc
+00c016: ed 78
+
+[	OUT [ C ] , D] Z80:14cyc, R800:10 or 9cyc
+00c018: ed 51
+
+[	OUT [ C ] , E] Z80:14cyc, R800:10 or 9cyc
+00c01a: ed 59
+
+[	EI] Z80:5cyc, R800:1cyc
+00c01c: fb
+
+[	RRCA] Z80:5cyc, R800:1cyc
+00c01d: 0f
+
+[	JR C , WAIT_CE_FLAG] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c01e: 38 ef
+
+[	RET] Z80:11cyc, R800:5cyc
+00c020: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE EXEC_VDPC]
+	Scope path: EXEC_VDPC:
+
+[EXEC_VDPC ::]
+	global label address: 0x00c021
+
+[	CALL WAIT_VDPC] Z80:18cyc, R800:5cyc
+00c021: cd 0a c0
+
+[	LD A , 32] Z80:8cyc, R800:2cyc
+00c024: 3e 20
+
+[	DI] Z80:5cyc, R800:2cyc
+00c026: f3
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c027: ed 79
+
+[	LD A , 17 | 0X80] Z80:8cyc, R800:2cyc
+00c029: 3e 91
+
+[	OUT [ C ] , A] Z80:14cyc, R800:10 or 9cyc
+00c02b: ed 79
+
+[	EI] Z80:5cyc, R800:1cyc
+00c02d: fb
+
+[	LD BC , ( 15 << 8 ) | VDP_IO_PORT3] Z80:11cyc, R800:3cyc
+00c02e: 01 9b 0f
+
+[	OTIR] Z80:23 or 18cyc, R800:? or 12 or 11cyc
+00c031: ed b3
+
+[	RET] Z80:11cyc, R800:5cyc
+00c033: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[VC_FILL ::]
+	global label address: 0x00c034
+
+[	DW 0]
+00c034: 00 00
+
+[	DW 256]
+00c036: 00 01
+
+[	DW 0]
+00c038: 00 00
+
+[	DW 256]
+00c03a: 00 01
+
+[	DW 256]
+00c03c: 00 01
+
+[	DW 212]
+00c03e: d4 00
+
+[	DB 0]
+00c040: 00
+
+[	DB 0B0000_0000]
+00c041: 00
+
+[	DB 0B1100_0000]
+00c042: c0
+
+[END_ADDRESS ::]
+	global label address: 0x00c043
+
+<< label >>
+END_ADDRESS 49219 ( 0xc043 )
+EXEC_VDPC 49185 ( 0xc021 )
+RG8SAV 65511 ( 0xffe7 )
+RG9SAV 65512 ( 0xffe8 )
+START_ADDRESS 49152 ( 0xc000 )
+VC_FILL 49204 ( 0xc034 )
+VDP_IO_PORT1 153 ( 0x99 )
+VDP_IO_PORT2 154 ( 0x9a )
+VDP_IO_PORT3 155 ( 0x9b )
+WAIT_VDPC 49162 ( 0xc00a )
+WAIT_VDPC:WAIT_CE_FLAG 49167 ( 0xc00f )

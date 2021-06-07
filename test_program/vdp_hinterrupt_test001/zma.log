@@ -1,0 +1,307 @@
+Z80 Macro Assembler ZMA v1.0.15
+=====================================================
+Programmed by t.hara
+
+<< code >>
+[	DB 0XFE]
+000000: fe
+
+[	DW START_ADDRESS]
+000001: 00 c0
+
+[	DW END_ADDRESS]
+000003: bd c1
+
+[	DW START_ADDRESS]
+000005: 00 c0
+
+[	ORG 0XC000]
+	code address: 0x00c000
+
+[START_ADDRESS ::]
+	global label address: 0x00c000
+
+[	SCOPE MAIN_LOOP]
+	Scope path: MAIN_LOOP:
+
+[	LD HL , 300] Z80:11cyc, R800:3cyc
+00c000: 21 2c 01
+
+[MAIN_LOOP ::]
+	global label address: 0x00c003
+
+[	CALL SUB_PROC] Z80:18cyc, R800:5cyc
+00c003: cd 0d c0
+
+[	DEC HL] Z80:7cyc, R800:1cyc
+00c006: 2b
+
+[	LD A , H] Z80:5cyc, R800:2cyc
+00c007: 7c
+
+[	OR A , L] Z80:5cyc, R800:1cyc
+00c008: b5
+
+[	JP NZ , MAIN_LOOP] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c009: c2 03 c0
+
+[	RET] Z80:11cyc, R800:5cyc
+00c00c: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE SUB_PROC]
+	Scope path: SUB_PROC:
+
+[SUB_PROC ::]
+	global label address: 0x00c00d
+
+[	PUSH HL] Z80:12cyc, R800:6cyc
+00c00d: e5
+
+[	LD E , L] Z80:5cyc, R800:2cyc
+00c00e: 5d
+
+[	LD D , H] Z80:5cyc, R800:2cyc
+00c00f: 54
+
+[	DI] Z80:5cyc, R800:2cyc
+00c010: f3
+
+[	LD A , 128] Z80:8cyc, R800:2cyc
+00c011: 3e 80
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c013: d3 99
+
+[	LD A , 0X80 | 19] Z80:8cyc, R800:2cyc
+00c015: 3e 93
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c017: d3 99
+
+[	LD A , [ RG0SAV ]] Z80:14cyc, R800:6cyc
+00c019: 3a df f3
+
+[	OR A , 0X10] Z80:8cyc, R800:2cyc
+00c01c: f6 10
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c01e: d3 99
+
+[	LD A , 0X80 | 0] Z80:8cyc, R800:2cyc
+00c020: 3e 80
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c022: d3 99
+
+[	LD A , 2] Z80:8cyc, R800:2cyc
+00c024: 3e 02
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c026: d3 99
+
+[	LD A , 0X80 | 15] Z80:8cyc, R800:2cyc
+00c028: 3e 8f
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c02a: d3 99
+
+[WAIT_NON_V_BLANK :]
+	label address: 0x00c02c
+
+[	IN A , [ VDP_IO_PORT1 ]] Z80:12cyc, R800:10 or 9cyc
+00c02c: db 99
+
+[	AND A , 0X40] Z80:8cyc, R800:2cyc
+00c02e: e6 40
+
+[	JP NZ , WAIT_NON_V_BLANK] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c030: c2 2c c0
+
+[WAIT_V_BLANK :]
+	label address: 0x00c033
+
+[	IN A , [ VDP_IO_PORT1 ]] Z80:12cyc, R800:10 or 9cyc
+00c033: db 99
+
+[	AND A , 0X40] Z80:8cyc, R800:2cyc
+00c035: e6 40
+
+[	JP Z , WAIT_V_BLANK] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c037: ca 33 c0
+
+[	LD A , 0] Z80:8cyc, R800:2cyc
+00c03a: 3e 00
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c03c: d3 99
+
+[	LD A , 0X80 | 15] Z80:8cyc, R800:2cyc
+00c03e: 3e 8f
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c040: d3 99
+
+[	IN A , [ VDP_IO_PORT1 ]] Z80:12cyc, R800:10 or 9cyc
+00c042: db 99
+
+[	LD A , 1] Z80:8cyc, R800:2cyc
+00c044: 3e 01
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c046: d3 99
+
+[	LD A , 0X80 | 15] Z80:8cyc, R800:2cyc
+00c048: 3e 8f
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c04a: d3 99
+
+[	IN A , [ VDP_IO_PORT1 ]] Z80:12cyc, R800:10 or 9cyc
+00c04c: db 99
+
+[	LD A , 2] Z80:8cyc, R800:2cyc
+00c04e: 3e 02
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c050: d3 99
+
+[	LD A , 0X80 | 15] Z80:8cyc, R800:2cyc
+00c052: 3e 8f
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c054: d3 99
+
+[COUNT_H_BLANK_LOOP :]
+	label address: 0x00c056
+
+[WAIT_NON_H_BLANK :]
+	label address: 0x00c056
+
+[	IN A , [ VDP_IO_PORT1 ]] Z80:12cyc, R800:10 or 9cyc
+00c056: db 99
+
+[	AND A , 0X20] Z80:8cyc, R800:2cyc
+00c058: e6 20
+
+[	JP NZ , WAIT_NON_H_BLANK] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c05a: c2 56 c0
+
+[WAIT_H_BLANK :]
+	label address: 0x00c05d
+
+[	IN A , [ VDP_IO_PORT1 ]] Z80:12cyc, R800:10 or 9cyc
+00c05d: db 99
+
+[	AND A , 0X20] Z80:8cyc, R800:2cyc
+00c05f: e6 20
+
+[	JP Z , WAIT_H_BLANK] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c061: ca 5d c0
+
+[	DEC HL] Z80:7cyc, R800:1cyc
+00c064: 2b
+
+[	LD A , H] Z80:5cyc, R800:2cyc
+00c065: 7c
+
+[	OR A , L] Z80:5cyc, R800:1cyc
+00c066: b5
+
+[	JP NZ , COUNT_H_BLANK_LOOP] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00c067: c2 56 c0
+
+[	LD A , 1] Z80:8cyc, R800:2cyc
+00c06a: 3e 01
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c06c: d3 99
+
+[	LD A , 0X80 | 15] Z80:8cyc, R800:2cyc
+00c06e: 3e 8f
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c070: d3 99
+
+[	IN A , [ VDP_IO_PORT1 ]] Z80:12cyc, R800:10 or 9cyc
+00c072: db 99
+
+[	LD HL , RESULT] Z80:11cyc, R800:3cyc
+00c074: 21 91 c0
+
+[	ADD HL , DE] Z80:12cyc, R800:1cyc
+00c077: 19
+
+[	LD [ HL ] , A] Z80:8cyc, R800:4cyc
+00c078: 77
+
+[	LD A , 0] Z80:8cyc, R800:2cyc
+00c079: 3e 00
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c07b: d3 99
+
+[	LD A , 0X80 | 15] Z80:8cyc, R800:2cyc
+00c07d: 3e 8f
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c07f: d3 99
+
+[	IN A , [ VDP_IO_PORT1 ]] Z80:12cyc, R800:10 or 9cyc
+00c081: db 99
+
+[	LD A , [ RG0SAV ]] Z80:14cyc, R800:6cyc
+00c083: 3a df f3
+
+[	AND A , ~ 0X10] Z80:8cyc, R800:2cyc
+00c086: e6 ef
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c088: d3 99
+
+[	LD A , 0X80 | 0] Z80:8cyc, R800:2cyc
+00c08a: 3e 80
+
+[	OUT [ VDP_IO_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
+00c08c: d3 99
+
+[	POP HL] Z80:11cyc, R800:5cyc
+00c08e: e1
+
+[	EI] Z80:5cyc, R800:1cyc
+00c08f: fb
+
+[	RET] Z80:11cyc, R800:5cyc
+00c090: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[RESULT ::]
+	global label address: 0x00c091
+
+[SPACE 300]
+	Allocate space: 300byte(s)
+		Fill value: 0
+
+[END_ADDRESS ::]
+	global label address: 0x00c1bd
+
+<< label >>
+END_ADDRESS 49597 ( 0xc1bd )
+MAIN_LOOP 49155 ( 0xc003 )
+RESULT 49297 ( 0xc091 )
+RG0SAV 62431 ( 0xf3df )
+START_ADDRESS 49152 ( 0xc000 )
+SUB_PROC 49165 ( 0xc00d )
+SUB_PROC:COUNT_H_BLANK_LOOP 49238 ( 0xc056 )
+SUB_PROC:WAIT_H_BLANK 49245 ( 0xc05d )
+SUB_PROC:WAIT_NON_H_BLANK 49238 ( 0xc056 )
+SUB_PROC:WAIT_NON_V_BLANK 49196 ( 0xc02c )
+SUB_PROC:WAIT_V_BLANK 49203 ( 0xc033 )
+VDP_IO_PORT0 152 ( 0x98 )
+VDP_IO_PORT1 153 ( 0x99 )
+VDP_IO_PORT2 154 ( 0x9a )
+VDP_IO_PORT3 155 ( 0x9b )
