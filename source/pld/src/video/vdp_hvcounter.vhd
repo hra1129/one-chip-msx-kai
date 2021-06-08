@@ -75,6 +75,8 @@ ENTITY VDP_HVCOUNTER IS
         FIELD                   : OUT   STD_LOGIC;
         H_BLANK                 : OUT   STD_LOGIC;
         V_BLANK                 : OUT   STD_LOGIC;
+        H_BLANK_START           : OUT   STD_LOGIC;
+        H_BLANK_END             : OUT   STD_LOGIC;
 
         PAL_MODE                : IN    STD_LOGIC;
         INTERLACE_MODE          : IN    STD_LOGIC;
@@ -114,6 +116,8 @@ BEGIN
     V_CNT_IN_FRAME      <= FF_V_CNT_IN_FRAME;
     H_BLANK             <= FF_H_BLANK;
     V_BLANK             <= FF_V_BLANK;
+    H_BLANK_START       <= W_H_BLANK_START;
+    H_BLANK_END         <= W_H_BLANK_END;
 
     --------------------------------------------------------------------------
     --  V SYNCHRONIZE MODE CHANGE

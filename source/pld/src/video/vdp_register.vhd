@@ -80,6 +80,9 @@
 --      Fixed behavior of address auto-increment.
 --      Fixed the write operation to the invalid register.
 --
+--  5th, June, 2021 by t.hara
+--      Fixed to clear H-blanking interrupt when 0 is written to bit4 of R#0
+--
 
 LIBRARY IEEE;
     USE IEEE.STD_LOGIC_1164.ALL;
@@ -443,7 +446,8 @@ BEGIN
                     CLR_HSYNC_INT <= '0';
                 END IF;
             ELSIF( VDPREGWRPULSE = '1' )THEN
-                IF( VDPREGPTR = "010011" OR (VDPREGPTR = "000000" AND VDPP1DATA(4) = '1') )THEN
+                -- IF( VDPREGPTR = "010011" OR (VDPREGPTR = "000000" AND VDPP1DATA(4) = '1') )THEN
+                IF( VDPREGPTR = "010011" OR VDPREGPTR = "000000" )THEN     -- Modified by t.hara, 2021/June/8th
                     -- CLEAR HSYNC INTERRUPT BY WRITE R19, R0
                     CLR_HSYNC_INT <= '1';
                 ELSE

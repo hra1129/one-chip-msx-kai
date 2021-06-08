@@ -328,7 +328,10 @@ ARCHITECTURE RTL OF VDP IS
             VD                      : OUT   STD_LOGIC;
             HSYNC                   : OUT   STD_LOGIC;
             ENAHSYNC                : OUT   STD_LOGIC;
+            H_BLANK_START           : OUT   STD_LOGIC;
+            H_BLANK_END             : OUT   STD_LOGIC;
             V_BLANKING_START        : OUT   STD_LOGIC;
+            V_BLANKING_END          : OUT   STD_LOGIC;
 
             VDPR9PALMODE            : IN    STD_LOGIC;
             REG_R9_INTERLACE_MODE   : IN    STD_LOGIC;
@@ -350,11 +353,15 @@ ARCHITECTURE RTL OF VDP IS
             H_CNT                   : IN    STD_LOGIC_VECTOR( 10 DOWNTO 0 );
             Y_CNT                   : IN    STD_LOGIC_VECTOR(  7 DOWNTO 0 );
             ACTIVE_LINE             : IN    STD_LOGIC;
+            H_BLANK_START           : IN    STD_LOGIC;
+            H_BLANK_END             : IN    STD_LOGIC;
             V_BLANKING_START        : IN    STD_LOGIC;
+            V_BLANKING_END          : IN    STD_LOGIC;
             CLR_VSYNC_INT           : IN    STD_LOGIC;
             CLR_HSYNC_INT           : IN    STD_LOGIC;
             REQ_VSYNC_INT_N         : OUT   STD_LOGIC;
             REQ_HSYNC_INT_N         : OUT   STD_LOGIC;
+            REG_R0_HSYNC_INT_EN     : IN    STD_LOGIC;
             REG_R19_HSYNC_INT_LINE  : IN    STD_LOGIC_VECTOR(  7 DOWNTO 0 )
         );
     END COMPONENT;
@@ -796,7 +803,10 @@ ARCHITECTURE RTL OF VDP IS
     SIGNAL HD                           : STD_LOGIC;
     SIGNAL VD                           : STD_LOGIC;
     SIGNAL ACTIVE_LINE                  : STD_LOGIC;
+    SIGNAL H_BLANK_START                : STD_LOGIC;
+    SIGNAL H_BLANK_END                  : STD_LOGIC;
     SIGNAL V_BLANKING_START             : STD_LOGIC;
+    SIGNAL V_BLANKING_END               : STD_LOGIC;
 
     -- FOR VSYNC INTERRUPT
     SIGNAL VSYNCINT_N                   : STD_LOGIC;
@@ -1101,11 +1111,15 @@ BEGIN
         H_CNT                   => H_CNT                            ,
         Y_CNT                   => PREDOTCOUNTER_Y(  7 DOWNTO 0 )   ,
         ACTIVE_LINE             => ACTIVE_LINE                      ,
+        H_BLANK_START           => H_BLANK_START                    ,
+        H_BLANK_END             => H_BLANK_END                      ,
         V_BLANKING_START        => V_BLANKING_START                 ,
+        V_BLANKING_END          => V_BLANKING_END                   ,
         CLR_VSYNC_INT           => CLR_VSYNC_INT                    ,
         CLR_HSYNC_INT           => CLR_HSYNC_INT                    ,
         REQ_VSYNC_INT_N         => REQ_VSYNC_INT_N                  ,
         REQ_HSYNC_INT_N         => REQ_HSYNC_INT_N                  ,
+        REG_R0_HSYNC_INT_EN     => REG_R0_HSYNC_INT_EN              ,
         REG_R19_HSYNC_INT_LINE  => REG_R19_HSYNC_INT_LINE
     );
 
@@ -1147,7 +1161,10 @@ BEGIN
         VD                      => VD                       ,
         HSYNC                   => HSYNC                    ,
         ENAHSYNC                => ENAHSYNC                 ,
+        H_BLANK_START           => H_BLANK_START            ,
+        H_BLANK_END             => H_BLANK_END              ,
         V_BLANKING_START        => V_BLANKING_START         ,
+        V_BLANKING_END          => V_BLANKING_END           ,
 
         VDPR9PALMODE            => VDPR9PALMODE             ,
         REG_R9_INTERLACE_MODE   => REG_R9_INTERLACE_MODE    ,

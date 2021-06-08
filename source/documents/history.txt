@@ -1,7 +1,9 @@
 1chipMSX-Kai Update History
 
-xx/xx/2021
-    (1) Changed the division counter of tr_pcm to LFSR. (by KdL)
+8th/June/2021
+    (1) Fixed an issue with Fighter's Ragnarok where the screen display would collapse.
+    (2) Made the H-Blanking interrupt process closer to the actual device.
+        This solved the problem of the MSX ENGINE logo freezing in DIX.
 
 28th/February/2021 (ocmkai-20210228.zip)
     (1) Fixed a bug that caused the RTC time to deviate by about one second per minute.

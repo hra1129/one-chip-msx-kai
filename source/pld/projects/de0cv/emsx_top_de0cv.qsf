@@ -899,6 +899,7 @@ set_location_assignment PIN_P14 -to p7SegLed5[3]
 set_location_assignment PIN_C1 -to p7SegLed5[4]
 set_location_assignment PIN_C2 -to p7SegLed5[5]
 set_location_assignment PIN_W19 -to p7SegLed5[6]
+set_global_assignment -name VERILOG_FILE ../../src/peripheral/ocmkai_debugger/ocmkai_debugger.v
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/step_execution/step_execution.v
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/panamega/megarom_pana.v
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/indicator/indicator.v

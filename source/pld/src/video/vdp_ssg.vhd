@@ -59,6 +59,9 @@
 --  30th,March,2008
 --  JP: VDP.VHD から分離 by t.hara
 --
+--  5th,June,2021
+--  JP: V_BLANKING_END 出力ポートを追加 by t.hara
+--
 
 LIBRARY IEEE;
     USE IEEE.STD_LOGIC_1164.ALL;
@@ -90,7 +93,10 @@ ENTITY VDP_SSG IS
         VD                      : OUT   STD_LOGIC;
         HSYNC                   : OUT   STD_LOGIC;
         ENAHSYNC                : OUT   STD_LOGIC;
+        H_BLANK_START           : OUT   STD_LOGIC;
+        H_BLANK_END             : OUT   STD_LOGIC;
         V_BLANKING_START        : OUT   STD_LOGIC;
+        V_BLANKING_END          : OUT   STD_LOGIC;
 
         VDPR9PALMODE            : IN    STD_LOGIC;
         REG_R9_INTERLACE_MODE   : IN    STD_LOGIC;
@@ -118,6 +124,8 @@ ARCHITECTURE RTL OF VDP_SSG IS
             FIELD               : OUT   STD_LOGIC;
             H_BLANK             : OUT   STD_LOGIC;
             V_BLANK             : OUT   STD_LOGIC;
+            H_BLANK_START       : OUT   STD_LOGIC;
+            H_BLANK_END         : OUT   STD_LOGIC;
 
             PAL_MODE            : IN    STD_LOGIC;
             INTERLACE_MODE      : IN    STD_LOGIC;
@@ -188,6 +196,8 @@ BEGIN
         FIELD               => W_FIELD              ,
         H_BLANK             => W_H_BLANK            ,
         V_BLANK             => W_V_BLANK            ,
+        H_BLANK_START       => H_BLANK_START        ,
+        H_BLANK_END         => H_BLANK_END          ,
 
         PAL_MODE            => VDPR9PALMODE         ,
         INTERLACE_MODE      => REG_R9_INTERLACE_MODE,
