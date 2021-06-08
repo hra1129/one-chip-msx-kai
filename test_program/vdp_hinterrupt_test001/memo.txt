@@ -1,0 +1,11 @@
+(1) V-Blanking のライン数は変更しないこと
+    Do not change the number of lines for V-Blanking.
+
+(2) S#1 には、H-Blanking割り込みが無効の間にも信号を出し、それは自動クリアされること
+    S#1 shall be signaled even while the H-Blanking interrupt is disabled, and it shall be cleared automatically.
+
+(3) 現状では、V-Blankingの開始タイミングが、実機と比べて 2ライン早い
+    Currently, the start timing of V-Blanking is two lines earlier than the actual device.
+
+(4) H-Blanking割り込みが有効の間、実機では S#1 bit0 は自動クリアされない
+    While the H-Blanking interrupt is enabled, S#1 bit0 is not cleared automatically on the actual device.
