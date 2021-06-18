@@ -79,7 +79,7 @@
 --        even field  -> even line (odd  line is black)
 --        odd  field  -> odd line  (even line is black)
 --
--- 13th,October,2003 created by Kunihiko Ohnaka
+-- 13rd,October,2003 created by Kunihiko Ohnaka
 -- JP: VDPのコアの実装と表示デバイスへの出力を別ソースにした．
 --
 -------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ ENTITY VDP_VGA IS
         HCOUNTERIN      : IN    STD_LOGIC_VECTOR(10 DOWNTO 0);
         VCOUNTERIN      : IN    STD_LOGIC_VECTOR(10 DOWNTO 0);
         -- MODE
-        PALMODE         : IN    STD_LOGIC; -- caro
+        PALMODE         : IN    STD_LOGIC; -- Added by caro
         INTERLACEMODE   : IN    STD_LOGIC;
         LEGACY_VGA      : IN    STD_LOGIC;
         -- VIDEO OUTPUT
@@ -121,6 +121,8 @@ ENTITY VDP_VGA IS
         VIDEOBOUT       : OUT   STD_LOGIC_VECTOR( 5 DOWNTO 0);
         VIDEOHSOUT_N    : OUT   STD_LOGIC;
         VIDEOVSOUT_N    : OUT   STD_LOGIC;
+        -- HDMI SUPPORT
+        BLANK_O         : OUT   STD_LOGIC;
         -- SWITCHED I/O SIGNALS
         RATIOMODE       : IN    STD_LOGIC_VECTOR( 2 DOWNTO 0)
     );
@@ -144,6 +146,7 @@ ARCHITECTURE RTL OF VDP_VGA IS
     END COMPONENT;
 
     SIGNAL FF_HSYNC_N   : STD_LOGIC;
+    SIGNAL FF_VSYNC_N   : STD_LOGIC;
 
     -- VIDEO OUTPUT ENABLE
     SIGNAL VIDEOOUTX    : STD_LOGIC;
@@ -162,9 +165,9 @@ ARCHITECTURE RTL OF VDP_VGA IS
     SHARED VARIABLE DISP_START_X    : INTEGER := 684 - DISP_WIDTH - 2;          -- 106
 BEGIN
 
-    VIDEOROUT <= DATAROUT WHEN VIDEOOUTX = '1' ELSE (OTHERS => '0');
-    VIDEOGOUT <= DATAGOUT WHEN VIDEOOUTX = '1' ELSE (OTHERS => '0');
-    VIDEOBOUT <= DATABOUT WHEN VIDEOOUTX = '1' ELSE (OTHERS => '0');
+    VIDEOROUT <= DATAROUT WHEN( VIDEOOUTX = '1' )ELSE (OTHERS => '0');
+    VIDEOGOUT <= DATAGOUT WHEN( VIDEOOUTX = '1' )ELSE (OTHERS => '0');
+    VIDEOBOUT <= DATABOUT WHEN( VIDEOOUTX = '1' )ELSE (OTHERS => '0');
 
     DBUF : VDP_DOUBLEBUF
     PORT MAP(
@@ -241,34 +244,34 @@ BEGIN
         CONSTANT CENTER_Y       : INTEGER := 12;                                -- based on HDMI AV output
     BEGIN
         IF( RESET = '1' )THEN
-            VIDEOVSOUT_N <= '1';
+            FF_VSYNC_N <= '1';
         ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
-            IF ( PALMODE = '0' ) THEN -- caro
-                IF( INTERLACEMODE = '0' ) THEN
+            IF( PALMODE = '0' )THEN
+                IF( INTERLACEMODE = '0' )THEN
                     IF( (VCOUNTERIN = 3*2 + CENTER_Y) OR (VCOUNTERIN = 524 + 3*2 + CENTER_Y) )THEN
-                        VIDEOVSOUT_N <= '0';
+                        FF_VSYNC_N <= '0';
                     ELSIF( (VCOUNTERIN = 6*2 + CENTER_Y) OR (VCOUNTERIN = 524 + 6*2 + CENTER_Y) )THEN
-                        VIDEOVSOUT_N <= '1';
+                        FF_VSYNC_N <= '1';
                     END IF;
                 ELSE
                     IF( (VCOUNTERIN = 3*2 + CENTER_Y) OR (VCOUNTERIN = 525 + 3*2 + CENTER_Y) )THEN
-                        VIDEOVSOUT_N <= '0';
+                        FF_VSYNC_N <= '0';
                     ELSIF( (VCOUNTERIN = 6*2 + CENTER_Y) OR (VCOUNTERIN = 525 + 6*2 + CENTER_Y) )THEN
-                        VIDEOVSOUT_N <= '1';
+                        FF_VSYNC_N <= '1';
                     END IF;
                 END IF;
             ELSE
-                IF( INTERLACEMODE = '0' ) THEN
+                IF( INTERLACEMODE = '0' )THEN
                     IF( (VCOUNTERIN = 3*2 + CENTER_Y + 6) OR (VCOUNTERIN = 626 + 3*2 + CENTER_Y + 6) )THEN
-                        VIDEOVSOUT_N <= '0';
+                        FF_VSYNC_N <= '0';
                     ELSIF( (VCOUNTERIN = 6*2 + CENTER_Y + 6) OR (VCOUNTERIN = 626 + 6*2 + CENTER_Y + 6) )THEN
-                        VIDEOVSOUT_N <= '1';
+                        FF_VSYNC_N <= '1';
                     END IF;
                 ELSE
                     IF( (VCOUNTERIN = 3*2 + CENTER_Y + 6) OR (VCOUNTERIN = 625 + 3*2 + CENTER_Y + 6) )THEN
-                        VIDEOVSOUT_N <= '0';
+                        FF_VSYNC_N <= '0';
                     ELSIF( (VCOUNTERIN = 6*2 + CENTER_Y + 6) OR (VCOUNTERIN = 625 + 6*2 + CENTER_Y + 6) )THEN
-                        VIDEOVSOUT_N <= '1';
+                        FF_VSYNC_N <= '1';
                     END IF;
                 END IF;
             END IF;
@@ -307,4 +310,9 @@ BEGIN
     END PROCESS;
 
     VIDEOHSOUT_N <= FF_HSYNC_N;
+    VIDEOVSOUT_N <= FF_VSYNC_N;
+
+    -- HDMI SUPPORT
+    BLANK_O <= '1' WHEN( VIDEOOUTX = '0' OR FF_VSYNC_N = '0' )ELSE '0';
+
 END RTL;

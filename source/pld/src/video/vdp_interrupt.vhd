@@ -57,8 +57,11 @@
 --
 -------------------------------------------------------------------------------
 --  History
---   2021/July/5th by t.hara
+--   2021/June/5th by t.hara
 --     -- Remove the automatic clear of H-BLANKING INTERRUPT at V-BLANKING start timing.
+--
+--   2021/June/18th by t.hara
+--     -- Removed the process of masking scan line interrupts with ACTIVE_LINE.
 --
 
 LIBRARY IEEE;
@@ -129,16 +132,18 @@ BEGIN
         ELSIF (CLK21M'EVENT AND CLK21M = '1') THEN
             IF( REG_R0_HSYNC_INT_EN = '1' ) THEN
 --              IF( CLR_HSYNC_INT = '1' OR (W_VSYNC_INTR_TIMING = '1' AND V_BLANKING_START = '1') )THEN
-                IF( CLR_HSYNC_INT = '1' )THEN            -- 2021/6/5 modified by t.hara
+                IF( CLR_HSYNC_INT = '1' )THEN                 -- 2021/June/5 modified by t.hara
                     -- H-BLANKING INTERRUPT CLEAR
                     FF_HSYNC_INT_N <= '1';
-                ELSIF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
+--              ELSIF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
+                ELSIF( Y_CNT = REG_R19_HSYNC_INT_LINE )THEN   -- 2021/June/18 modified by t.hara
                     -- H-BLANKING INTERRUPT REQUEST
                     FF_HSYNC_INT_N <= '0';
                 END IF;
             ELSE
                 -- 2021/6/8 added by t.hara
-                IF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
+--              IF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
+                IF( Y_CNT = REG_R19_HSYNC_INT_LINE )THEN      -- 2021/June/18 modified by t.hara
                     IF( H_BLANK_START = '1' )THEN
                         FF_HSYNC_INT_N <= '0';
                     ELSIF( H_BLANK_END = '1' )THEN

@@ -29,10 +29,12 @@
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-//------------------------------------------------------------------------------------
-// OCM-PLD Pack v3.8 by KdL (2020.01.09) / MSX2+ Stable Release / MSXtR Experimental
+//-----------------------------------------------------------------------------------------------------
+// OCM-PLD Pack v3.9 by KdL (2021.06.11) / MSX2+ Stable Release for SM-X and SX-2 / MSXtR Experimental
 // Special thanks to t.hara, caro, mygodess & all MRC users (http://www.msx.org)
-//------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------
+// Setup for XTAL 50.00000MHz
+//-----------------------------------------------------------------------------------------------------
 // History
 //     June/27th/2020
 //       Converted to VerilogHDL by t.hara
@@ -44,9 +46,7 @@
 //       Removed step execution by t.hara
 //
 
-module emsx_top #(
-		parameter		deocmpldcv	= 0
-	) (
+module emsx_top(
 		// Clock, Reset ports
 		input			clk21m,								// VDP Clock ... 21.48MHz
 		input			memclk,
@@ -151,7 +151,22 @@ module emsx_top #(
 		output			EPC_CS,
 		output			EPC_OE,
 		output			EPC_DI,
-		input			EPC_DO
+		input			EPC_DO,
+
+		// DE0CV, SM-X, Multicore 2 and SX-2 ports
+		output			clk21m_out,
+		output			clk_hdmi,
+		output			esp_rx_o,
+		input			esp_tx_i,
+		output	[15:0]	pcm_o,
+		output			blank_o,
+		input			ear_i,
+		output			mic_o,
+		output			midi_o,
+		output			midi_active_o,
+		output			vga_status,
+		inout	[1:0]	vga_scanlines,
+		output			btn_scan
 	);
 
 	localparam		DEBUG_MODE		= 0;			// 1 = enabled, 0 = disabled
@@ -486,6 +501,13 @@ module emsx_top #(
 	wire	[7:0]	tr_pcm_wave_in;								// 2019/11/29 t.hara added
 	wire	[7:0]	tr_pcm_wave_out;							// 2019/11/29 t.hara added
 
+	// OPL3 signals
+	wire	[7:0]	opl3_dout_s;
+	wire	[15:0]	opl3_sound_s;
+	wire			opl3_req;
+	reg				opl3_enabled = 1'b0;
+	wire	[2:0]	Opl3Vol;
+
 	// MSX-MIDI ports											// 2020/02/12 t.hara added
 	wire			tr_midi_req;
 	wire	[7:0]	tr_midi_dbi;
@@ -525,6 +547,9 @@ module emsx_top #(
 		.extclk3m		( extclk3m			)
 	);
 
+	assign clk21m_out = clk21m;
+	assign vga_status = ff_DisplayMode[1];
+
 	// hybrid clock timeout counter
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
@@ -533,7 +558,7 @@ module emsx_top #(
 		else begin
 			if( freerun_count[16:0] == 17'd0 ) begin
 				if( MmcEna == 1'b0 ) begin
-					ff_hybstartcnt <= 3'b111;												// begin after 48ms
+					ff_hybstartcnt <= 3'b111;
 				end
 				else if( ff_hybstartcnt != 3'b000 ) begin
 					ff_hybstartcnt <= ff_hybstartcnt - 3'd1;
@@ -550,7 +575,7 @@ module emsx_top #(
 		else begin
 			if( ff_hybstartcnt == 3'b000 || ff_hybtoutcnt != 3'b000 ) begin
 				if( MmcEna == 1'b1 ) begin
-					ff_hybtoutcnt <= 3'b111;												// timeout after 96ms
+					ff_hybtoutcnt <= 3'b111;
 				end
 				else if( freerun_count[17:0] == 18'd0 ) begin
 					ff_hybtoutcnt <= ff_hybtoutcnt - 3'd1;
@@ -578,18 +603,17 @@ module emsx_top #(
 	always @( posedge clk21m ) begin
 		if( w_ldbios_n == 1'b0 ) begin
 			if( LastRst_sta == portF4_mode ) begin
-				ff_LogoRstCnt <= 5'b11111;													// 3100ms
+				ff_LogoRstCnt <= 5'b11111;
 				ff_logo_timeout <= 2'b00;
 			end
 		end
-//		else if( w_10hz == 1'b1 && ff_LogoRstCnt != 5'b00000 && SdPaus == 1'b0 ) begin		// dismissed
 		else if( w_10hz == 1'b1 && ff_LogoRstCnt != 5'b00000 ) begin
 			ff_LogoRstCnt <= ff_LogoRstCnt - 5'd1;
-			if( ff_LogoRstCnt == 5'b10010 ) begin											// 1800ms
+			if( ff_LogoRstCnt == 5'b10010 ) begin
 				ff_logo_timeout <= 2'b01;
 			end
 		end
-		else if( ff_LogoRstCnt == 5'b00000 ) begin											// 0ms
+		else if( ff_LogoRstCnt == 5'b00000 ) begin
 			ff_logo_timeout <= 2'b10;
 		end
 	end
@@ -868,6 +892,7 @@ module emsx_top #(
 		.Scc1Dbi				( Scc1Dbi				),
 		.Scc2Dbi				( Scc2Dbi				),
 		.RamDbi					( RamDbi				),
+		.Opl3Dbi				( opl3_dout_s			),
 		.RamAck					( RamAck				),
 		.Scc1Ack				( Scc1Ack				),
 		.Scc2Ack				( Scc2Ack				),
@@ -881,6 +906,7 @@ module emsx_top #(
 		.Slot1Mode				( Scc1Type				),
 		.Slot2Mode				( ff_Slot2Mode			),
 		.rom_mode				( w_rom_mode			),
+		.opl3_enabled			( opl3_enabled			),
 		.mem_slot0_0			( w_mem_slot0_0			),
 		.mem_slot0_1			( w_mem_slot0_1			),
 		.mem_slot0_2			( w_mem_slot0_2			),
@@ -916,6 +942,7 @@ module emsx_top #(
 		.system_flags_req		( system_flags_req		),
 		.tr_pcm_req				( tr_pcm_req			),
 		.tr_midi_req			( tr_midi_req			),
+		.opl3_req				( opl3_req				),
 		.req_reset_primary_slot	( req_reset_primary_slot),
 		.ack_reset_primary_slot	( ack_reset_primary_slot)
 	);
@@ -942,46 +969,32 @@ module emsx_top #(
 				Reso_v			<= 1'b0;							// Hsync:15kHz
 				ff_pVideoHS_n	<= 1'bz;							// CSync Disabled
 				ff_pVideoVS_n	<= DACout;							// Audio Out (Mono)
-//				ff_legacy_vga		<= 1'b0;							// behaves like vAllow_n		(for V9938 MSX2 VDP)
+//				ff_legacy_vga	<= 1'b0;							// behaves like vAllow_n		(for V9938 MSX2 VDP)
 			end
 		2'b01:														// RGB 15kHz
 			begin
-				if( ZemmixNeo == 1'b1 || deocmpldcv == 1 ) begin	// Luminance 100%
-					ff_pDac_VR	<= VideoR;
-					ff_pDac_VG	<= VideoG;
-					ff_pDac_VB	<= VideoB;
-				end
-				else begin											// Luminance 50%
-					ff_pDac_VR	<= { 1'b0, VideoR[5:1] };
-					ff_pDac_VG	<= { 1'b0, VideoG[5:1] };
-					ff_pDac_VB	<= { 1'b0, VideoB[5:1] };
-				end
+				ff_pDac_VR		<= VideoR;
+				ff_pDac_VG		<= VideoG;
+				ff_pDac_VB		<= VideoB;
 				Reso_v			<= 1'b0;							// Hsync:15kHz
 				ff_pVideoHS_n	<= VideoCS_n;						// CSync Enabled
 				ff_pVideoVS_n	<= DACout;							// Audio Out (Mono)
-//				ff_legacy_vga		<= 1'b0;							// behaves like vAllow_n		(for V9938 MSX2 VDP)
+//				ff_legacy_vga	<= 1'b0;							// behaves like vAllow_n		(for V9938 MSX2 VDP)
 			end
 		default:
 			begin													// VGA / VGA+ 31kHz
-				if( ZemmixNeo == 1'b1 || deocmpldcv == 1 ) begin	// Luminance 100%
-					ff_pDac_VR	<= VideoR;
-					ff_pDac_VG	<= VideoG;
-					ff_pDac_VB	<= VideoB;
-				end
-				else begin											// Luminance 50%
-					ff_pDac_VR	<= { 1'b0, VideoR[5:1] };
-					ff_pDac_VG	<= { 1'b0, VideoG[5:1] };
-					ff_pDac_VB	<= { 1'b0, VideoB[5:1] };
-				end
+				ff_pDac_VR		<= VideoR;
+				ff_pDac_VG		<= VideoG;
+				ff_pDac_VB		<= VideoB;
 				Reso_v			<= 1'b1;							// Hsync:31kHz
 				ff_pVideoHS_n	<= VideoHS_n;
 				ff_pVideoVS_n	<= VideoVS_n;
-//				ff_legacy_vga		<= ~ff_DisplayMode[0];					// behaves like vAllow_n		(for V9938 MSX2 VDP)
+//				ff_legacy_vga	<= ~ff_DisplayMode[0];				// behaves like vAllow_n		(for V9938 MSX2 VDP)
 				if( !legacy_sel ) begin								// Assignment of Legacy Output	(for V9958 MSX2+/tR VDP)
-					ff_legacy_vga	<= ~ff_DisplayMode[0];					// to VGA
+					ff_legacy_vga	<= ~ff_DisplayMode[0];			// to VGA
 				end
 				else begin
-					ff_legacy_vga	<= ff_DisplayMode[0];					// to VGA+
+					ff_legacy_vga	<= ff_DisplayMode[0];			// to VGA+
 				end
 			end
 		endcase
@@ -1009,14 +1022,18 @@ module emsx_top #(
 		.OpllAmp			( OpllAmp			),
 		.Scc1Amp			( Scc1AmpL			),
 		.Scc2Amp			( Scc2AmpL			),
+		.Opl3Amp			( opl3_sound_s		),
 		.tr_pcm_wave_out	( tr_pcm_wave_out	),
 		.OpllVol			( OpllVol			),
 		.SccVol				( SccVol			),
 		.PsgVol				( PsgVol			),
+		.Opl3Vol			( Opl3Vol			),
 		.MstrVol			( MstrVol			),
 		.KeyClick			( KeyClick			),
 		.DACin				( DACin				)
 	);
+
+	assign Opl3Vol		= ~{ 3 {opl3_enabled} } | MstrVol;
 
 	assign pDacOut		= DACout;
 	assign pDacLMute	= ( pseudoStereo == 1'b1 && ff_CmtScro == 1'b0 ) ? 1'b1 : 1'b0;
@@ -1312,6 +1329,7 @@ module emsx_top #(
 		.PVIDEOCS_N			( VideoCS_n							),
 		.PVIDEODHCLK		( VideoDHClk						),
 		.PVIDEODLCLK		( VideoDLClk						),
+		.BLANK_o			( blank_o							),
 		.DISPRESO			( Reso_v							),
 		.NTSC_PAL_TYPE		( ntsc_pal_type						),
 		.FORCED_V_MODE		( forced_v_mode						),
@@ -1371,7 +1389,7 @@ module emsx_top #(
 		.wavr				( 						)
 	);
 
-	assign Scc1Type		= ( ff_Slot1Mode == 1'b0 ) ? 2'b00: 2'b10;
+	assign Scc1Type		= { ff_Slot1Mode, 1'b0 };
 
 	megaram u_megaram_for_slot2 (
 		.clk21m				( clk21m				),
@@ -1406,45 +1424,9 @@ module emsx_top #(
 		.wav				( OpllAmp				)
 	);
 
-	tr_pcm u_tr_pcm (		// 2019/11/29 t.hara added
-		.clk21m				( clk21m				),
-		.reset				( reset					),
-		.req				( tr_pcm_req			),
-		.ack				( 						),
-		.wrt				( wrt					),
-		.adr				( adr[0]				),
-		.dbi				( tr_pcm_dbi			),
-		.dbo				( dbo					),
-		.wave_in			( tr_pcm_wave_in		),
-		.wave_out			( tr_pcm_wave_out		)
-	);
-
-	assign tr_pcm_wave_in	= 8'd0;
-
-	tr_midi #(
-		.c_base_clk			( 2147727			)	// clk21m is 21.47727MHz
-	) u_tr_midi (
-		.clk21m				( clk21m			),
-		.reset				( reset				),
-		.req				( tr_midi_req		),
-		.ack				( 					),
-		.wrt				( wrt				),
-		.adr				( adr[2:0]			),
-		.dbi				( tr_midi_dbi		),
-		.dbo				( dbo				),
-		.pMidiTxD			( pMidiTxD			),
-		.pMidiRxD			( pMidiRxD			),
-		.pMidiIntr			( tr_midi_intr		)
-	);
-
-	// OPLL enabler
+	// OPLL wait enabler
 	always @( posedge clk21m ) begin
-		if( ff_clksel == 1'b1 || ff_clksel5m_n == 1'b0 ) begin
-			OpllEnaWait <= 1'b1;
-		end
-		else begin
-			OpllEnaWait <= 1'b0;
-		end
+		OpllEnaWait <= ~(ff_clksel ^ ff_clksel5m_n);
 	end
 
 	interpo #(
@@ -1474,6 +1456,69 @@ module emsx_top #(
 		.reset				( reset				), 
 		.DACin				( lpf5_wave			), 
 		.DACout				( DACout			)
+	);
+
+	// HDMI sound output
+	assign pcm_o = { 2'b00, lpf5_wave };
+
+	tr_pcm u_tr_pcm (		// 2019/11/29 t.hara added
+		.clk21m				( clk21m				),
+		.reset				( reset					),
+		.req				( tr_pcm_req			),
+		.ack				( 						),
+		.wrt				( wrt					),
+		.adr				( adr[0]				),
+		.dbi				( tr_pcm_dbi			),
+		.dbo				( dbo					),
+		.wave_in			( tr_pcm_wave_in		),
+		.wave_out			( tr_pcm_wave_out		)
+	);
+
+	assign tr_pcm_wave_in	= 8'd0;
+
+	wifi u_wifi (
+		.clk_i				( clk21m				),
+		.wait_o				( esp_wait_s			),
+		.reset_i			( xSltRst_n				),			 // swioRESET_n was purposely excluded here
+		.iorq_i				( pSltIorq_n			),
+		.wrt_i				( pSltWr_n				),
+		.rd_i				( pSltRd_n				),
+		.tx_i				( esp_tx_i				),
+		.rx_o				( esp_rx_o				),
+		.adr_i				( adr					),
+		.db_i				( dbo					),
+		.db_o				( esp_dout_s			)
+	);
+
+	tr_midi #(
+		.c_base_clk			( 2147727			)	// clk21m is 21.47727MHz
+	) u_tr_midi (
+		.clk21m				( clk21m			),
+		.reset				( reset				),
+		.req				( tr_midi_req		),
+		.ack				( 					),
+		.wrt				( wrt				),
+		.adr				( adr[2:0]			),
+		.dbi				( tr_midi_dbi		),
+		.dbo				( dbo				),
+		.pMidiTxD			( pMidiTxD			),
+		.pMidiRxD			( pMidiRxD			),
+		.pMidiIntr			( tr_midi_intr		)
+	);
+
+	opl3 #(
+		.OPLCLK				( 86000000			)	//	opl_clk in Hz
+	) u_opl3 (
+		.clk				( clk21m			),
+		.clk_opl			( memclk			),	//	86MHz
+		.rst_n				( ~reset			),
+		.irq_n				(					),
+		.addr				( adr[1:0]			),	// OPL and OPL2 uses adr(0) only
+		.dout				( opl3_dout_s		),
+		.din				( dbo				),
+		.we					( opl3_req			),
+		.sample_l			( opl3_sound_s		),
+		.sample_r			(					)
 	);
 
 	s1990 u_s1990 (
@@ -1580,8 +1625,6 @@ module emsx_top #(
 		.warmRESET			( warmRESET			),
 		.WarmMSXlogo		( WarmMSXlogo		),	// here to reduce LEs
 
-		.ZemmixNeo			( ZemmixNeo			),
-
 		.JIS2_ena			( JIS2_ena			),
 		.portF4_mode		( portF4_mode		),
 		.ff_ldbios_n		( w_ldbios_n		),
@@ -1592,7 +1635,9 @@ module emsx_top #(
 		.iSlt1_linear		( iSlt1_linear		),
 		.iSlt2_linear		( iSlt2_linear		),
 		.Slot0_req			( Slot0_req			),	// here to reduce LEs
-		.Slot0Mode			( Slot0Mode			)
+		.Slot0Mode			( Slot0Mode			),
+		.vga_scanlines		(					),
+		.btn_scan			(					)
 	);
 
 	// OCM-Kai Control Device		Added by t.hara in May/11th/2020
@@ -1612,11 +1657,19 @@ module emsx_top #(
 		.panamega_is_linear			( PanaMegaIsLinear			)
 	);
 
+	ocmkai_debugger u_ocmkai_debugger (
+		.clk21m						( clk21m					),
+		.reset						( reset						),
+		.processor_mode				( processor_mode			),
+		.z80_pc						( z80_pc					),
+		.r800_pc					( r800_pc					),
+		.p_7seg_address_0			( p_7seg_address_0			),
+		.p_7seg_address_1			( p_7seg_address_1			),
+		.p_7seg_address_2			( p_7seg_address_2			),
+		.p_7seg_address_3			( p_7seg_address_3			)
+	);
+
 	assign p_7seg_cpu_type	= ( ~processor_mode ) ? c_7seg_r : c_7seg_z;
-	assign p_7seg_address_0	= 7'b1111111;
-	assign p_7seg_address_1	= 7'b1111111;
-	assign p_7seg_address_2	= 7'b1111111;
-	assign p_7seg_address_3	= 7'b1111111;
 	assign p_7seg_debug		= { ~w_led_internal_firmware, 4'b1111, req_reset_primary_slot, w_ldbios_n };
 
     // debug enabler 'SHIFT+PAUSE'

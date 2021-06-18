@@ -31,10 +31,10 @@
 --
 -- Revision History
 --
--- 02nd,Jun,2021 modified by KdL
+-- 2nd,Jun,2021 modified by KdL
 --  - LMMV is reverted to previous speed in accordance with current VDP module
 --
--- 09th,Jan,2020 modified by KdL
+-- 9th,Jan,2020 modified by KdL
 --  - LMMV fix which improves the Sunrise logo a bit (temporary solution?)
 --    Some glitches appear to be unrelated to the VDP_COMMAND entity and
 --    the correct speed is not yet reached

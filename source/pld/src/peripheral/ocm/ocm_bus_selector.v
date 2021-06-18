@@ -31,6 +31,8 @@
 //
 // ----------------------------------------------------------------------------
 //	History
+//	June/16th/2021 Added OPL3 by t.hara
+//
 //	July/12th/2020 Added Panasonic MegaROM by t.hara
 //
 //	May/23th/2020 Created by t.hara
@@ -41,7 +43,7 @@
 //	Feb/22th/2021 t.hara
 //		Added rom_mode port.
 //		When rom_mode=0, some segments of MemoryMapper will be write-protected.
-
+//
 module ocm_bus_selector (
 	input			reset,
 	input			clk21m,
@@ -106,6 +108,7 @@ module ocm_bus_selector (
 	input	[ 7:0]	Scc1Dbi,
 	input	[ 7:0]	Scc2Dbi,
 	input	[ 7:0]	RamDbi,
+	input	[ 7:0]	Opl3Dbi,
 	input			RamAck,
 	input			Scc1Ack,
 	input			Scc2Ack,
@@ -119,6 +122,7 @@ module ocm_bus_selector (
 	input	[ 1:0]	Slot1Mode,
 	input	[ 1:0]	Slot2Mode,
 	input			rom_mode,					//	0: DRAM mode, 1: ROM mode
+	input			opl3_enabled,
 	output			mem_slot0_0,
 	output			mem_slot0_1,
 	output			mem_slot0_2,
@@ -154,6 +158,7 @@ module ocm_bus_selector (
 	output			system_flags_req,
 	output			tr_pcm_req,
 	output			tr_midi_req,
+	output			opl3_req,
 	input			req_reset_primary_slot,
 	output			ack_reset_primary_slot
 );
@@ -335,6 +340,12 @@ module ocm_bus_selector (
 			else if( !w_mem && { ff_iSltAdr[ 7:2 ], 2'd0 } == 8'hFC                        ) begin		// Memory-mapper 4096 kB
 				ff_dlydbi <= MapDbi;
 			end
+			else if( !w_mem && { ff_iSltAdr[ 7:3 ], 3'd0 } == 8'hC0 && opl3_enabled        ) begin		// OPL3
+				ff_dlydbi <= Opl3Dbi;
+			end
+//			else if( !w_mem && { ff_iSltAdr[ 7:1 ], 1'd0 } == 8'h7C                        ) begin		// OPL3
+//				ff_dlydbi <= Opl3Dbi;
+//			end
 			else begin
 				ff_dlydbi <= 8'hFF;
 			end

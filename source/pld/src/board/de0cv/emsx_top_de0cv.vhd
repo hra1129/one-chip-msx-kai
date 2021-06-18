@@ -174,9 +174,6 @@ architecture RTL of emsx_top_de0cv is
 
     -- CORE
     component emsx_top
-        generic(
-            deocmpldcv      : integer := 0
-        );
         port(
             -- Clock, Reset ports
             clk21m          : in    std_logic;                          -- VDP Clock ... 21.48MHz
@@ -282,8 +279,22 @@ architecture RTL of emsx_top_de0cv is
             EPC_CS          : out   std_logic;
             EPC_OE          : out   std_logic;
             EPC_DI          : out   std_logic;
-            EPC_DO          : in    std_logic
+            EPC_DO          : in    std_logic;
 
+			-- DE0CV, SM-X, Multicore 2 and SX-2 ports
+			clk21m_out		: out	std_logic;
+			clk_hdmi		: out	std_logic;
+			esp_rx_o		: out	std_logic;
+			esp_tx_i		: in	std_logic;
+			pcm_o			: out	std_logic_vector( 15 downto 0 );
+			blank_o			: out	std_logic;
+			ear_i			: in	std_logic;
+			mic_o			: out	std_logic;
+			midi_o			: out	std_logic;
+			midi_active_o	: out	std_logic;
+			vga_status		: out	std_logic;
+			vga_scanlines	: inout	std_logic_vector( 1 downto 0 );
+			btn_scan		: out	std_logic
         );
     end component;
 
@@ -341,9 +352,6 @@ begin
         port map(EPC_CK, EPC_CS, EPC_OE, EPC_DI, 'Z', 'Z', 'Z', not EPC_OE, '0', '0', '0', open, EPC_DO, open, open);
 
     U92 : emsx_top
-        generic map(
-            deocmpldcv => 1
-        )
         port map(
             clk21m,
             memclk,
@@ -439,7 +447,21 @@ begin
             EPC_CS,
             EPC_OE,
             EPC_DI,
-            EPC_DO
+            EPC_DO,
+
+			open,		--	clk21m_out		
+			open,		--	clk_hdmi		
+			open,		--	esp_rx_o		
+			'0',		--	esp_tx_i		
+			open,		--	pcm_o			
+			open,		--	blank_o			
+			'0',		--	ear_i			
+			open,		--	mic_o			
+			open,		--	midi_o			
+			open,		--	midi_active_o	
+			open,		--	vga_status		
+			open,		--	vga_scanlines	
+			open		--	btn_scan		
         );
 
 end RTL;

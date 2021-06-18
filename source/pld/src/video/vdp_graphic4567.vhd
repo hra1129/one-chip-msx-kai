@@ -63,7 +63,7 @@
 -------------------------------------------------------------------------------
 -- Revision History
 --
--- 12th,August,2006 created by Kunihiko Ohnaka
+-- 12nd,August,2006 created by Kunihiko Ohnaka
 -- JP: VDPのコアの実装とスクリーンモードの実装を分離した
 --
 -- 29th,October,2006 modified by Kunihiko Ohnaka
@@ -73,10 +73,10 @@
 -- 20th,March,2008 modified by t.hara
 -- JP: リファクタリング, VDP_PACKAGE の参照を削除
 --
--- 9th, April,2008 modified by t.hara
+-- 9th,April,2008 modified by t.hara
 -- Supported YJK mode.
 --
--- 11th, September,2019 modified by Oduvaldo Pavan Junior
+-- 11st,September,2019 modified by Oduvaldo Pavan Junior
 -- Fixed the lack of page flipping (R13) capability
 --
 -- Added the undocumented feature where R1 bit #2 change the blink counter

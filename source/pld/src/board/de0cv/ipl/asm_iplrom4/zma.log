@@ -16,7 +16,7 @@ Programmed by t.hara
 000001: 31 ff ff
 
 [	LD BC , END_CODE - START_CODE] Z80:11cyc, R800:3cyc
-000004: 01 95 07
+000004: 01 96 07
 
 [	LD DE , DRAM_CODE_ADDRESS] Z80:11cyc, R800:3cyc
 000007: 11 00 f0
@@ -109,7 +109,7 @@ Programmed by t.hara
 00f030: 32 af f6
 
 [	LD HL , MESSAGE_BIOS_READ_ERROR] Z80:11cyc, R800:3cyc
-00f033: 21 70 f7
+00f033: 21 71 f7
 
 [	CALL PUTS] Z80:18cyc, R800:5cyc
 00f036: cd b3 f6
@@ -142,7 +142,7 @@ Programmed by t.hara
 00f046: 11 00 3c
 
 [	LD HL , MESSAGE_SROM_BOOT] Z80:11cyc, R800:3cyc
-00f049: 21 5c f7
+00f049: 21 5d f7
 
 [	JR TRY_COMMON] Z80:13cyc, R800:3cyc
 00f04c: 18 07
@@ -157,7 +157,7 @@ Programmed by t.hara
 00f051: d8
 
 [	LD HL , MESSAGE_SD_BOOT] Z80:11cyc, R800:3cyc
-00f052: 21 4a f7
+00f052: 21 4b f7
 
 [TRY_COMMON :]
 	label address: 0x00f055
@@ -172,10 +172,10 @@ Programmed by t.hara
 00f059: d8
 
 [	LD [ CURRENT_SECTOR_LOW ] , DE] Z80:22cyc, R800:8cyc
-00f05a: ed 53 91 f7
+00f05a: ed 53 92 f7
 
 [	LD [ CURRENT_SECTOR_HIGH ] , BC] Z80:22cyc, R800:8cyc
-00f05e: ed 43 93 f7
+00f05e: ed 43 94 f7
 
 [	LD A , [ BUFFER + BIOS_IMAGE_FLAG ]] Z80:14cyc, R800:6cyc
 00f062: 3a 04 c0
@@ -349,10 +349,10 @@ Programmed by t.hara
 00f0c1: c5
 
 [	LD DE , [ CURRENT_SECTOR_LOW ]] Z80:22cyc, R800:8cyc
-00f0c2: ed 5b 91 f7
+00f0c2: ed 5b 92 f7
 
 [	LD BC , [ CURRENT_SECTOR_HIGH ]] Z80:22cyc, R800:8cyc
-00f0c6: ed 4b 93 f7
+00f0c6: ed 4b 94 f7
 
 [	LD B , 16384 / 512] Z80:8cyc, R800:2cyc
 00f0ca: 06 20
@@ -364,10 +364,10 @@ Programmed by t.hara
 00f0cf: cd 83 f1
 
 [	LD [ CURRENT_SECTOR_LOW ] , DE] Z80:22cyc, R800:8cyc
-00f0d2: ed 53 91 f7
+00f0d2: ed 53 92 f7
 
 [	LD [ CURRENT_SECTOR_HIGH ] , BC] Z80:22cyc, R800:8cyc
-00f0d6: ed 43 93 f7
+00f0d6: ed 43 94 f7
 
 [	POP BC] Z80:11cyc, R800:5cyc
 00f0da: c1
@@ -2270,73 +2270,74 @@ Programmed by t.hara
 00f6e9: 6f 72 20 4f 6e 65 43 68
 00f6f1: 69 70 4d 53 58 2e 20 20
 
-[	DS "                         Revision 4.0.4 "]
+[	DS "                         Revision 4.0.5 "]
 00f6f9: 20 20 20 20 20 20 20 20
 00f701: 20 20 20 20 20 20 20 20
 00f709: 20 20 20 20 20 20 20 20
 00f711: 20 52 65 76 69 73 69 6f
-00f719: 6e 20 34 2e 30 2e 34 20
+00f719: 6e 20 34 2e 30 2e 35 20
 
-[	DS "       OCM-Kai Build date Feb.28th.2021 "]
+[	DS "       OCM-Kai Build date June.17th.2021 "]
 00f721: 20 20 20 20 20 20 20 4f
 00f729: 43 4d 2d 4b 61 69 20 42
 00f731: 75 69 6c 64 20 64 61 74
-00f739: 65 20 46 65 62 2e 32 38
-00f741: 74 68 2e 32 30 32 31 20
+00f739: 65 20 4a 75 6e 65 2e 31
+00f741: 37 74 68 2e 32 30 32 31
+00f749: 20
 
 [	DB 0]
-00f749: 00
+00f74a: 00
 
 [MESSAGE_SD_BOOT ::]
-	global label address: 0x00f74a
+	global label address: 0x00f74b
 
 [	DS "Boot from SD Card"]
-00f74a: 42 6f 6f 74 20 66 72 6f
-00f752: 6d 20 53 44 20 43 61 72
-00f75a: 64
+00f74b: 42 6f 6f 74 20 66 72 6f
+00f753: 6d 20 53 44 20 43 61 72
+00f75b: 64
 
 [	DB 0]
-00f75b: 00
+00f75c: 00
 
 [MESSAGE_SROM_BOOT ::]
-	global label address: 0x00f75c
+	global label address: 0x00f75d
 
 [	DS "Boot from SerialROM"]
-00f75c: 42 6f 6f 74 20 66 72 6f
-00f764: 6d 20 53 65 72 69 61 6c
-00f76c: 52 4f 4d
+00f75d: 42 6f 6f 74 20 66 72 6f
+00f765: 6d 20 53 65 72 69 61 6c
+00f76d: 52 4f 4d
 
 [	DB 0]
-00f76f: 00
+00f770: 00
 
 [MESSAGE_BIOS_READ_ERROR ::]
-	global label address: 0x00f770
+	global label address: 0x00f771
 
 [	DS "[ERROR!] Cannot read BIOS image."]
-00f770: 5b 45 52 52 4f 52 21 5d
-00f778: 20 43 61 6e 6e 6f 74 20
-00f780: 72 65 61 64 20 42 49 4f
-00f788: 53 20 69 6d 61 67 65 2e
+00f771: 5b 45 52 52 4f 52 21 5d
+00f779: 20 43 61 6e 6e 6f 74 20
+00f781: 72 65 61 64 20 42 49 4f
+00f789: 53 20 69 6d 61 67 65 2e
 
 [	DB 0]
-00f790: 00
+00f791: 00
 
 [	INCLUDE ".//ocm_iplrom_message.asm"] end
 
 [CURRENT_SECTOR_LOW :]
-	label address: 0x00f791
+	label address: 0x00f792
 
 [	DW 0]
-00f791: 00 00
+00f792: 00 00
 
 [CURRENT_SECTOR_HIGH :]
-	label address: 0x00f793
+	label address: 0x00f794
 
 [	DW 0]
-00f793: 00 00
+00f794: 00 00
 
 [END_CODE ::]
-	global label address: 0x00f795
+	global label address: 0x00f796
 
 << label >>
 BIOS_IMAGE_COMMAND_BLOCKS 5 ( 0x5 )
@@ -2357,10 +2358,10 @@ CALCULATE_FIRST_SECTOR_IN_BIOS_IMAGE:LOOP1 63077 ( 0xf665 )
 CALCULATE_FIRST_SECTOR_IN_BIOS_IMAGE:LOOP2 63098 ( 0xf67a )
 CALCULATE_FIRST_SECTOR_IN_BIOS_IMAGE:SKIP1 63087 ( 0xf66f )
 CARD_TYPE 62761 ( 0xf529 )
-CURRENT_SECTOR_HIGH 63379 ( 0xf793 )
-CURRENT_SECTOR_LOW 63377 ( 0xf791 )
+CURRENT_SECTOR_HIGH 63380 ( 0xf794 )
+CURRENT_SECTOR_LOW 63378 ( 0xf792 )
 DRAM_CODE_ADDRESS 61440 ( 0xf000 )
-END_CODE 63381 ( 0xf795 )
+END_CODE 63382 ( 0xf796 )
 END_LOOP 61497 ( 0xf039 )
 ENTRY_POINT 0 ( 0x0 )
 EPCS_ERASE_BULK 199 ( 0xc7 )
@@ -2400,10 +2401,10 @@ MBR_PARTITION_LBA_BEGIN_SECTOR 8 ( 0x8 )
 MBR_PARTITION_TOTAL_SECTORS 12 ( 0xc )
 MBR_PARTITION_TYPE 4 ( 0x4 )
 MEGASD_SD_REGISTER 16384 ( 0x4000 )
-MESSAGE_BIOS_READ_ERROR 63344 ( 0xf770 )
+MESSAGE_BIOS_READ_ERROR 63345 ( 0xf771 )
 MESSAGE_INITIAL_TEXT 63185 ( 0xf6d1 )
-MESSAGE_SD_BOOT 63306 ( 0xf74a )
-MESSAGE_SROM_BOOT 63324 ( 0xf75c )
+MESSAGE_SD_BOOT 63307 ( 0xf74b )
+MESSAGE_SROM_BOOT 63325 ( 0xf75d )
 PBR_BIOS_PARAMETER_BLOCK 11 ( 0xb )
 PBR_BOOTSTRAP_CODE 62 ( 0x3e )
 PBR_BYTES_PER_SECTOR 11 ( 0xb )
