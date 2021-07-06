@@ -216,7 +216,7 @@ BEGIN
                 WHEN "00" =>    FF_FIFO0    <= FIFODATA_OUT;
                 WHEN "01" =>    FF_FIFO1    <= FIFODATA_OUT;
                 WHEN "10" =>    FF_FIFO2    <= FIFODATA_OUT;
-                WHEN "11" =>    FF_FIFO3    <= FIFODATA_OUT;
+                WHEN OTHERS =>  FF_FIFO3    <= FIFODATA_OUT;
                 END CASE;
             END IF;
         END IF;

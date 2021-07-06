@@ -933,7 +933,6 @@ set_global_assignment -name VHDL_FILE ../../src/video/vdp_package.vhd
 set_global_assignment -name VHDL_FILE ../../src/video/vdp_ntsc_pal.vhd
 set_global_assignment -name VHDL_FILE ../../src/video/vdp_linebuf.vhd
 set_global_assignment -name VHDL_FILE ../../src/video/vdp_interrupt.vhd
-set_global_assignment -name VHDL_FILE ../../src/video/vdp_hvcounter.vhd
 set_global_assignment -name VHDL_FILE ../../src/video/vdp_graphic4567.vhd
 set_global_assignment -name VHDL_FILE ../../src/video/vdp_graphic123m.vhd
 set_global_assignment -name VHDL_FILE ../../src/video/vdp_doublebuf.vhd

@@ -65,93 +65,97 @@
 --
 
 LIBRARY IEEE;
-    USE IEEE.STD_LOGIC_1164.ALL;
-    USE IEEE.STD_LOGIC_UNSIGNED.ALL;
-    USE IEEE.STD_LOGIC_ARITH.ALL;
-    USE WORK.VDP_PACKAGE.ALL;
+	USE IEEE.STD_LOGIC_1164.ALL;
+	USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+	USE IEEE.STD_LOGIC_ARITH.ALL;
+	USE WORK.VDP_PACKAGE.ALL;
 
 ENTITY VDP_INTERRUPT IS
-    PORT(
-        RESET                   : IN    STD_LOGIC;
-        CLK21M                  : IN    STD_LOGIC;
+	PORT(
+		RESET					: IN	STD_LOGIC;
+		CLK21M					: IN	STD_LOGIC;
 
-        H_CNT                   : IN    STD_LOGIC_VECTOR( 10 DOWNTO 0 );
-        Y_CNT                   : IN    STD_LOGIC_VECTOR(  7 DOWNTO 0 );
-        ACTIVE_LINE             : IN    STD_LOGIC;
-        H_BLANK_START           : IN    STD_LOGIC;
-        H_BLANK_END             : IN    STD_LOGIC;
-        V_BLANKING_START        : IN    STD_LOGIC;
-        V_BLANKING_END          : IN    STD_LOGIC;
-        CLR_VSYNC_INT           : IN    STD_LOGIC;
-        CLR_HSYNC_INT           : IN    STD_LOGIC;
-        REQ_VSYNC_INT_N         : OUT   STD_LOGIC;
-        REQ_HSYNC_INT_N         : OUT   STD_LOGIC;
-        REG_R0_HSYNC_INT_EN     : IN    STD_LOGIC;
-        REG_R19_HSYNC_INT_LINE  : IN    STD_LOGIC_VECTOR(  7 DOWNTO 0 )
-    );
+		H_CNT					: IN	STD_LOGIC_VECTOR( 10 DOWNTO 0 );
+		Y_CNT					: IN	STD_LOGIC_VECTOR(  7 DOWNTO 0 );
+		ACTIVE_LINE				: IN	STD_LOGIC;
+		H_BLANK_START			: IN	STD_LOGIC;
+		H_BLANK_END				: IN	STD_LOGIC;
+		V_BLANKING_START		: IN	STD_LOGIC;
+		V_BLANKING_END			: IN	STD_LOGIC;
+		CLR_VSYNC_INT			: IN	STD_LOGIC;
+		CLR_HSYNC_INT			: IN	STD_LOGIC;
+		VSYNC_INTR_TIMING		: IN	STD_LOGIC;
+		REQ_VSYNC_INT_N			: OUT	STD_LOGIC;
+		REQ_HSYNC_INT_N			: OUT	STD_LOGIC;
+		REG_R0_HSYNC_INT_EN		: IN	STD_LOGIC;
+		REG_R19_HSYNC_INT_LINE	: IN	STD_LOGIC_VECTOR(  7 DOWNTO 0 )
+	);
 END VDP_INTERRUPT;
 
 ARCHITECTURE RTL OF VDP_INTERRUPT IS
 
-    SIGNAL FF_VSYNC_INT_N           : STD_LOGIC;
-    SIGNAL FF_HSYNC_INT_N           : STD_LOGIC;
-    SIGNAL W_VSYNC_INTR_TIMING      : STD_LOGIC;
+	SIGNAL FF_VSYNC_INT_N			: STD_LOGIC;
+	SIGNAL FF_HSYNC_INT_N			: STD_LOGIC;
+--	SIGNAL W_VSYNC_INTR_TIMING		: STD_LOGIC;	--	2021/June/21st comment out by t.hara
 BEGIN
 
-    REQ_VSYNC_INT_N <= FF_VSYNC_INT_N;
-    REQ_HSYNC_INT_N <= FF_HSYNC_INT_N;
+	REQ_VSYNC_INT_N <= FF_VSYNC_INT_N;
+	REQ_HSYNC_INT_N <= FF_HSYNC_INT_N;
 
-    -----------------------------------------------------------------------------
-    -- VSYNC INTERRUPT REQUEST
-    -----------------------------------------------------------------------------
-    W_VSYNC_INTR_TIMING <=  '1' WHEN( H_CNT = LEFT_BORDER )ELSE
-                            '0';
+	-----------------------------------------------------------------------------
+	-- VSYNC INTERRUPT REQUEST
+	-----------------------------------------------------------------------------
+	--	2021/June/21st comment out by t.hara
+	--	W_VSYNC_INTR_TIMING <=	'1' WHEN( H_CNT = LEFT_BORDER )ELSE
+	--							'0';
 
-    PROCESS( RESET, CLK21M )
-    BEGIN
-        IF( RESET = '1' )THEN
-            FF_VSYNC_INT_N <= '1';
-        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
-            IF( CLR_VSYNC_INT = '1' )THEN
-                -- V-BLANKING INTERRUPT CLEAR
-                FF_VSYNC_INT_N <= '1';
-            ELSIF( W_VSYNC_INTR_TIMING = '1' AND V_BLANKING_START = '1' )THEN
-                -- V-BLANKING INTERRUPT REQUEST
-                FF_VSYNC_INT_N <= '0';
-            END IF;
-        END IF;
-    END PROCESS;
+	PROCESS( RESET, CLK21M )
+	BEGIN
+		IF( RESET = '1' )THEN
+			FF_VSYNC_INT_N <= '1';
+		ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
+			IF( CLR_VSYNC_INT = '1' )THEN
+				-- V-BLANKING INTERRUPT CLEAR
+				FF_VSYNC_INT_N <= '1';
+--			2021/June/21st modified by t.hara
+--			ELSIF( W_VSYNC_INTR_TIMING = '1' AND V_BLANKING_START = '1' )THEN
+			ELSIF( VSYNC_INTR_TIMING = '1' AND V_BLANKING_START = '1' )THEN
+				-- V-BLANKING INTERRUPT REQUEST
+				FF_VSYNC_INT_N <= '0';
+			END IF;
+		END IF;
+	END PROCESS;
 
-    --------------------------------------------------------------------------
-    --  W_HSYNC INTERRUPT REQUEST
-    --------------------------------------------------------------------------
-    PROCESS( RESET, CLK21M )
-    BEGIN
-        IF (RESET = '1') THEN
-            FF_HSYNC_INT_N <= '1';
-        ELSIF (CLK21M'EVENT AND CLK21M = '1') THEN
-            IF( REG_R0_HSYNC_INT_EN = '1' ) THEN
---              IF( CLR_HSYNC_INT = '1' OR (W_VSYNC_INTR_TIMING = '1' AND V_BLANKING_START = '1') )THEN
-                IF( CLR_HSYNC_INT = '1' )THEN                 -- 2021/June/5 modified by t.hara
-                    -- H-BLANKING INTERRUPT CLEAR
-                    FF_HSYNC_INT_N <= '1';
---              ELSIF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
-                ELSIF( Y_CNT = REG_R19_HSYNC_INT_LINE )THEN   -- 2021/June/18 modified by t.hara
-                    -- H-BLANKING INTERRUPT REQUEST
-                    FF_HSYNC_INT_N <= '0';
-                END IF;
-            ELSE
-                -- 2021/6/8 added by t.hara
---              IF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
-                IF( Y_CNT = REG_R19_HSYNC_INT_LINE )THEN      -- 2021/June/18 modified by t.hara
-                    IF( H_BLANK_START = '1' )THEN
-                        FF_HSYNC_INT_N <= '0';
-                    ELSIF( H_BLANK_END = '1' )THEN
-                        FF_HSYNC_INT_N <= '1';
-                    END IF;
-                END IF;
-            END IF;
-        END IF;
-    END PROCESS;
+	--------------------------------------------------------------------------
+	--	W_HSYNC INTERRUPT REQUEST
+	--------------------------------------------------------------------------
+	PROCESS( RESET, CLK21M )
+	BEGIN
+		IF (RESET = '1') THEN
+			FF_HSYNC_INT_N <= '1';
+		ELSIF (CLK21M'EVENT AND CLK21M = '1') THEN
+			IF( REG_R0_HSYNC_INT_EN = '1' ) THEN
+--				IF( CLR_HSYNC_INT = '1' OR (W_VSYNC_INTR_TIMING = '1' AND V_BLANKING_START = '1') )THEN
+				IF( CLR_HSYNC_INT = '1' )THEN				  -- 2021/June/5 modified by t.hara
+					-- H-BLANKING INTERRUPT CLEAR
+					FF_HSYNC_INT_N <= '1';
+--				ELSIF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
+				ELSIF( Y_CNT = REG_R19_HSYNC_INT_LINE )THEN	  -- 2021/June/23rd modified by t.hara
+					-- H-BLANKING INTERRUPT REQUEST
+					FF_HSYNC_INT_N <= '0';
+				END IF;
+			ELSE
+				-- 2021/6/8 added by t.hara
+--				IF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
+				IF( Y_CNT = REG_R19_HSYNC_INT_LINE )THEN	  -- 2021/June/23rd modified by t.hara
+					IF( H_BLANK_START = '1' )THEN
+						FF_HSYNC_INT_N <= '0';
+					ELSIF( H_BLANK_END = '1' )THEN
+						FF_HSYNC_INT_N <= '1';
+					END IF;
+				END IF;
+			END IF;
+		END IF;
+	END PROCESS;
 
 END RTL;
