@@ -76,7 +76,7 @@ ENTITY VDP_INTERRUPT IS
 		CLK21M					: IN	STD_LOGIC;
 
 		H_CNT					: IN	STD_LOGIC_VECTOR( 10 DOWNTO 0 );
-		Y_CNT					: IN	STD_LOGIC_VECTOR(  7 DOWNTO 0 );
+		Y_CNT					: IN	STD_LOGIC_VECTOR(  8 DOWNTO 0 );
 		ACTIVE_LINE				: IN	STD_LOGIC;
 		H_BLANK_START			: IN	STD_LOGIC;
 		H_BLANK_END				: IN	STD_LOGIC;
@@ -140,14 +140,14 @@ BEGIN
 					-- H-BLANKING INTERRUPT CLEAR
 					FF_HSYNC_INT_N <= '1';
 --				ELSIF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
-				ELSIF( Y_CNT = REG_R19_HSYNC_INT_LINE )THEN	  -- 2021/June/23rd modified by t.hara
+				ELSIF( Y_CNT = ("0" & REG_R19_HSYNC_INT_LINE) )THEN	  -- 2021/June/23rd modified by t.hara
 					-- H-BLANKING INTERRUPT REQUEST
 					FF_HSYNC_INT_N <= '0';
 				END IF;
 			ELSE
 				-- 2021/6/8 added by t.hara
 --				IF( ACTIVE_LINE = '1' AND Y_CNT = REG_R19_HSYNC_INT_LINE )THEN
-				IF( Y_CNT = REG_R19_HSYNC_INT_LINE )THEN	  -- 2021/June/23rd modified by t.hara
+				IF( Y_CNT = ("0" & REG_R19_HSYNC_INT_LINE) )THEN	  -- 2021/June/23rd modified by t.hara
 					IF( H_BLANK_START = '1' )THEN
 						FF_HSYNC_INT_N <= '0';
 					ELSIF( H_BLANK_END = '1' )THEN

@@ -591,7 +591,8 @@ begin
 		if (RESET = '1') then
 			ff_pre_y_cnt		<= (others =>'0');
 		elsif( CLK21M'event and CLK21M = '1' )then
-			ff_pre_y_cnt <= ff_monitor_line + ("0" & reg_r23_vstart_line);
+			ff_pre_y_cnt( 7 downto 0 )	<= ff_monitor_line( 7 downto 0 ) + reg_r23_vstart_line;
+			ff_pre_y_cnt( 8 )			<= ff_monitor_line( 8 );
 		end if;
 	end process;
 
