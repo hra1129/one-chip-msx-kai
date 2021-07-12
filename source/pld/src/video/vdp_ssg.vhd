@@ -95,7 +95,8 @@ entity VDP_SSG is
 		HD						: out	std_logic;
 		VD						: out	std_logic;
 		HSYNC					: out	std_logic;
-		ENAHSYNC				: out	std_logic;
+--		ENAHSYNC				: out	std_logic;
+		SYNC_AT_NEXT_LINE		: out	std_logic;
 		H_BLANK_START			: out	std_logic;
 		H_BLANK_END				: out	std_logic;
 		V_BLANKING_START		: out	std_logic;
@@ -201,6 +202,7 @@ begin
 	PREDOTCOUNTER_Y		<= ff_pre_y_cnt;
 	PREDOTCOUNTER_YP	<= ff_monitor_line;
 	HSYNC				<= '1' when( ff_h_cnt(1 downto 0) = "10" and ff_pre_x_cnt = "111111111" )else '0';
+	SYNC_AT_NEXT_LINE	<= w_h_cnt_end;
 
 	-----------------------------------------------------------------------------
 	--	base timing signal
@@ -617,7 +619,6 @@ begin
 		end if;
 	end process;
 
-
 	process( CLK21M, RESET ) begin
 		if (RESET = '1') then
 			ff_monitor_line		<= (others =>'0');
@@ -653,7 +654,6 @@ begin
 	process( CLK21M, RESET ) begin
 		if (RESET = '1') then
 			prewindow_y_sp		<= '0';			-- 2021/june/20th added by t.hara
-			enahsync			<= '0';			-- 2021/june/20th added by t.hara
 		elsif( CLK21M'event and CLK21M = '1' )then
 			if( w_hsync = '1' )then
 				-- jp: prewindow_xが 1になるタイミングと同じタイミングでy座標の計算
@@ -661,18 +661,35 @@ begin
 					prewindow_y_sp	<= '1';
 				else
 					if( ff_monitor_line = 0 ) then
-						enahsync		<= '1';
+						-- hold
 					elsif( (reg_r9_y_dots = '0' and ff_monitor_line = 191) or
 						   (reg_r9_y_dots = '1' and ff_monitor_line = 211) )then
 						prewindow_y_sp	<= '0';
-					elsif( (reg_r9_y_dots = '0' and reg_r9_pal_mode = '0' and ff_monitor_line = 234) or
-						   (reg_r9_y_dots = '1' and reg_r9_pal_mode = '0' and ff_monitor_line = 244) or
-						   (reg_r9_y_dots = '0' and reg_r9_pal_mode = '1' and ff_monitor_line = 258) or
-						   (reg_r9_y_dots = '1' and reg_r9_pal_mode = '1' and ff_monitor_line = 268) )then
-						enahsync		<= '0';
 					end if;
 				end if;
 			end if;
 		end if;
 	end process;
+
+--	process( CLK21M, RESET ) begin
+--		if (RESET = '1') then
+--			enahsync			<= '0';			-- 2021/june/20th added by t.hara
+--		elsif( CLK21M'event and CLK21M = '1' )then
+--			if( w_hsync = '1' )then
+--				-- jp: prewindow_xが 1になるタイミングと同じタイミングでy座標の計算
+--				if(	 w_v_blank_end = '1' )then
+--					-- hold
+--				else
+--					if( ff_monitor_line = 0 ) then
+--						enahsync		<= '1';
+--					elsif( (reg_r9_y_dots = '0' and reg_r9_pal_mode = '0' and ff_monitor_line = 234) or
+--						   (reg_r9_y_dots = '1' and reg_r9_pal_mode = '0' and ff_monitor_line = 244) or
+--						   (reg_r9_y_dots = '0' and reg_r9_pal_mode = '1' and ff_monitor_line = 258) or
+--						   (reg_r9_y_dots = '1' and reg_r9_pal_mode = '1' and ff_monitor_line = 268) )then
+--						enahsync		<= '0';
+--					end if;
+--				end if;
+--			end if;
+--		end if;
+--	end process;
 end rtl;
