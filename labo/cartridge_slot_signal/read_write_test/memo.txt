@@ -1,0 +1,31 @@
+read	70h <-- 010Dh
+write	01h --> 4000h
+read	71h <-- 010Eh
+write	02h --> 4000h
+read	7eh <-- 010Fh
+read	xxh <-- 4000h
+
+read	70h <-- 0110h
+write	01h --> 4000h
+read	71h <-- 0111h
+write	02h --> 4000h
+read	7eh <-- 0112h
+read	xxh <-- 4000h
+
+read	70h <-- 0113h
+write	01h --> 4000h
+read	71h <-- 0114h
+write	02h --> 4000h
+read	7eh <-- 0115h
+read	xxh <-- 4000h
+
+read	70h <-- 0116h
+write	01h --> 4000h
+read	71h <-- 0117h
+write	02h --> 4000h
+read	7eh <-- 0118h
+read	xxh <-- 4000h
+
+read	C3h <-- 0119h A0=1 A1=0
+read	0Dh <-- 011Ah A0=0 A1=1
+read	01h <-- 011Bh A0=1 A1=1

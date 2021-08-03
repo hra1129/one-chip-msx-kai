@@ -1,0 +1,2 @@
+zma RDWTTEST.ASM RDWRTEST.COM
+pause
