@@ -782,17 +782,12 @@ module emsx_top(
 
 	assign pSltBdir_n	=	1'bz;
 
-//	assign pSltDat		=	( pSltRd_n == 1'b1 ) ? 8'dz :
-//							( pSltIorq_n == 1'b0 && BusDir    == 1'b1  ) ? dbi :
-//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b00 ) ? dbi :
-//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b11 ) ? dbi :
-//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b01 && Scc1Type  != 2'b00 ) ? dbi :
-//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b10 && ff_Slot2Mode != 2'b00 ) ? dbi :
-//							8'dz;
-
 	assign pSltDat		=	( pSltRd_n == 1'b1 ) ? 8'dz :
 							( pSltIorq_n == 1'b0 && BusDir    == 1'b1  ) ? dbi :
-							( pSltMerq_n == 1'b0                       ) ? dbi :
+							( pSltMerq_n == 1'b0 && PriSltNum == 2'b00 ) ? dbi :
+							( pSltMerq_n == 1'b0 && PriSltNum == 2'b11 ) ? dbi :
+							( pSltMerq_n == 1'b0 && PriSltNum == 2'b01 && Scc1Type  != 2'b00 ) ? dbi :
+							( pSltMerq_n == 1'b0 && PriSltNum == 2'b10 && ff_Slot2Mode != 2'b00 ) ? dbi :
 							8'dz;
 
 	assign pSltRsv5		= 1'bz;
