@@ -64,14 +64,20 @@ module ppi (
 	output			Paus,
 	output			Scro,
 	output			Reso,
-	output	[ 7:0]	Fkeys
+	output	[ 7:0]	Fkeys,
+	input			autofire
 );
 	reg		[ 7:0]	ff_ppi_port_a;
 	reg		[ 7:0]	ff_ppi_port_c;
 	reg		[ 7:0]	ff_ExpSlot0;
 	reg		[ 7:0]	ff_ExpSlot3;
 	wire	[ 7:0]	w_key_x;
+	wire	[ 7:0]	w_key_x_af;
 	wire			w_caps;
+
+	// Space key autofire
+	assign w_key_x_af = ( ff_ppi_port_c[ 3: 0 ] != 4'd8 ) ? w_key_x: 
+						{ w_key_x[7:1], (w_key_x[0] | autofire) };
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset == 1'b1 )begin
@@ -168,7 +174,7 @@ module ppi (
 
 	// I/O port access on A8-ABh ... PPI(8255) register read
 	assign dbi			=	( adr[1:0] == 2'b00 ) ? ff_ppi_port_a: 
-							( adr[1:0] == 2'b01 ) ? w_key_x      : 
+							( adr[1:0] == 2'b01 ) ? w_key_x_af   : 
 							( adr[1:0] == 2'b10 ) ? ff_ppi_port_c: 8'hFF;
 
 	assign RemOut		= ff_ppi_port_c[4];

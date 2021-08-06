@@ -59,6 +59,7 @@
 --                 work as expected.
 --             - Add the description of NumLk status maintenance. (by t.hara)
 -- Jul 22 2020 - Change the inout/buffer port to in/out port.(by t.hara)
+-- Aug  6 2021 - Added control-key status in Fkeys(6). by t.hara
 --------------------------------------------------------------------------------
 --
 
@@ -81,7 +82,7 @@ entity eseps2 is
     Reso     : out std_logic;
 
     -- | b7  | b6   | b5   | b4   | b3  | b2  | b1  | b0  |
-    -- | SHI | --   | PgUp | PgDn | F9  | F10 | F11 | F12 |
+    -- | SHI | CTRL | PgUp | PgDn | F9  | F10 | F11 | F12 |
     Fkeys    : out std_logic_vector(7 downto 0);
 
     pPs2Clk  : inout std_logic;
@@ -151,6 +152,7 @@ begin
     variable Ps2NumL : std_logic;       -- NumLk status                            Added by t.hara in May/1st/2020
     variable Ps2Shif : std_logic;       -- real shift status
     variable Ps2Vshi : std_logic;       -- virtual shift status
+    variable Ps2Ctrl : std_logic;       -- real control status
     variable oFkeys  : std_logic_vector(7 downto 0);
 
     variable KeyId   : std_logic_vector(8 downto 0);
@@ -408,6 +410,10 @@ begin
               if Ps2brk = '0' then
                 NumL <= not NumL;
               end if;
+              Ps2Chg := '1';
+            elsif( Ps2Dat = X"14" and Ps2xE1 ='0' )then -- control make, Added by t.hara, 2021/Aug/6th
+              Ps2Ctrl:= not Ps2Ctrl;
+              oFkeys(6) := Ps2Ctrl;
               Ps2Chg := '1';
             elsif( Ps2Dat = X"F0" )then -- break code
               Ps2brk := '1';

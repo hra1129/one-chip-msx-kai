@@ -97,9 +97,11 @@ module emsx_top(
 		inout			pPs2Dat,
 
 		// Joystick ports (Port_A, Port_B)
-		inout	[5:0]	pJoyA,
+		input	[5:0]	pJoyA_in,
+		output	[1:0]	pJoyA_out,
 		output			pStrA,
-		inout	[5:0]	pJoyB,
+		input	[5:0]	pJoyB_in,
+		output	[1:0]	pJoyB_out,
 		output			pStrB,
 
 		// SD/MMC slot ports
@@ -513,6 +515,14 @@ module emsx_top(
 	wire	[7:0]	tr_midi_dbi;
 	wire			tr_midi_intr;
 
+	// Autofire,  Added by t.hara, 2021/Aug/6th
+	wire			af_increment;
+	wire			af_decrement;
+	wire			af_mask;
+	wire	[5:0]	w_pJoyA_in;
+	wire	[5:0]	w_pJoyB_in;
+	wire	[7:0]	w_PpiPortB;
+
 	// Sound output filter
 	wire	[DAC_msbi:0]	lpf1_wave;
 	wire	[DAC_msbi:0]	lpf5_wave;
@@ -782,12 +792,17 @@ module emsx_top(
 
 	assign pSltBdir_n	=	1'bz;
 
+//	assign pSltDat		=	( pSltRd_n == 1'b1 ) ? 8'dz :
+//							( pSltIorq_n == 1'b0 && BusDir    == 1'b1  ) ? dbi :
+//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b00 ) ? dbi :
+//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b11 ) ? dbi :
+//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b01 && Scc1Type  != 2'b00 ) ? dbi :
+//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b10 && ff_Slot2Mode != 2'b00 ) ? dbi :
+//							8'dz;
+
 	assign pSltDat		=	( pSltRd_n == 1'b1 ) ? 8'dz :
 							( pSltIorq_n == 1'b0 && BusDir    == 1'b1  ) ? dbi :
-							( pSltMerq_n == 1'b0 && PriSltNum == 2'b00 ) ? dbi :
-							( pSltMerq_n == 1'b0 && PriSltNum == 2'b11 ) ? dbi :
-							( pSltMerq_n == 1'b0 && PriSltNum == 2'b01 && Scc1Type  != 2'b00 ) ? dbi :
-							( pSltMerq_n == 1'b0 && PriSltNum == 2'b10 && ff_Slot2Mode != 2'b00 ) ? dbi :
+							( pSltMerq_n == 1'b0                       ) ? dbi :
 							8'dz;
 
 	assign pSltRsv5		= 1'bz;
@@ -824,7 +839,8 @@ module emsx_top(
 		.Paus					( Paus					),
 		.Scro					( Scro					),
 		.Reso					( Reso					),
-		.Fkeys					( FKeys					)
+		.Fkeys					( FKeys					),
+		.autofire				( af_mask				)
 	);
 
 	assign exp_slot_req		= req & ~iSltMerq_n;
@@ -1359,9 +1375,11 @@ module emsx_top(
 		.adr				( adr					),
 		.dbi				( PsgDbi				),
 		.dbo				( dbo					),
-		.joya				( pJoyA					),
+		.joya_in			( w_pJoyA_in			),
+		.joya_out			( pJoyA_out				),
 		.stra				( pStrA					),
-		.joyb				( pJoyB					),
+		.joyb_in			( w_pJoyB_in			),
+		.joyb_out			( pJoyB_out				),
 		.strb				( pStrB					),
 		.kana				( Kana					),
 		.cmtin				( CmtIn					),
@@ -1546,6 +1564,26 @@ module emsx_top(
 		.sw_internal_firmware	( ff_dip_req[9]				),
 		.led_internal_firmware	( w_led_internal_firmware	)
 	);
+
+	// Added by t.hara, 2021/Aug/6th
+	autofire u_autofire (
+		.clk21m				( clk21m				),
+		.reset				( reset					),
+		.count_en			( freerun_count[18]		),
+		.af_increment		( af_increment			),
+		.af_decrement		( af_decrement			),
+		.af_mask			( af_mask				),
+		.af_speed			( 						)
+	);
+
+	// | b7	 | b6	| b5   | b4	  | b3	| b2  | b1	| b0  |
+	// | SHI | CTRL | PgUp | PgDn | F9	| F10 | F11 | F12 |
+	assign af_increment = vFKeys[6] & ~vFKeys[5] & FKeys[5];
+	assign af_decrement = vFKeys[6] & ~vFKeys[4] & FKeys[4];
+
+	// Joypad autofire
+	assign w_pJoyA_in = { pJoyA_in[5], (pJoyA_in[4] | af_mask), pJoyA_in[3:0] };
+	assign w_pJoyB_in = { pJoyB_in[5], (pJoyB_in[4] | af_mask), pJoyB_in[3:0] };
 
 	system_flags u_system_flags (
 		.clk21m				( clk21m			),

@@ -985,6 +985,7 @@ set_global_assignment -name VHDL_FILE ../../src/peripheral/megasd/megasd.vhd
 set_global_assignment -name VHDL_FILE ../../src/peripheral/sram/ram.vhd
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/rtc/rtc.v
 set_global_assignment -name VHDL_FILE ../../src/peripheral/switch_io/swioports.vhd
+set_global_assignment -name VERILOG_FILE ../../src/peripheral/s1990/autofire.v
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/s1990/s1990.v
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/system_flags/system_flags.v
 set_global_assignment -name VHDL_FILE ../../src/r800/t800.vhd
