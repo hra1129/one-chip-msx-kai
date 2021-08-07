@@ -1,9 +1,9 @@
 --
 -- swioports.vhd
 --   Switched I/O ports ($40-$4F)
---   Revision 9
+--   Revision 10
 --
--- Copyright (c) 2011-2020 KdL
+-- Copyright (c) 2011-2021 KdL
 -- All rights reserved.
 --
 -- Redistribution and use of this source code or any derivative works, are
@@ -49,7 +49,7 @@ entity switched_io_ports is
         io40_n          : inout std_logic_vector(  7 downto 0 );            -- ID Manufacturers/Devices :   $08 (008), $D4 (212=1chipMSX), $FF (255=null)
         io41_id212_n    : inout std_logic_vector(  7 downto 0 );            -- $41 ID212 states         :   Smart Commands
         io42_id212      : inout std_logic_vector(  7 downto 0 );            -- $42 ID212 states         :   Virtual DIP-SW states
-        io43_id212      : inout std_logic_vector(  7 downto 0 );            -- $43 ID212 states         :   Lock Mask for port $42 functions, cmt and reset key
+        io43_id212      : inout std_logic_vector(  7 downto 0 );            -- $43 ID212 states         :   Lock Mask for port $42 functions, CMT and reset key
         io44_id212      : inout std_logic_vector(  7 downto 0 );            -- $44 ID212 states         :   Lights Mask have the green leds control when Lights Mode is On
         OpllVol         : inout std_logic_vector(  2 downto 0 );            -- OPLL Volume
         SccVol          : inout std_logic_vector(  2 downto 0 );            -- SCC-I Volume
@@ -67,7 +67,7 @@ entity switched_io_ports is
         io41_id008_n    : inout std_logic;                                  -- $41 ID008 BIT-0 state    :   0=5.37MHz, 1=3.58MHz (write_n only)
         swioKmap        : inout std_logic;                                  -- Keyboard layout selector
         CmtScro         : inout std_logic;                                  -- CMT state
-        swioCmt         : inout std_logic;                                  -- CMT enabler
+        swioCmt         : inout std_logic;                                  -- CMT enabler              :   This toggle is used for the Internal OPL3 on SM-X and SX-2
         LightsMode      : inout std_logic;                                  -- Custom green led states
         Red_sta         : inout std_logic;                                  -- Custom red led state
         LastRst_sta     : inout std_logic;                                  -- Last reset state         :   0=Cold Reset, 1=Warm Reset (MSX2+) / 1=Cold Reset, 0=Warm Reset (MSXtR)
@@ -84,7 +84,6 @@ entity switched_io_ports is
         ff_dip_req      : in    std_logic_vector(  7 downto 0 );            -- DIP-SW states/reqs
         ff_dip_ack      : inout std_logic_vector(  7 downto 0 );            -- DIP-SW acks
         -- 'KEYS' group
---      SdPaus          : in    std_logic;                                  -- dismissed
         Scro            : in    std_logic;
         ff_Scro         : in    std_logic;
         Reso            : in    std_logic;
@@ -97,8 +96,6 @@ entity switched_io_ports is
         swioRESET_n     : inout std_logic;                                  -- Reset Pulse
         warmRESET       : inout std_logic;                                  -- 0=Cold Reset, 1=Warm Reset
         WarmMSXlogo     : inout std_logic;                                  -- Show MSX logo with Warm Reset
-        -- 'MACHINES' group
-        ZemmixNeo       : inout std_logic;                                  -- Machine type             :   0=1chipMSX, 1=Zemmix Neo
         -- 'IPL-ROM' group
         JIS2_ena        : inout std_logic;                                  -- JIS2 enabler             :   0=JIS1 only (BIOS 384 kB), 1=JIS1+JIS2 (BIOS 512 kB)
         portF4_mode     : inout std_logic;                                  -- Port F4 mode             :   0=F4 Device Inverted (MSX2+), 1=F4 Device Normal (MSXtR)
@@ -110,20 +107,26 @@ entity switched_io_ports is
         iSlt1_linear    : inout std_logic;                                  -- Internal Slot1 Linear    :   0=Disabled, 1=Enabled
         iSlt2_linear    : inout std_logic;                                  -- Internal Slot2 Linear    :   0=Disabled, 1=Enabled
         Slot0_req       : inout std_logic;                                  -- Slot0 Primary Mode req   :   Warm Reset is necessary to complete the request
-        Slot0Mode       : inout std_logic                                   -- Current Slot0 state      :   0=Primary, 1=Expanded
+        Slot0Mode       : inout std_logic;                                  -- Current Slot0 state      :   0=Primary, 1=Expanded
+        vga_scanlines   : inout std_logic_vector(  1 downto 0 );            -- VGA Scanlines 0%, 25%, 50% or 75% (default is 0%)
+        btn_scan        : in    std_logic                                   -- Scanlines button
     );
 end switched_io_ports;
 
 architecture RTL of switched_io_ports is
 
     signal  swio_ack    : std_logic;
+    signal  prev_scan   : std_logic_vector(  1 downto 0 ) := "11";
 
-    -- 'OCM-PLD' version number (x \ 10).(y mod 10).(z[0~3])                -- OCM-PLD version 0.0(.0) ~ 25.5(.3)
-    constant ocm_pld_xy : std_logic_vector(  7 downto 0 ) := "00100110";    -- 38
+    -- Machine Type ID (0-15)                                               -- 0 = 1chipMSX, 1 = Zemmix Neo, 2 = SM-X, 3 = SX-2, ..., 15 = Unknown
+    constant MachineID  : std_logic_vector(  3 downto 0 ) :=     "0000";    -- 0
+
+    -- OCM-PLD version number (x \ 10).(y mod 10).(z[0~3])                  -- OCM-PLD version 0.0(.0) ~ 25.5(.3)
+    constant ocm_pld_xy : std_logic_vector(  7 downto 0 ) := "00100111";    -- 39
     constant ocm_pld_z  : std_logic_vector(  1 downto 0 ) :=       "00";    -- 0
 
-    -- 'Switched I/O Ports' revision number (0-31)                          -- Switched I/O ports Revision 0 ~ 31
-    constant swioRevNr  : std_logic_vector(  4 downto 0 ) :=    "01001";    -- 9
+    -- Switched I/O Ports revision number (0-31)                            -- Switched I/O ports Revision 0 ~ 31
+    constant swioRevNr  : std_logic_vector(  4 downto 0 ) :=    "01010";    -- 10
 
 begin
     -- out assignment: 'ports $40-$4F'
@@ -151,13 +154,13 @@ begin
             Blink_ena & RstReq_sta & LastRst_sta & Red_sta & LightsMode & CmtScro & swioKmap & not io41_id008_n
                                                 when( (adr(3 downto 0) = "1000") and (io40_n = "00101011") )else
                 -- $49 ID212 states as below => read only
-                -- Machine Type IDs are "XX0000XX" for 1chipMSX, "XX0001XX" for Zemmix Neo, "XX0010XX" for SM-X, "XX1111XX" is Unknown, all the others are free IDs
-            forced_v_mode & (ntsc_pal_type and (not io42_id212(1) or io42_id212(2))) & ("000" & ZemmixNeo) & extclk3m & pseudoStereo
+            forced_v_mode & (ntsc_pal_type and (not io42_id212(1) or io42_id212(2))) & MachineID & extclk3m & pseudoStereo
                                                 when( (adr(3 downto 0) = "1001") and (io40_n = "00101011") )else
                 -- $4A ID212 states as below => read only
             iSlt2_linear & iSlt1_linear & legacy_sel & not centerYJK_R25_n & (not RatioMode + 1) & right_inverse
                                                 when( (adr(3 downto 0) = "1010") and (io40_n = "00101011") )else
-                -- $4B ID212 => free
+                -- $4B ID212 states as below => read only
+            "000000" & vga_scanlines            when( (adr(3 downto 0) = "1011") and (io40_n = "00101011") )else
                 -- $4C ID212 states of physical dip-sw => read only
             ff_dip_req                          when( (adr(3 downto 0) = "1100") and (io40_n = "00101011") )else
                 -- $4D ID212 VRAM Slot IDs => read/write_n
@@ -172,8 +175,7 @@ begin
     ack <=  swio_ack;
 
 --  =============================================================================================================
-    DefKmap     <=  '0';                        -- Default Keyboard     0=Japanese Layout   1=Non-Japanese Layout
-    ZemmixNeo   <=  '0';                        -- Machine Type         0=1chipMSX          1=Zemmix Neo
+    DefKmap     <=  '1';                        -- Default Keyboard     0=Japanese Layout   1=Non-Japanese Layout
 --  =============================================================================================================
 
     process( reset, clk21m )
@@ -309,168 +311,162 @@ begin
                         end if;
                     end if;
                     -- in assignment: 'Toggle Keys' (keyboard)
---                  if( SdPaus = '0' )then                                      -- dismissed
-                        if( Fkeys(7) = '0' )then                                -- SHIFT key    is  Off
-                            if( io43_id212(2) = '0' )then                       -- BIT[2]=0     of  Lock Mask
-                                if( Fkeys(5 downto 4) /= vFKeys(5 downto 4) )then
-                                    GreenLvEna  <=  '1';
-                                    LevCtrl <= "111";
-                                end if;
-                                if( Fkeys(4) /= vFkeys(4) )then                 -- PGDOWN       is  Master Volume Down
-                                    if( DEBUG_ENA = 1 )then
-                                        BREAK_POINT := BREAK_POINT - 1;
-                                    elsif( MstrVol /= "111" )then
-                                        LevCtrl <= not (MstrVol + 1);
-                                        MstrVol <= MstrVol + 1;
-                                    else
-                                        LevCtrl <= "000";
-                                    end if;
-                                end if;
-                                if( Fkeys(5) /= vFkeys(5) )then                 -- PGUP         is  Master Volume Up
-                                    if( DEBUG_ENA = 1 )then
-                                        BREAK_POINT := BREAK_POINT + 1;
-                                    elsif( MstrVol /= "000" )then
-                                        LevCtrl <= not (MstrVol - 1);
-                                        MstrVol <= MstrVol - 1;
-                                    end if;
+                    if( Fkeys(7) = '0' )then                                    -- SHIFT key    is  Off
+                        if( io43_id212(2) = '0' )then                           -- BIT[2]=0     of  Lock Mask
+                            if( Fkeys(5 downto 4) /= vFKeys(5 downto 4) )then
+                                GreenLvEna  <=  '1';
+                                LevCtrl <= "111";
+                            end if;
+                            if( Fkeys(6) = '0' and Fkeys(4) /= vFkeys(4) )then                     -- PGDOWN       is  Master Volume Down
+                                if( MstrVol /= "111" )then
+                                    LevCtrl <= not (MstrVol + 1);
+                                    MstrVol <= MstrVol + 1;
+                                else
+                                    LevCtrl <= "000";
                                 end if;
                             end if;
-                            if( io43_id212(0) = '0' )then                       -- BIT[0]=0     of  Lock Mask
-                                if( Fkeys(0) /= vFKeys(0) )then                 -- F12          is  TURBO selector
-                                    if( io41_id008_n = '1' and io42_id212(0) = '0' )then
-                                        io41_id008_n    <=  '0';                -- 3.58MHz      >>  5.37MHz
-                                    elsif( io41_id008_n = '0' and io42_id212(0) = '0' )then
-                                        if( extclk3m = '0' )then                -- Off          is  Triple Step
-                                            io41_id008_n    <=  '1';
-                                            io42_id212(0)   <=  '1';            -- 5.37MHz      >>  Custom Turbo
-                                        else                                    -- On           is  Double Step
-                                            io41_id008_n    <=  '1';            -- 5.37MHz      >>  3.58MHz
-                                        end if;
-                                    else
-                                        io42_id212(0)   <=  '0';                -- Custom Turbo >>  3.58MHz
-                                    end if;
+                            if( Fkeys(6) = '0' and Fkeys(5) /= vFkeys(5) )then                     -- PGUP         is  Master Volume Up
+                                if( MstrVol /= "000" )then
+                                    LevCtrl <= not (MstrVol - 1);
+                                    MstrVol <= MstrVol - 1;
                                 end if;
                             end if;
-                            if( io43_id212(1) = '0' )then                       -- BIT[1]=0     of  Lock Mask
-                                if( ff_Reso /= Reso )then                       -- PRNSCR       is  DISPLAY selector (next)
-                                    case io42_id212(2 downto 1) is
+                        end if;
+                        if( io43_id212(0) = '0' )then                           -- BIT[0]=0     of  Lock Mask
+                            if( Fkeys(0) /= vFKeys(0) )then                     -- F12          is  TURBO selector
+                                if( io41_id008_n = '1' and io42_id212(0) = '0' )then
+                                    io41_id008_n    <=  '0';                    -- 3.58MHz      >>  5.37MHz
+                                elsif( io41_id008_n = '0' and io42_id212(0) = '0' )then
+                                    if( extclk3m = '0' )then                    -- Off          is  Triple Step
+                                        io41_id008_n    <=  '1';
+                                        io42_id212(0)   <=  '1';                -- 5.37MHz      >>  Custom Turbo
+                                    else                                        -- On           is  Double Step
+                                        io41_id008_n    <=  '1';                -- 5.37MHz      >>  3.58MHz
+                                    end if;
+                                else
+                                    io42_id212(0)   <=  '0';                    -- Custom Turbo >>  3.58MHz
+                                end if;
+                            end if;
+                        end if;
+                        if( io43_id212(1) = '0' )then                           -- BIT[1]=0     of  Lock Mask
+                            if( ff_Reso /= Reso )then                           -- PRTSCR       is  DISPLAY selector (next)
+                                case io42_id212(2 downto 1) is
                                     when "00"   =>  io42_id212(2)           <=  '1';    --  Y/C     to  RGB
                                     when "10"   =>  io42_id212(2 downto 1)  <=  "01";   --  RGB     to  VGA
                                     when "01"   =>  io42_id212(2)           <=  '1';    --  VGA     to  VGA+
                                     when "11"   =>  io42_id212(2 downto 1)  <=  "00";   --  VGA+    to  Y/C
-                                    end case;
+                                end case;
+                            end if;
+                        end if;
+                        if( io43_id212(2) = '0' )then                           -- BIT[2]=0     of  Lock Mask
+                            if( Fkeys(3 downto 1) /= vFKeys(3 downto 1) )then
+                                GreenLvEna  <=  '1';
+                                LevCtrl     <=  "111";
+                            end if;
+                            if( Fkeys(1) /= vFKeys(1) )then                     -- F11          is  OPLL Volume Up
+                                if( OpllVol /= "111" )then
+                                    LevCtrl <= OpllVol + 1;
+                                    OpllVol <= OpllVol + 1;
                                 end if;
                             end if;
-                            if( io43_id212(2) = '0' )then                       -- BIT[2]=0     of  Lock Mask
-                                if( Fkeys(3 downto 1) /= vFKeys(3 downto 1) )then
-                                    GreenLvEna  <=  '1';
-                                    LevCtrl     <=  "111";
-                                end if;
-                                if( Fkeys(1) /= vFKeys(1) )then                 -- F11          is  OPLL Volume Up
-                                    if( OpllVol /= "111" )then
-                                        LevCtrl <= OpllVol + 1;
-                                        OpllVol <= OpllVol + 1;
-                                    end if;
-                                end if;
-                                if( Fkeys(2) /= vFKeys(2) )then                 -- F10          is  SCC-I Volume Up
-                                    if( SccVol /= "111" )then
-                                        LevCtrl <= SccVol + 1;
-                                        SccVol  <= SccVol + 1;
-                                    end if;
-                                end if;
-                                if( Fkeys(3) /= vFKeys(3) )then                 -- F9           is  PSG Volume Up
-                                    if( PsgVol /= "111" )then
-                                        LevCtrl <= PsgVol + 1;
-                                        PsgVol  <= PsgVol + 1;
-                                    end if;
-                                end if;
-                                if( ff_Scro /= Scro and portF4_mode = '0' )then -- SCRLK        is  CMT selector
-                                    swioCmt     <=  not swioCmt;
+                            if( Fkeys(2) /= vFKeys(2) )then                     -- F10          is  SCC-I Volume Up
+                                if( SccVol /= "111" )then
+                                    LevCtrl <= SccVol + 1;
+                                    SccVol  <= SccVol + 1;
                                 end if;
                             end if;
-                        else                                                    -- SHIFT key    is  On
-                            if( io43_id212(2) = '0' )then                       -- BIT[2]=0     of  Lock Mask
-                                if( Fkeys(5 downto 4) /= vFKeys(5 downto 4) )then
-                                    GreenLvEna  <=  '1';
-                                    LevCtrl <= "111";
-                                end if;
-                                if( Fkeys(4) /= vFkeys(4) )then                 -- SHIFT+PGDOWN is  Master Volume from max to middle, min or mute
-                                    if( MstrVol < "011" )then
-                                        LevCtrl <= "100";
-                                        MstrVol <= "011";
-                                    elsif( MstrVol < "110" )then
-                                        LevCtrl <= "001";
-                                        MstrVol <= "110";
-                                    else
-                                        LevCtrl <= "000";
-                                        MstrVol <= "111";
-                                    end if;
-                                end if;
-                                if( Fkeys(5) /= vFkeys(5) )then                 -- SHIFT+PGUP   is  Master Volume from mute to min, middle or max
-                                    if( MstrVol > "110" )then
-                                        LevCtrl <= "001";
-                                        MstrVol <= "110";
-                                    elsif( MstrVol > "011" )then
-                                        LevCtrl <= "100";
-                                        MstrVol <= "011";
-                                    else
-                                        MstrVol <= "000";
-                                    end if;
+                            if( Fkeys(3) /= vFKeys(3) )then                     -- F9           is  PSG Volume Up
+                                if( PsgVol /= "111" )then
+                                    LevCtrl <= PsgVol + 1;
+                                    PsgVol  <= PsgVol + 1;
                                 end if;
                             end if;
-                            if( io43_id212(1) = '0' )then                       -- BIT[1]=0     of  Lock Mask
-                                if( ff_Reso /= Reso )then                       -- SHIFT+PRNSCR is  DISPLAY selector (previous)
-                                    case io42_id212(2 downto 1) is
+                            if( ff_Scro /= Scro and portF4_mode = '0' )then     -- SCRLK        is  CMT toggle
+                                swioCmt     <=  not swioCmt;
+                            end if;
+                        end if;
+                    else                                                        -- SHIFT key    is  On (held down)
+                        if( io43_id212(2) = '0' )then                           -- BIT[2]=0     of  Lock Mask
+                            if( Fkeys(5 downto 4) /= vFKeys(5 downto 4) )then
+                                GreenLvEna  <=  '1';
+                                LevCtrl <= "111";
+                            end if;
+                            if( Fkeys(4) /= vFkeys(4) )then                     -- SHIFT+PGDOWN is  Master Volume from max to middle, min or mute
+                                if( MstrVol < "011" )then
+                                    LevCtrl <= "100";
+                                    MstrVol <= "011";
+                                elsif( MstrVol < "110" )then
+                                    LevCtrl <= "001";
+                                    MstrVol <= "110";
+                                else
+                                    LevCtrl <= "000";
+                                    MstrVol <= "111";
+                                end if;
+                            end if;
+                            if( Fkeys(5) /= vFkeys(5) )then                     -- SHIFT+PGUP   is  Master Volume from mute to min, middle or max
+                                if( MstrVol > "110" )then
+                                    LevCtrl <= "001";
+                                    MstrVol <= "110";
+                                elsif( MstrVol > "011" )then
+                                    LevCtrl <= "100";
+                                    MstrVol <= "011";
+                                else
+                                    MstrVol <= "000";
+                                end if;
+                            end if;
+                        end if;
+                        if( io43_id212(1) = '0' )then                           -- BIT[1]=0     of  Lock Mask
+                            if( ff_Reso /= Reso )then                           -- SHIFT+PRTSCR is  DISPLAY selector (previous)
+                                case io42_id212(2 downto 1) is
                                     when "11"   =>  io42_id212(2)           <=  '0';    --  VGA+    to  VGA
                                     when "01"   =>  io42_id212(2 downto 1)  <=  "10";   --  VGA     to  RGB
                                     when "10"   =>  io42_id212(2)           <=  '0';    --  RGB     to  Y/C
                                     when "00"   =>  io42_id212(2 downto 1)  <=  "11";   --  Y/C     to  VGA+
-                                    end case;
+                                end case;
+                            end if;
+                        end if;
+                        if( io43_id212(2) = '0' )then                           -- BIT[2]=0     of  Lock Mask
+                            if( Fkeys(3 downto 1) /= vFKeys(3 downto 1) )then
+                                GreenLvEna  <=  '1';
+                                LevCtrl     <=  "000";
+                            end if;
+                            if( Fkeys(1) /= vFKeys(1) )then                     -- SHIFT+F11    is  OPLL Volume Down
+                                if( OpllVol /= "000" )then
+                                    LevCtrl <= OpllVol - 1;
+                                    OpllVol <= OpllVol - 1;
                                 end if;
                             end if;
-                            if( io43_id212(2) = '0' )then                       -- BIT[2]=0     of  Lock Mask
-                                if( Fkeys(3 downto 1) /= vFKeys(3 downto 1) )then
-                                    GreenLvEna  <=  '1';
-                                    LevCtrl     <=  "000";
-                                end if;
-                                if( Fkeys(1) /= vFKeys(1) )then                 -- SHIFT+F11    is  OPLL Volume Down
-                                    if( OpllVol /= "000" )then
-                                        LevCtrl <= OpllVol - 1;
-                                        OpllVol <= OpllVol - 1;
-                                    end if;
-                                end if;
-                                if( Fkeys(2) /= vFKeys(2) )then                 -- SHIFT+F10    is  SCC-I Volume Down
-                                    if( SccVol /= "000" )then
-                                        LevCtrl <= SccVol - 1;
-                                        SccVol  <= SccVol - 1;
-                                    end if;
-                                end if;
-                                if( Fkeys(3) /= vFKeys(3) )then                 -- SHIFT+F9     is  PSG Volume Down
-                                    if( PsgVol /= "000" )then
-                                        LevCtrl <= PsgVol - 1;
-                                        PsgVol  <= PsgVol - 1;
-                                    end if;
+                            if( Fkeys(2) /= vFKeys(2) )then                     -- SHIFT+F10    is  SCC-I Volume Down
+                                if( SccVol /= "000" )then
+                                    LevCtrl <= SccVol - 1;
+                                    SccVol  <= SccVol - 1;
                                 end if;
                             end if;
-                            if( io43_id212(3) = '0' )then                       -- BIT[3]=0     of  Lock Mask
-                                if( Fkeys(0) /= vFKeys(0) )then                 -- SHIFT+F12    is  SLOT1 selector
-                                    io42_id212(3)   <=  not io42_id212(3);
-                                    iSlt1_linear    <=  '0';
-                                end if;                                         -- EXTERNAL SLOT1   >> <<   INTERNAL SCC-I(A)
+                            if( Fkeys(3) /= vFKeys(3) )then                     -- SHIFT+F9     is  PSG Volume Down
+                                if( PsgVol /= "000" )then
+                                    LevCtrl <= PsgVol - 1;
+                                    PsgVol  <= PsgVol - 1;
+                                end if;
                             end if;
-                            if( io43_id212(4) = '0' )then                       -- BIT[4]=0     of  Lock Mask
-                                if( ff_Scro /= Scro )then                       -- SHIFT+SCRLK  is  SLOT2 selector
-                                    case io42_id212(5 downto 4) is
+                        end if;
+                        if( io43_id212(3) = '0' )then                           -- BIT[3]=0     of  Lock Mask
+                            if( Fkeys(0) /= vFKeys(0) )then                     -- SHIFT+F12    is  SLOT1 selector
+                                io42_id212(3)   <=  not io42_id212(3);
+                                iSlt1_linear    <=  '0';
+                            end if;                                             -- EXTERNAL SLOT1   >> <<   INTERNAL SCC-I(A)
+                        end if;
+                        if( io43_id212(4) = '0' )then                           -- BIT[4]=0     of  Lock Mask
+                            if( ff_Scro /= Scro )then                           -- SHIFT+SCRLK  is  SLOT2 selector
+                                case io42_id212(5 downto 4) is
                                     when "00"   =>  io42_id212(5)           <=  '1';    --  EXTERNAL SLOT2      to  INTERNAL ASCII 8K
                                     when "10"   =>  io42_id212(5 downto 4)  <=  "01";   --  INTERNAL ASCII 8K   to  INTERNAL SCC-I(B)
                                     when "01"   =>  io42_id212(5)           <=  '1';    --  INTERNAL SCC-I(B)   to  INTERNAL ASCII 16K
                                     when "11"   =>  io42_id212(5 downto 4)  <=  "00";   --  INTERNAL ASCII 16K  to  EXTERNAL SLOT2
-                                    end case;
-                                    iSlt2_linear    <=  '0';
-                                end if;                                         -- Hint! You can get SCC-I(B) quickly with a SHIFT+'double'SCRLK
-                            end if;
+                                end case;
+                                iSlt2_linear    <=  '0';
+                            end if;                                             -- Hint! You can get SCC-I(B) quickly with a SHIFT+'double'SCRLK
                         end if;
---                  end if;
+                    end if;
                     -- in assignment: 'Port $40 [ID Manufacturers/Devices]' (read_n/write)
                     if( req = '1' and wrt = '1' and (adr(3 downto 0) = "0000") )then
                         case dbo is
@@ -591,9 +587,9 @@ begin
                             when "00011100" =>                                  -- VDP Speed Mode is Fast (V9958 only)
                                 VdpSpeedMode    <=  '1' and V9938_n;
                             -- SMART CODES  #029, #030
-                            when "00011101" =>                                  -- MegaSD Off       (warm reset is required)
+                            when "00011101" =>                                  -- MegaSD Off       (warm reset to go)
                                 MegaSD_req      <=  '0';
-                            when "00011110" =>                                  -- MegaSD On        (warm reset is required)
+                            when "00011110" =>                                  -- MegaSD On        (warm reset to go)
                                 MegaSD_req      <=  '1';
                             -- SMART CODES  #031, #032, #033, #034, #035
                             when "00011111" =>                                  -- MegaSD Blink Off + DIP-SW8 State On
@@ -745,7 +741,16 @@ begin
                                 OFFSET_Y := "0010111";
                             when "01001111" =>                                  -- Vertical Offset 24 (useful for Space Manbow)
                                 OFFSET_Y := "0011000";
-                            -- SMART CODES  #080, #..., #126                    -- Free Group
+                            -- SMART CODES  #080, #081, #082, #083  (not available on this machine)
+--                          when "01010000" =>                                  -- VGA Scanlines 0% (default)
+--                              vga_scanlines <= "00";
+--                          when "01010001" =>                                  -- VGA Scanlines 25%
+--                              vga_scanlines <= "01";
+--                          when "01010010" =>                                  -- VGA Scanlines 50%
+--                              vga_scanlines <= "10";
+--                          when "01010011" =>                                  -- VGA Scanlines 75%
+--                              vga_scanlines <= "11";
+                            -- SMART CODES  #084, #..., #126                    -- Free Group
                             -- SMART CODE   #127
                             when "01111111" =>                                  -- Pixel Ratio 1:1 for LED Display
                                 RatioMode       <=  RatioMode - 1;
@@ -766,7 +771,12 @@ begin
                                 iSlt2_linear <=  '0';
                             when "10000110" =>                                  -- Internal Slot2 Linear On (requires SCC-I or ASCII-8K/16K preset)
                                 iSlt2_linear <=  io42_id212(4) or io42_id212(5);
-                            -- SMART CODES  #135, #..., #175                    -- Free Group
+                            -- SMART CODES  #135, #136 (not available on this machine)
+--                          when "10000111" =>
+--                              swioCmt         <=  '0';                        -- Internal OPL3    is Off (default)
+--                          when "10001000" =>
+--                              swioCmt         <=  '1';                        -- Internal OPL3    is On
+                            -- SMART CODES  #137, #..., #175                    -- Free Group
                             -- SMART CODES  #176, #177, #178, #179, #180, #181, #182, #183
                             when "10110000" =>                                  -- Master Volume 0 (mute)
                                 MstrVol         <=  "111";
@@ -867,10 +877,10 @@ begin
                                 centerYJK_R25_n <=  '0';
                             -- SMART CODES  #216, #..., #248                    -- Free Group
                             -- SMART CODE   #249
-                            when "11111001" =>                                  -- Slot0 Primary Mode (warm reset is required) (internal OPLL disabled)
+                            when "11111001" =>                                  -- Slot0 Primary Mode (warm reset to go) (internal OPLL disabled)
                                 Slot0_req       <=  '0';
                             -- SMART CODE   #250
-                            when "11111010" =>                                  -- MSX logo will be On after a Warm Reset
+                            when "11111010" =>                                  -- System Logo On (the logo will be displayed after a warm reset)
                                 WarmMSXlogo     <=  not portF4_mode;
                             -- SMART CODES  #251, #252, #253, #254
                             when "11111011" =>                                  -- Cold Reset (Volume will be reset)
@@ -964,6 +974,12 @@ begin
                     if( req = '1' and wrt = '1' and (adr(3 downto 0) = "1111")  and (io40_n = "00101011") and ff_ldbios_n = '0' )then
                         portF4_mode         <=  not dbo(7);                     -- BIT[7]
                         WarmMSXlogo         <=  not dbo(7);                     -- MSX logo will be Off after a Warm Reset
+                    end if;
+                    -- in assignment: 'Scanlines button'
+                    if( btn_scan = '1' )then                                    -- Released
+                        prev_scan <= vga_scanlines;
+                    elsif( vga_scanlines = prev_scan )then                      -- Held down
+                        vga_scanlines <= vga_scanlines + 1;
                     end if;
                 end if;
             end if;

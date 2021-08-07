@@ -412,7 +412,7 @@ begin
               end if;
               Ps2Chg := '1';
             elsif( Ps2Dat = X"14" and Ps2xE1 ='0' )then -- control make, Added by t.hara, 2021/Aug/6th
-              Ps2Ctrl:= not Ps2Ctrl;
+              Ps2Ctrl:= not Ps2brk;
               oFkeys(6) := Ps2Ctrl;
               Ps2Chg := '1';
             elsif( Ps2Dat = X"F0" )then -- break code

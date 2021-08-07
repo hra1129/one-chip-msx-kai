@@ -519,6 +519,7 @@ module emsx_top(
 	wire			af_increment;
 	wire			af_decrement;
 	wire			af_mask;
+	wire	[3:0]	af_speed;
 	wire	[5:0]	w_pJoyA_in;
 	wire	[5:0]	w_pJoyB_in;
 	wire	[7:0]	w_PpiPortB;
@@ -1573,13 +1574,13 @@ module emsx_top(
 		.af_increment		( af_increment			),
 		.af_decrement		( af_decrement			),
 		.af_mask			( af_mask				),
-		.af_speed			( 						)
+		.af_speed			( af_speed				)
 	);
 
 	// | b7	 | b6	| b5   | b4	  | b3	| b2  | b1	| b0  |
 	// | SHI | CTRL | PgUp | PgDn | F9	| F10 | F11 | F12 |
-	assign af_increment = vFKeys[6] & ~vFKeys[5] & FKeys[5];
-	assign af_decrement = vFKeys[6] & ~vFKeys[4] & FKeys[4];
+	assign af_increment = vFKeys[6] & (vFKeys[5] ^ FKeys[5]);
+	assign af_decrement = vFKeys[6] & (vFKeys[4] ^ FKeys[4]);
 
 	// Joypad autofire
 	assign w_pJoyA_in = { pJoyA_in[5], (pJoyA_in[4] | af_mask), pJoyA_in[3:0] };
@@ -1695,12 +1696,24 @@ module emsx_top(
 		.panamega_is_linear			( PanaMegaIsLinear			)
 	);
 
+//	ocmkai_debugger u_ocmkai_debugger (
+//		.clk21m						( clk21m					),
+//		.reset						( reset						),
+//		.processor_mode				( processor_mode			),
+//		.z80_pc						( z80_pc					),
+//		.r800_pc					( r800_pc					),
+//		.p_7seg_address_0			( p_7seg_address_0			),
+//		.p_7seg_address_1			( p_7seg_address_1			),
+//		.p_7seg_address_2			( p_7seg_address_2			),
+//		.p_7seg_address_3			( p_7seg_address_3			)
+//	);
+
 	ocmkai_debugger u_ocmkai_debugger (
 		.clk21m						( clk21m					),
 		.reset						( reset						),
-		.processor_mode				( processor_mode			),
-		.z80_pc						( z80_pc					),
-		.r800_pc					( r800_pc					),
+		.processor_mode				( 1'b0						),		//	R800
+		.z80_pc						( 16'd0						),
+		.r800_pc					( { { 3'd0, vFKeys[6] }, { 2'd0, vFKeys[5], vFKeys[4] }, { 3'd0, af_mask }, af_speed }	),
 		.p_7seg_address_0			( p_7seg_address_0			),
 		.p_7seg_address_1			( p_7seg_address_1			),
 		.p_7seg_address_2			( p_7seg_address_2			),
