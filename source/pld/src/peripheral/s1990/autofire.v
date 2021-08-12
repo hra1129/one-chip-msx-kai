@@ -33,17 +33,22 @@
 // History
 // 2021/Aug/05  t.hara
 //   1st release
+// 2021/Aug/09  t.hara
+//   The autofire speed is now cycled up and down.
+//   It can be turned on and off independently of the autofire speed.
 // ============================================================================
 
 module autofire (
 		input			clk21m,
 		input			reset,
 		input			count_en,
+		input			af_on_off_toggle,
 		input			af_increment,
 		input			af_decrement,
 		output			af_mask,
 		output	[3:0]	af_speed
 	);
+	reg					ff_enable;			//	0: OFF, 1: ON
 	reg					ff_count_en;
 	reg		[3:0]		ff_af_speed;
 	reg		[3:0]		ff_af_count;
@@ -58,23 +63,25 @@ module autofire (
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
+			ff_enable <= 1'b0;
+		end
+		else if( af_on_off_toggle ) begin
+			ff_enable <= ~ff_enable;
+		end
+		else begin
+			//	hold
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
 			ff_af_speed <= 4'b1111;
 		end
 		else if( af_increment ) begin
-			if( ff_af_speed != 4'b1111 ) begin
-				ff_af_speed <= ff_af_speed + 4'd1;
-			end
-			else begin
-				//	hold
-			end
+			ff_af_speed <= ff_af_speed - 4'd1;
 		end
 		else if( af_decrement ) begin
-			if( ff_af_speed != 4'b0000 ) begin
-				ff_af_speed <= ff_af_speed - 4'd1;
-			end
-			else begin
-				//	hold
-			end
+			ff_af_speed <= ff_af_speed + 4'd1;
 		end
 	end
 
@@ -83,7 +90,7 @@ module autofire (
 			ff_af_count <= 4'd0;
 		end
 		else if( w_count_en ) begin
-			if( ff_af_speed == 4'b1111 ) begin
+			if( !ff_enable ) begin
 				ff_af_count <= 4'd0;
 			end
 			else if( ff_af_count == 4'd0 ) begin
@@ -103,18 +110,13 @@ module autofire (
 			ff_af_mask <= 1'd0;
 		end
 		else if( w_count_en && (ff_af_count == 4'd0) ) begin
-			if( ff_af_speed == 4'b1111 ) begin
-				ff_af_mask <= 1'd0;
-			end
-			else begin
-				ff_af_mask <= ~ff_af_mask;
-			end
+			ff_af_mask <= ~ff_af_mask;
 		end
 		else begin
 			//	hold
 		end
 	end
 
-	assign af_mask	= ff_af_mask;
+	assign af_mask	= ff_af_mask & ff_enable;
 	assign af_speed	= ff_af_speed;
 endmodule

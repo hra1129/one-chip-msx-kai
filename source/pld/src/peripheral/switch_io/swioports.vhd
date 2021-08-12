@@ -1,5 +1,5 @@
 --
--- swioports.vhd
+-- sm_swioports.vhd
 --   Switched I/O ports ($40-$4F)
 --   Revision 10
 --
@@ -49,7 +49,7 @@ entity switched_io_ports is
         io40_n          : inout std_logic_vector(  7 downto 0 );            -- ID Manufacturers/Devices :   $08 (008), $D4 (212=1chipMSX), $FF (255=null)
         io41_id212_n    : inout std_logic_vector(  7 downto 0 );            -- $41 ID212 states         :   Smart Commands
         io42_id212      : inout std_logic_vector(  7 downto 0 );            -- $42 ID212 states         :   Virtual DIP-SW states
-        io43_id212      : inout std_logic_vector(  7 downto 0 );            -- $43 ID212 states         :   Lock Mask for port $42 functions, CMT and reset key
+        io43_id212      : inout std_logic_vector(  7 downto 0 );            -- $43 ID212 states         :   Lock Mask for port $42 functions, OPL3 and reset key
         io44_id212      : inout std_logic_vector(  7 downto 0 );            -- $44 ID212 states         :   Lights Mask have the green leds control when Lights Mode is On
         OpllVol         : inout std_logic_vector(  2 downto 0 );            -- OPLL Volume
         SccVol          : inout std_logic_vector(  2 downto 0 );            -- SCC-I Volume
@@ -66,8 +66,8 @@ entity switched_io_ports is
         MegaSD_ack      : out   std_logic;                                  -- Current MegaSD state
         io41_id008_n    : inout std_logic;                                  -- $41 ID008 BIT-0 state    :   0=5.37MHz, 1=3.58MHz (write_n only)
         swioKmap        : inout std_logic;                                  -- Keyboard layout selector
-        CmtScro         : inout std_logic;                                  -- CMT state
-        swioCmt         : inout std_logic;                                  -- CMT enabler              :   This toggle is used for the Internal OPL3 on SM-X and SX-2
+        CmtScro         : inout std_logic;                                  -- Internal OPL3 state
+        swioCmt         : inout std_logic;                                  -- Internal OPL3 enabler    :   No toggle is required to use CMT in this firmware
         LightsMode      : inout std_logic;                                  -- Custom green led states
         Red_sta         : inout std_logic;                                  -- Custom red led state
         LastRst_sta     : inout std_logic;                                  -- Last reset state         :   0=Cold Reset, 1=Warm Reset (MSX2+) / 1=Cold Reset, 0=Warm Reset (MSXtR)
@@ -119,7 +119,7 @@ architecture RTL of switched_io_ports is
     signal  prev_scan   : std_logic_vector(  1 downto 0 ) := "11";
 
     -- Machine Type ID (0-15)                                               -- 0 = 1chipMSX, 1 = Zemmix Neo, 2 = SM-X, 3 = SX-2, ..., 15 = Unknown
-    constant MachineID  : std_logic_vector(  3 downto 0 ) :=     "0000";    -- 0
+    constant MachineID  : std_logic_vector(  3 downto 0 ) :=     "0011";    -- 3
 
     -- OCM-PLD version number (x \ 10).(y mod 10).(z[0~3])                  -- OCM-PLD version 0.0(.0) ~ 25.5(.3)
     constant ocm_pld_xy : std_logic_vector(  7 downto 0 ) := "00100111";    -- 39
@@ -209,7 +209,7 @@ begin
                     MegaSD_ack      <=  ff_dip_req(7);      -- Prevent system crash using DIP-SW8
                     io41_id008_n    <=  '1';                -- CPU Clock is 3.58MHz
                     swioKmap        <=  DefKmap;            -- Keyboard Layout to Default
-                    swioCmt         <=  '0';                -- CMT is Off
+                    swioCmt         <=  '0';                -- Internal OPL3 is Off
                     LightsMode      <=  '0';                -- Lights Mode is Auto
                     Red_sta         <=  not io41_id008_n;   -- Red Led is Turbo 5.37MHz
                     LastRst_sta     <=  portF4_mode;        -- Cold state
@@ -381,7 +381,7 @@ begin
                                     PsgVol  <= PsgVol + 1;
                                 end if;
                             end if;
-                            if( ff_Scro /= Scro and portF4_mode = '0' )then     -- SCRLK        is  CMT toggle
+                            if( ff_Scro /= Scro )then                           -- SCRLK        is  Internal OPL3 toggle
                                 swioCmt     <=  not swioCmt;
                             end if;
                         end if;
@@ -620,19 +620,19 @@ begin
                                 SccVol          <=  "100";
                                 PsgVol          <=  "100";
                                 MstrVol         <=  "000";
-                            -- SMART CODES  #039, #040
-                            when "00100111" =>
-                                if( portF4_mode = '0' )then
-                                    swioCmt         <=  '0';                    -- CMT Off (default)
-                                else
-                                    io41_id212_n    <=  "11111111";             -- (MSX turboR does not have CMT)
-                                end if;
-                            when "00101000" =>
-                                if( portF4_mode = '0' )then
-                                    swioCmt         <=  '1';                    -- CMT On
-                                else
-                                    io41_id212_n    <=  "11111111";             -- (MSX turboR does not have CMT)
-                                end if;
+                            -- SMART CODES  #039, #040 (not available on this machine)
+--                          when "00100111" =>
+--                              if( portF4_mode = '0' )then
+--                                  swioCmt         <=  '0';                    -- CMT Off (default)
+--                              else
+--                                  io41_id212_n    <=  "11111111";             -- (MSX turboR does not have CMT)
+--                              end if;
+--                          when "00101000" =>
+--                              if( portF4_mode = '0' )then
+--                                  swioCmt         <=  '1';                    -- CMT On
+--                              else
+--                                  io41_id212_n    <=  "11111111";             -- (MSX turboR does not have CMT)
+--                              end if;
                             -- SMART CODES  #041, #042
                             when "00101001" =>                                  -- Turbo Locked
                                 io43_id212(0)   <=  '1';
@@ -741,15 +741,15 @@ begin
                                 OFFSET_Y := "0010111";
                             when "01001111" =>                                  -- Vertical Offset 24 (useful for Space Manbow)
                                 OFFSET_Y := "0011000";
-                            -- SMART CODES  #080, #081, #082, #083  (not available on this machine)
---                          when "01010000" =>                                  -- VGA Scanlines 0% (default)
---                              vga_scanlines <= "00";
---                          when "01010001" =>                                  -- VGA Scanlines 25%
---                              vga_scanlines <= "01";
---                          when "01010010" =>                                  -- VGA Scanlines 50%
---                              vga_scanlines <= "10";
---                          when "01010011" =>                                  -- VGA Scanlines 75%
---                              vga_scanlines <= "11";
+                            -- SMART CODES  #080, #081, #082, #083
+                            when "01010000" =>                                  -- VGA Scanlines 0% (default)
+                                vga_scanlines <= "00";
+                            when "01010001" =>                                  -- VGA Scanlines 25%
+                                vga_scanlines <= "01";
+                            when "01010010" =>                                  -- VGA Scanlines 50%
+                                vga_scanlines <= "10";
+                            when "01010011" =>                                  -- VGA Scanlines 75%
+                                vga_scanlines <= "11";
                             -- SMART CODES  #084, #..., #126                    -- Free Group
                             -- SMART CODE   #127
                             when "01111111" =>                                  -- Pixel Ratio 1:1 for LED Display
@@ -771,11 +771,11 @@ begin
                                 iSlt2_linear <=  '0';
                             when "10000110" =>                                  -- Internal Slot2 Linear On (requires SCC-I or ASCII-8K/16K preset)
                                 iSlt2_linear <=  io42_id212(4) or io42_id212(5);
-                            -- SMART CODES  #135, #136 (not available on this machine)
---                          when "10000111" =>
---                              swioCmt         <=  '0';                        -- Internal OPL3    is Off (default)
---                          when "10001000" =>
---                              swioCmt         <=  '1';                        -- Internal OPL3    is On
+                            -- SMART CODES  #135, #136
+                            when "10000111" =>
+                                swioCmt         <=  '0';                        -- Internal OPL3    is Off (default)
+                            when "10001000" =>
+                                swioCmt         <=  '1';                        -- Internal OPL3    is On
                             -- SMART CODES  #137, #..., #175                    -- Free Group
                             -- SMART CODES  #176, #177, #178, #179, #180, #181, #182, #183
                             when "10110000" =>                                  -- Master Volume 0 (mute)

@@ -516,6 +516,7 @@ module emsx_top(
 	wire			tr_midi_intr;
 
 	// Autofire,  Added by t.hara, 2021/Aug/6th
+	wire			af_on_off_toggle;
 	wire			af_increment;
 	wire			af_decrement;
 	wire			af_mask;
@@ -793,17 +794,12 @@ module emsx_top(
 
 	assign pSltBdir_n	=	1'bz;
 
-//	assign pSltDat		=	( pSltRd_n == 1'b1 ) ? 8'dz :
-//							( pSltIorq_n == 1'b0 && BusDir    == 1'b1  ) ? dbi :
-//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b00 ) ? dbi :
-//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b11 ) ? dbi :
-//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b01 && Scc1Type  != 2'b00 ) ? dbi :
-//							( pSltMerq_n == 1'b0 && PriSltNum == 2'b10 && ff_Slot2Mode != 2'b00 ) ? dbi :
-//							8'dz;
-
 	assign pSltDat		=	( pSltRd_n == 1'b1 ) ? 8'dz :
 							( pSltIorq_n == 1'b0 && BusDir    == 1'b1  ) ? dbi :
-							( pSltMerq_n == 1'b0                       ) ? dbi :
+							( pSltMerq_n == 1'b0 && PriSltNum == 2'b00 ) ? dbi :
+							( pSltMerq_n == 1'b0 && PriSltNum == 2'b11 ) ? dbi :
+							( pSltMerq_n == 1'b0 && PriSltNum == 2'b01 && Scc1Type  != 2'b00 ) ? dbi :
+							( pSltMerq_n == 1'b0 && PriSltNum == 2'b10 && ff_Slot2Mode != 2'b00 ) ? dbi :
 							8'dz;
 
 	assign pSltRsv5		= 1'bz;
@@ -1571,6 +1567,7 @@ module emsx_top(
 		.clk21m				( clk21m				),
 		.reset				( reset					),
 		.count_en			( freerun_count[18]		),
+		.af_on_off_toggle	( af_on_off_toggle		),
 		.af_increment		( af_increment			),
 		.af_decrement		( af_decrement			),
 		.af_mask			( af_mask				),
@@ -1579,8 +1576,9 @@ module emsx_top(
 
 	// | b7	 | b6	| b5   | b4	  | b3	| b2  | b1	| b0  |
 	// | SHI | CTRL | PgUp | PgDn | F9	| F10 | F11 | F12 |
-	assign af_increment = vFKeys[6] & (vFKeys[5] ^ FKeys[5]);
-	assign af_decrement = vFKeys[6] & (vFKeys[4] ^ FKeys[4]);
+	assign af_on_off_toggle	=   vFKeys[7]  & vFKeys[6] & ( (vFKeys[5] ^ FKeys[5]) | (vFKeys[4] ^ FKeys[4]) );
+	assign af_increment		= (~vFKeys[7]) & vFKeys[6] & (vFKeys[5] ^ FKeys[5]);
+	assign af_decrement		= (~vFKeys[7]) & vFKeys[6] & (vFKeys[4] ^ FKeys[4]);
 
 	// Joypad autofire
 	assign w_pJoyA_in = { pJoyA_in[5], (pJoyA_in[4] | af_mask), pJoyA_in[3:0] };
