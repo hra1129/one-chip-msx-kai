@@ -1,5 +1,5 @@
 Analysis & Synthesis report for emsx_top_de0cv
-Thu Aug 12 21:22:25 2021
+Tue Aug 17 21:27:51 2021
 Quartus Prime Version 18.1.1 Build 646 04/11/2019 SJ Lite Edition
 
 
@@ -216,7 +216,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                  ;
 +---------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Thu Aug 12 21:22:25 2021       ;
+; Analysis & Synthesis Status     ; Successful - Tue Aug 17 21:27:51 2021       ;
 ; Quartus Prime Version           ; 18.1.1 Build 646 04/11/2019 SJ Lite Edition ;
 ; Revision Name                   ; emsx_top_de0cv                              ;
 ; Top-level Entity Name           ; emsx_top_de0cv                              ;
@@ -331,14 +331,14 @@ https://fpgasoftware.intel.com/eula.
 ; Number detected on machine ; 8           ;
 ; Maximum allowed            ; 4           ;
 ;                            ;             ;
-; Average used               ; 2.52        ;
+; Average used               ; 2.53        ;
 ; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;  50.7%      ;
-;     Processor 3            ;  50.6%      ;
-;     Processor 4            ;  50.6%      ;
+;     Processor 2            ;  51.1%      ;
+;     Processor 3            ;  51.1%      ;
+;     Processor 4            ;  51.1%      ;
 +----------------------------+-------------+
 
 
@@ -515,14 +515,14 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------+------------------------------------------------------------------------------------+
 ; Resource                                    ; Usage                                                                              ;
 +---------------------------------------------+------------------------------------------------------------------------------------+
-; Estimate of Logic utilization (ALMs needed) ; 8599                                                                               ;
+; Estimate of Logic utilization (ALMs needed) ; 8634                                                                               ;
 ;                                             ;                                                                                    ;
-; Combinational ALUT usage for logic          ; 14256                                                                              ;
-;     -- 7 input functions                    ; 263                                                                                ;
-;     -- 6 input functions                    ; 2286                                                                               ;
-;     -- 5 input functions                    ; 4108                                                                               ;
-;     -- 4 input functions                    ; 2114                                                                               ;
-;     -- <=3 input functions                  ; 5485                                                                               ;
+; Combinational ALUT usage for logic          ; 14363                                                                              ;
+;     -- 7 input functions                    ; 247                                                                                ;
+;     -- 6 input functions                    ; 2265                                                                               ;
+;     -- 5 input functions                    ; 4159                                                                               ;
+;     -- 4 input functions                    ; 2150                                                                               ;
+;     -- <=3 input functions                  ; 5542                                                                               ;
 ;                                             ;                                                                                    ;
 ; Dedicated logic registers                   ; 5801                                                                               ;
 ;                                             ;                                                                                    ;
@@ -537,8 +537,8 @@ https://fpgasoftware.intel.com/eula.
 ;                                             ;                                                                                    ;
 ; Maximum fan-out node                        ; pll_de0cv:U90|pll_de0cv_0002:pll_de0cv_inst|altera_pll:altera_pll_i|outclk_wire[0] ;
 ; Maximum fan-out                             ; 4608                                                                               ;
-; Total fan-out                               ; 84156                                                                              ;
-; Average fan-out                             ; 4.02                                                                               ;
+; Total fan-out                               ; 84454                                                                              ;
+; Average fan-out                             ; 4.01                                                                               ;
 +---------------------------------------------+------------------------------------------------------------------------------------+
 
 
@@ -547,20 +547,20 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------+--------------+
 ; Compilation Hierarchy Node                              ; Combinational ALUTs ; Dedicated Logic Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                                                         ; Entity Name           ; Library Name ;
 +---------------------------------------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------+--------------+
-; |emsx_top_de0cv                                         ; 14256 (3)           ; 5801 (3)                  ; 329120            ; 22         ; 195  ; 0            ; |emsx_top_de0cv                                                                                                                                                             ; emsx_top_de0cv        ; work         ;
-;    |emsx_top:U92|                                       ; 14253 (144)         ; 5798 (106)                ; 329120            ; 22         ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92                                                                                                                                                ; emsx_top              ; work         ;
+; |emsx_top_de0cv                                         ; 14363 (3)           ; 5801 (3)                  ; 329120            ; 22         ; 195  ; 0            ; |emsx_top_de0cv                                                                                                                                                             ; emsx_top_de0cv        ; work         ;
+;    |emsx_top:U92|                                       ; 14360 (145)         ; 5798 (106)                ; 329120            ; 22         ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92                                                                                                                                                ; emsx_top              ; work         ;
 ;       |INTERPO:u_interpo|                               ; 50 (50)             ; 45 (45)                   ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|INTERPO:u_interpo                                                                                                                              ; INTERPO               ; work         ;
 ;          |INTERPO_MUL:U_INTERPO_MUL|                    ; 0 (0)               ; 0 (0)                     ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|INTERPO:u_interpo|INTERPO_MUL:U_INTERPO_MUL                                                                                                    ; INTERPO_MUL           ; work         ;
 ;       |LPF2:u_lpf2|                                     ; 66 (66)             ; 126 (126)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|LPF2:u_lpf2                                                                                                                                    ; LPF2                  ; work         ;
-;       |T800a:u_r800|                                    ; 1482 (15)           ; 410 (17)                  ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800                                                                                                                                   ; T800a                 ; work         ;
-;          |T800:u0|                                      ; 1467 (611)          ; 393 (265)                 ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0                                                                                                                           ; T800                  ; work         ;
+;       |T800a:u_r800|                                    ; 1483 (15)           ; 410 (17)                  ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800                                                                                                                                   ; T800a                 ; work         ;
+;          |T800:u0|                                      ; 1468 (614)          ; 393 (265)                 ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0                                                                                                                           ; T800                  ; work         ;
 ;             |T800_ALU:alu|                              ; 148 (148)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_ALU:alu                                                                                                              ; T800_ALU              ; work         ;
-;             |T800_MCode:mcode|                          ; 546 (546)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_MCode:mcode                                                                                                          ; T800_MCode            ; work         ;
+;             |T800_MCode:mcode|                          ; 544 (544)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_MCode:mcode                                                                                                          ; T800_MCode            ; work         ;
 ;             |T800_Reg:Regs|                             ; 162 (162)           ; 128 (128)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_Reg:Regs                                                                                                             ; T800_Reg              ; work         ;
-;       |T80a:u_z80|                                      ; 1446 (16)           ; 407 (15)                  ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80                                                                                                                                     ; T80a                  ; work         ;
-;          |T80:u0|                                       ; 1430 (610)          ; 392 (264)                 ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0                                                                                                                              ; T80                   ; work         ;
+;       |T80a:u_z80|                                      ; 1447 (16)           ; 407 (15)                  ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80                                                                                                                                     ; T80a                  ; work         ;
+;          |T80:u0|                                       ; 1431 (609)          ; 392 (264)                 ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0                                                                                                                              ; T80                   ; work         ;
 ;             |T80_ALU:alu|                               ; 146 (146)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0|T80_ALU:alu                                                                                                                  ; T80_ALU               ; work         ;
-;             |T80_MCode:mcode|                           ; 512 (512)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0|T80_MCode:mcode                                                                                                              ; T80_MCode             ; work         ;
+;             |T80_MCode:mcode|                           ; 514 (514)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0|T80_MCode:mcode                                                                                                              ; T80_MCode             ; work         ;
 ;             |T80_Reg:Regs|                              ; 162 (162)           ; 128 (128)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0|T80_Reg:Regs                                                                                                                 ; T80_Reg               ; work         ;
 ;       |VDP:u_v9958|                                     ; 2062 (319)          ; 1268 (73)                 ; 25736             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958                                                                                                                                    ; VDP                   ; work         ;
 ;          |VDP_COLORDEC:U_VDP_COLORDEC|                  ; 42 (42)             ; 52 (52)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_COLORDEC:U_VDP_COLORDEC                                                                                                        ; VDP_COLORDEC          ; work         ;
@@ -571,7 +571,7 @@ https://fpgasoftware.intel.com/eula.
 ;                |altsyncram:blkram_rtl_0|                ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_GRAPHIC4567:U_VDP_GRAPHIC4567|ram:U_FIFOMEM|altsyncram:blkram_rtl_0                                                            ; altsyncram            ; work         ;
 ;                   |altsyncram_fka1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_GRAPHIC4567:U_VDP_GRAPHIC4567|ram:U_FIFOMEM|altsyncram:blkram_rtl_0|altsyncram_fka1:auto_generated                             ; altsyncram_fka1       ; work         ;
 ;          |VDP_INTERRUPT:U_INTERRUPT|                    ; 7 (7)               ; 2 (2)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_INTERRUPT:U_INTERRUPT                                                                                                          ; VDP_INTERRUPT         ; work         ;
-;          |VDP_NTSC_PAL:U_VDP_NTSC_PAL|                  ; 30 (30)             ; 4 (4)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_NTSC_PAL:U_VDP_NTSC_PAL                                                                                                        ; VDP_NTSC_PAL          ; work         ;
+;          |VDP_NTSC_PAL:U_VDP_NTSC_PAL|                  ; 29 (29)             ; 4 (4)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_NTSC_PAL:U_VDP_NTSC_PAL                                                                                                        ; VDP_NTSC_PAL          ; work         ;
 ;          |VDP_REGISTER:U_VDP_REGISTER|                  ; 289 (289)           ; 239 (239)                 ; 144               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_REGISTER:U_VDP_REGISTER                                                                                                        ; VDP_REGISTER          ; work         ;
 ;             |ram:U_PALETTEMEMG|                         ; 0 (0)               ; 0 (0)                     ; 48                ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_REGISTER:U_VDP_REGISTER|ram:U_PALETTEMEMG                                                                                      ; ram                   ; work         ;
 ;                |altsyncram:blkram_rtl_0|                ; 0 (0)               ; 0 (0)                     ; 48                ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_REGISTER:U_VDP_REGISTER|ram:U_PALETTEMEMG|altsyncram:blkram_rtl_0                                                              ; altsyncram            ; work         ;
@@ -591,7 +591,7 @@ https://fpgasoftware.intel.com/eula.
 ;                   |altsyncram_fka1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_SPRITE:U_SPRITE|ram:U_ODD_LINE_BUF|altsyncram:blkram_rtl_0|altsyncram_fka1:auto_generated                                      ; altsyncram_fka1       ; work         ;
 ;          |VDP_SSG:U_SSG|                                ; 160 (160)           ; 95 (95)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_SSG:U_SSG                                                                                                                      ; VDP_SSG               ; work         ;
 ;          |VDP_TEXT12:U_VDP_TEXT12|                      ; 109 (109)           ; 95 (95)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_TEXT12:U_VDP_TEXT12                                                                                                            ; VDP_TEXT12            ; work         ;
-;          |VDP_VGA:U_VDP_VGA|                            ; 95 (75)             ; 20 (20)                   ; 19200             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_VGA:U_VDP_VGA                                                                                                                  ; VDP_VGA               ; work         ;
+;          |VDP_VGA:U_VDP_VGA|                            ; 96 (76)             ; 20 (20)                   ; 19200             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_VGA:U_VDP_VGA                                                                                                                  ; VDP_VGA               ; work         ;
 ;             |VDP_DOUBLEBUF:DBUF|                        ; 20 (20)             ; 0 (0)                     ; 19200             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_VGA:U_VDP_VGA|VDP_DOUBLEBUF:DBUF                                                                                               ; VDP_DOUBLEBUF         ; work         ;
 ;                |VDP_LINEBUF:U_BUF_BE|                   ; 0 (0)               ; 0 (0)                     ; 3200              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_VGA:U_VDP_VGA|VDP_DOUBLEBUF:DBUF|VDP_LINEBUF:U_BUF_BE                                                                          ; VDP_LINEBUF           ; work         ;
 ;                   |altsyncram:IMEM_rtl_0|               ; 0 (0)               ; 0 (0)                     ; 3200              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_VGA:U_VDP_VGA|VDP_DOUBLEBUF:DBUF|VDP_LINEBUF:U_BUF_BE|altsyncram:IMEM_rtl_0                                                    ; altsyncram            ; work         ;
@@ -615,7 +615,7 @@ https://fpgasoftware.intel.com/eula.
 ;       |VENCODE:u_video_encoder|                         ; 200 (200)           ; 70 (70)                   ; 0                 ; 4          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VENCODE:u_video_encoder                                                                                                                        ; VENCODE               ; work         ;
 ;       |autofire:u_autofire|                             ; 15 (15)             ; 11 (11)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|autofire:u_autofire                                                                                                                            ; autofire              ; work         ;
 ;       |clock_generator:u_clock_generator|               ; 11 (11)             ; 6 (6)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|clock_generator:u_clock_generator                                                                                                              ; clock_generator       ; work         ;
-;       |emsx_sdram_controller:u_sdram_control|           ; 206 (206)           ; 88 (88)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|emsx_sdram_controller:u_sdram_control                                                                                                          ; emsx_sdram_controller ; work         ;
+;       |emsx_sdram_controller:u_sdram_control|           ; 205 (205)           ; 88 (88)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|emsx_sdram_controller:u_sdram_control                                                                                                          ; emsx_sdram_controller ; work         ;
 ;       |eseopll:u_eseopll|                               ; 1278 (44)           ; 729 (40)                  ; 4178              ; 4          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll                                                                                                                              ; eseopll               ; work         ;
 ;          |opll:U1|                                      ; 1234 (3)            ; 689 (17)                  ; 4178              ; 4          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1                                                                                                                      ; opll                  ; work         ;
 ;             |Operator:op|                               ; 204 (90)            ; 96 (49)                   ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|Operator:op                                                                                                          ; Operator              ; work         ;
@@ -664,33 +664,33 @@ https://fpgasoftware.intel.com/eula.
 ;                   |altsyncram_qvm1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 70                ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|esepwm:u_esepwm|esefir5:U1|tapram:u0|altsyncram:TapMem_rtl_0|altsyncram_qvm1:auto_generated                                                    ; altsyncram_qvm1       ; work         ;
 ;       |freerun_counter:u_freerun_counter|               ; 21 (21)             ; 21 (21)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|freerun_counter:u_freerun_counter                                                                                                              ; freerun_counter       ; work         ;
 ;       |indicator:u_indicator|                           ; 35 (35)             ; 14 (14)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|indicator:u_indicator                                                                                                                          ; indicator             ; work         ;
-;       |iplrom:u_iplrom|                                 ; 2072 (2072)         ; 8 (8)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|iplrom:u_iplrom                                                                                                                                ; iplrom                ; work         ;
+;       |iplrom:u_iplrom|                                 ; 2168 (2168)         ; 8 (8)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|iplrom:u_iplrom                                                                                                                                ; iplrom                ; work         ;
 ;       |kanji:u_kanji_rom|                               ; 49 (49)             ; 45 (45)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|kanji:u_kanji_rom                                                                                                                              ; kanji                 ; work         ;
 ;       |mapper:u_mapper_ram_for_slot3_0|                 ; 48 (48)             ; 32 (32)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|mapper:u_mapper_ram_for_slot3_0                                                                                                                ; mapper                ; work         ;
-;       |megaram:u_megaram_for_slot1|                     ; 354 (57)            ; 269 (38)                  ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1                                                                                                                    ; megaram               ; work         ;
-;          |scc_wave:SccCh|                               ; 297 (297)           ; 231 (231)                 ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh                                                                                                     ; scc_wave              ; work         ;
+;       |megaram:u_megaram_for_slot1|                     ; 357 (59)            ; 269 (38)                  ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1                                                                                                                    ; megaram               ; work         ;
+;          |scc_wave:SccCh|                               ; 298 (298)           ; 231 (231)                 ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh                                                                                                     ; scc_wave              ; work         ;
 ;             |ram:wavemem|                               ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|ram:wavemem                                                                                         ; ram                   ; work         ;
 ;                |altsyncram:blkram_rtl_0|                ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|ram:wavemem|altsyncram:blkram_rtl_0                                                                 ; altsyncram            ; work         ;
 ;                   |altsyncram_fka1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|ram:wavemem|altsyncram:blkram_rtl_0|altsyncram_fka1:auto_generated                                  ; altsyncram_fka1       ; work         ;
 ;             |scc_wave_mul:u_mul|                        ; 0 (0)               ; 0 (0)                     ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|scc_wave_mul:u_mul                                                                                  ; scc_wave_mul          ; work         ;
-;       |megaram:u_megaram_for_slot2|                     ; 365 (70)            ; 271 (40)                  ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2                                                                                                                    ; megaram               ; work         ;
-;          |scc_wave:SccCh|                               ; 295 (295)           ; 231 (231)                 ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh                                                                                                     ; scc_wave              ; work         ;
+;       |megaram:u_megaram_for_slot2|                     ; 364 (70)            ; 271 (40)                  ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2                                                                                                                    ; megaram               ; work         ;
+;          |scc_wave:SccCh|                               ; 294 (294)           ; 231 (231)                 ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh                                                                                                     ; scc_wave              ; work         ;
 ;             |ram:wavemem|                               ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|ram:wavemem                                                                                         ; ram                   ; work         ;
 ;                |altsyncram:blkram_rtl_0|                ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|ram:wavemem|altsyncram:blkram_rtl_0                                                                 ; altsyncram            ; work         ;
 ;                   |altsyncram_fka1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|ram:wavemem|altsyncram:blkram_rtl_0|altsyncram_fka1:auto_generated                                  ; altsyncram_fka1       ; work         ;
 ;             |scc_wave_mul:u_mul|                        ; 0 (0)               ; 0 (0)                     ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|scc_wave_mul:u_mul                                                                                  ; scc_wave_mul          ; work         ;
 ;       |megarom_pana:u_megarom_pana|                     ; 131 (131)           ; 76 (76)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megarom_pana:u_megarom_pana                                                                                                                    ; megarom_pana          ; work         ;
 ;       |megasd:u_megasd|                                 ; 83 (83)             ; 69 (69)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megasd:u_megasd                                                                                                                                ; megasd                ; work         ;
-;       |ocm_bus_selector:u_ocm_bus_selector|             ; 457 (457)           ; 52 (52)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector                                                                                                            ; ocm_bus_selector      ; work         ;
+;       |ocm_bus_selector:u_ocm_bus_selector|             ; 458 (458)           ; 52 (52)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector                                                                                                            ; ocm_bus_selector      ; work         ;
 ;       |ocmkai_control_decice:u_ocmkai_control_device|   ; 47 (47)             ; 24 (24)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ocmkai_control_decice:u_ocmkai_control_device                                                                                                  ; ocmkai_control_decice ; work         ;
 ;       |ocmkai_debugger:u_ocmkai_debugger|               ; 14 (14)             ; 8 (8)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ocmkai_debugger:u_ocmkai_debugger                                                                                                              ; ocmkai_debugger       ; work         ;
-;       |opl3:u_opl3|                                     ; 1721 (0)            ; 616 (0)                   ; 278272            ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3                                                                                                                                    ; opl3                  ; work         ;
-;          |opl3sw:opl3|                                  ; 1721 (69)           ; 616 (47)                  ; 278272            ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3                                                                                                                        ; opl3sw                ; work         ;
-;             |NextZ80:Z80|                               ; 1015 (400)          ; 312 (24)                  ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80                                                                                                            ; NextZ80               ; work         ;
+;       |opl3:u_opl3|                                     ; 1725 (0)            ; 616 (0)                   ; 278272            ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3                                                                                                                                    ; opl3                  ; work         ;
+;          |opl3sw:opl3|                                  ; 1725 (69)           ; 616 (47)                  ; 278272            ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3                                                                                                                        ; opl3sw                ; work         ;
+;             |NextZ80:Z80|                               ; 1019 (400)          ; 312 (24)                  ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80                                                                                                            ; NextZ80               ; work         ;
 ;                |ALU16:CPU_ALU16|                        ; 16 (16)             ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|ALU16:CPU_ALU16                                                                                            ; ALU16                 ; work         ;
-;                |ALU8:CPU_ALU8|                          ; 230 (224)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|ALU8:CPU_ALU8                                                                                              ; ALU8                  ; work         ;
+;                |ALU8:CPU_ALU8|                          ; 232 (226)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|ALU8:CPU_ALU8                                                                                              ; ALU8                  ; work         ;
 ;                   |daa:daa_adjust|                      ; 6 (6)               ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|ALU8:CPU_ALU8|daa:daa_adjust                                                                               ; daa                   ; work         ;
-;                |Z80Reg:CPU_REGS|                        ; 369 (160)           ; 288 (64)                  ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|Z80Reg:CPU_REGS                                                                                            ; Z80Reg                ; work         ;
+;                |Z80Reg:CPU_REGS|                        ; 371 (162)           ; 288 (64)                  ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|Z80Reg:CPU_REGS                                                                                            ; Z80Reg                ; work         ;
 ;                   |RAM16X8D_regs:regs_hi|               ; 94 (94)             ; 112 (112)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|Z80Reg:CPU_REGS|RAM16X8D_regs:regs_hi                                                                      ; RAM16X8D_regs         ; work         ;
 ;                   |RAM16X8D_regs:regs_lo|               ; 102 (102)           ; 112 (112)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|Z80Reg:CPU_REGS|RAM16X8D_regs:regs_lo                                                                      ; RAM16X8D_regs         ; work         ;
 ;                   |RegSelect:WSelectR|                  ; 7 (7)               ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|opl3:u_opl3|opl3sw:opl3|NextZ80:Z80|Z80Reg:CPU_REGS|RegSelect:WSelectR                                                                         ; RegSelect             ; work         ;
@@ -735,7 +735,7 @@ https://fpgasoftware.intel.com/eula.
 ;       |s1990:u_s1990|                                   ; 52 (52)             ; 31 (31)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|s1990:u_s1990                                                                                                                                  ; s1990                 ; work         ;
 ;       |sound_mixer:u_sound_mixer|                       ; 256 (256)           ; 131 (131)                 ; 0                 ; 7          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|sound_mixer:u_sound_mixer                                                                                                                      ; sound_mixer           ; work         ;
 ;          |scc_mix_mul:u_mul|                            ; 0 (0)               ; 0 (0)                     ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|sound_mixer:u_sound_mixer|scc_mix_mul:u_mul                                                                                                    ; scc_mix_mul           ; work         ;
-;       |switched_io_ports:u_switched_io_ports|           ; 382 (382)           ; 76 (76)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|switched_io_ports:u_switched_io_ports                                                                                                          ; switched_io_ports     ; work         ;
+;       |switched_io_ports:u_switched_io_ports|           ; 384 (384)           ; 76 (76)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|switched_io_ports:u_switched_io_ports                                                                                                          ; switched_io_ports     ; work         ;
 ;       |system_flags:u_system_flags|                     ; 9 (9)               ; 8 (8)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|system_flags:u_system_flags                                                                                                                    ; system_flags          ; work         ;
 ;       |tr_midi:u_tr_midi|                               ; 294 (50)            ; 219 (30)                  ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi                                                                                                                              ; tr_midi               ; work         ;
 ;          |i8251:u_8251|                                 ; 121 (18)            ; 71 (26)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251                                                                                                                 ; i8251                 ; work         ;
@@ -1793,11 +1793,11 @@ Encoding Type:  One-Hot
 ; emsx_top:U92|VDP:u_v9958|VDP_REGISTER:U_VDP_REGISTER|VDPP2IS1STBYTE                ; 19      ;
 ; emsx_top:U92|clock_generator:u_clock_generator|ff_cpuclk                           ; 5       ;
 ; emsx_top:U92|clock_generator:u_clock_generator|ff_clkdiv[1]                        ; 4       ;
-; emsx_top:U92|megasd:u_megasd|mmc_ck                                                ; 1       ;
-; emsx_top:U92|s1990:u_s1990|ff_cpu_change_state[0]                                  ; 31      ;
 ; emsx_top:U92|emsx_sdram_controller:u_sdram_control|ff_sdr_upper_dq_mask            ; 1       ;
 ; emsx_top:U92|emsx_sdram_controller:u_sdram_control|ff_sdr_lower_dq_mask            ; 1       ;
 ; emsx_top:U92|ff_DisplayMode[1]                                                     ; 6       ;
+; emsx_top:U92|megasd:u_megasd|mmc_ck                                                ; 1       ;
+; emsx_top:U92|s1990:u_s1990|ff_cpu_change_state[0]                                  ; 31      ;
 ; emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|i8251_transmitter:u_transmitter|ff_txd ; 2       ;
 ; emsx_top:U92|VDP:u_v9958|VDP_VGA:U_VDP_VGA|FF_VSYNC_N                              ; 3       ;
 ; emsx_top:U92|VDP:u_v9958|VDP_SSG:U_SSG|IVIDEOVS_N                                  ; 3       ;
@@ -1810,27 +1810,27 @@ Encoding Type:  One-Hot
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[0]                     ; 206     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[1]                     ; 197     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[5]                     ; 126     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[6]                     ; 133     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[7]                     ; 154     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[6]                     ; 130     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[7]                     ; 151     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[3]                     ; 185     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[1]                     ; 426     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[0]                     ; 475     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[3]                     ; 354     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[2]                     ; 320     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[1]                     ; 425     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[0]                     ; 450     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[3]                     ; 332     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[2]                     ; 335     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltMerq_n                     ; 4       ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltIorq_n                     ; 39      ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltIorq_n                     ; 38      ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_xSltRd_n                       ; 2       ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[4]                     ; 284     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[5]                     ; 270     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[7]                     ; 206     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[6]                     ; 279     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[4]                     ; 243     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[5]                     ; 282     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[7]                     ; 202     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[6]                     ; 285     ;
 ; emsx_top:U92|ff_hybridclk_n                                                        ; 2       ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_wait_n_s                       ; 2       ;
 ; emsx_top:U92|reset_controller:u_reset_controller|ff_sync_reset                     ; 9       ;
 ; emsx_top:U92|clock_generator:u_clock_generator|ff_clkdiv3[1]                       ; 3       ;
 ; emsx_top:U92|ocmkai_control_decice:u_ocmkai_control_device|ff_panamega_is_linear   ; 13      ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[14]                    ; 96      ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[15]                    ; 60      ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[14]                    ; 94      ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[15]                    ; 63      ;
 ; emsx_top:U92|ppi:u_ppi|ff_ExpSlot3[0]                                              ; 2       ;
 ; emsx_top:U92|ppi:u_ppi|ff_ppi_port_a[1]                                            ; 2       ;
 ; emsx_top:U92|ppi:u_ppi|ff_ppi_port_a[3]                                            ; 2       ;
@@ -1843,12 +1843,12 @@ Encoding Type:  One-Hot
 ; emsx_top:U92|ppi:u_ppi|ff_ExpSlot3[1]                                              ; 2       ;
 ; emsx_top:U92|ppi:u_ppi|ff_ExpSlot3[3]                                              ; 2       ;
 ; emsx_top:U92|ppi:u_ppi|ff_ExpSlot3[5]                                              ; 2       ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[13]                    ; 81      ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[12]                    ; 31      ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[11]                    ; 49      ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[9]                     ; 152     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[10]                    ; 163     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[8]                     ; 135     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[13]                    ; 79      ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[8]                     ; 198     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[11]                    ; 48      ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[10]                    ; 151     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[9]                     ; 163     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[12]                    ; 30      ;
 ; emsx_top:U92|s1990:u_s1990|ff_rom_mode                                             ; 3       ;
 ; emsx_top:U92|megaram:u_megaram_for_slot1|SccBank2[1]                               ; 2       ;
 ; emsx_top:U92|megaram:u_megaram_for_slot2|SccBank2[1]                               ; 2       ;
@@ -6127,7 +6127,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;     SLD               ; 45                          ;
 ;     plain             ; 427                         ;
 ; arriav_io_obuf        ; 91                          ;
-; arriav_lcell_comb     ; 14262                       ;
+; arriav_lcell_comb     ; 14369                       ;
 ;     arith             ; 1832                        ;
 ;         0 data inputs ; 16                          ;
 ;         1 data inputs ; 1026                        ;
@@ -6135,16 +6135,16 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;         3 data inputs ; 54                          ;
 ;         4 data inputs ; 138                         ;
 ;         5 data inputs ; 170                         ;
-;     extend            ; 263                         ;
-;         7 data inputs ; 263                         ;
-;     normal            ; 11907                       ;
+;     extend            ; 247                         ;
+;         7 data inputs ; 247                         ;
+;     normal            ; 12030                       ;
 ;         0 data inputs ; 13                          ;
-;         1 data inputs ; 653                         ;
-;         2 data inputs ; 1326                        ;
-;         3 data inputs ; 1722                        ;
-;         4 data inputs ; 1969                        ;
-;         5 data inputs ; 3938                        ;
-;         6 data inputs ; 2286                        ;
+;         1 data inputs ; 651                         ;
+;         2 data inputs ; 1364                        ;
+;         3 data inputs ; 1743                        ;
+;         4 data inputs ; 2005                        ;
+;         5 data inputs ; 3989                        ;
+;         6 data inputs ; 2265                        ;
 ;     shared            ; 260                         ;
 ;         0 data inputs ; 19                          ;
 ;         1 data inputs ; 17                          ;
@@ -6157,7 +6157,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; stratixv_ram_block    ; 369                         ;
 ;                       ;                             ;
 ; Max LUT depth         ; 19.80                       ;
-; Average LUT depth     ; 5.59                        ;
+; Average LUT depth     ; 5.64                        ;
 +-----------------------+-----------------------------+
 
 
@@ -6166,7 +6166,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:01:04     ;
+; Top            ; 00:01:07     ;
 +----------------+--------------+
 
 
@@ -6176,7 +6176,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.1 Build 646 04/11/2019 SJ Lite Edition
-    Info: Processing started: Thu Aug 12 21:20:59 2021
+    Info: Processing started: Tue Aug 17 21:26:20 2021
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off emsx_top_de0cv -c emsx_top_de0cv
 Info (16303): Aggressive Area optimization mode selected -- logic area will be prioritized at the potential cost of reduced timing performance
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
@@ -7697,19 +7697,19 @@ Warning (21074): Design contains 5 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "pSW[2]" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/board/de0cv/emsx_top_de0cv.vhd Line: 115
     Warning (15610): No output dependent on input pin "pSW[3]" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/board/de0cv/emsx_top_de0cv.vhd Line: 115
     Warning (15610): No output dependent on input pin "pDip[8]" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/board/de0cv/emsx_top_de0cv.vhd Line: 116
-Info (21057): Implemented 17186 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 17293 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 19 input pins
     Info (21059): Implemented 90 output pins
     Info (21060): Implemented 86 bidirectional pins
-    Info (21061): Implemented 16596 logic cells
+    Info (21061): Implemented 16703 logic cells
     Info (21064): Implemented 369 RAM segments
     Info (21065): Implemented 3 PLLs
     Info (21062): Implemented 22 DSP elements
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 254 warnings
-    Info: Peak virtual memory: 5074 megabytes
-    Info: Processing ended: Thu Aug 12 21:22:25 2021
-    Info: Elapsed time: 00:01:26
-    Info: Total CPU time (on all processors): 00:02:40
+    Info: Peak virtual memory: 5077 megabytes
+    Info: Processing ended: Tue Aug 17 21:27:51 2021
+    Info: Elapsed time: 00:01:31
+    Info: Total CPU time (on all processors): 00:02:51
 
 
 +------------------------------------------+

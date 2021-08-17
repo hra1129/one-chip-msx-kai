@@ -107,6 +107,19 @@ start_code::
 		xor		a, a
 		out		[exp_io_ocmkai_ctrl_data], a
 
+		; Check already loaded BIOS.
+		ld		a, 0x80							;	Check MAIN-ROM
+		ld		[ eseram8k_bank2 ], a
+		ld		hl, 0x8000
+		ld		a, [hl]
+		cp		a, 0xF3
+		jr		nz, no_loaded
+		inc		hl
+		ld		a, [hl]
+		cp		a, 0xC3
+		jp		z, start_system
+
+no_loaded:
 		ld		a, 0x40							;	Enable SD/MMC (Disable EPCS)
 		ld		[ eseram8k_bank0 ], a
 
@@ -303,7 +316,7 @@ fill_blocks:
 		jr		exit
 
 		; COMMAND0: Start System ---------------------------------------------------------
-start_system:
+start_system::
 		; Initialize MegaSDHC MemoryID
 		ld		a, exp_io_ocmkai_ctrl_reg_memory_id
 		out		[exp_io_ocmkai_ctrl_register_sel], a
@@ -326,8 +339,7 @@ start_system:
 		ld		a, exp_io_1chipmsx_id
 		out		[ exp_io_vendor_id_port ], a	; I/O address 0x40 is 1chipMSX device in expanded I/O.
 
-		ld		sp, 0xFFFF
-		jp		0x0000							; start MSX BASIC
+		rst		0x00							; start MSX BASIC
 		endscope
 
 ; --------------------------------------------------------------------
