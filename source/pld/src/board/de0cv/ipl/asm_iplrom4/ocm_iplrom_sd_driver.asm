@@ -270,7 +270,7 @@ sd_read_sector::
 		pop		hl
 		or		a, a
 		scf
-		ret		nz					;	error	š‚±‚±‚Å”²‚¯‚Ä‚µ‚Ü‚¤ 
+		ret		nz					;	error
 
 		push	de
 		push	bc

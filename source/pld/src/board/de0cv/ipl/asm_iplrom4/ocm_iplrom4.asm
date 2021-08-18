@@ -19,7 +19,7 @@
 ; --------------------------------------------------------------------
 ;	Configuration
 ; --------------------------------------------------------------------
-srom_bios_image_address					:= 0x3C00			; EPCS64 0x780000 : 0x3C00 = 0x780000 / 256 / 2
+srom_bios_image_address					:= 0x780000 >> 9	; EPCS64 0x780000
 
 ; --------------------------------------------------------------------
 ;	Work area
@@ -102,12 +102,35 @@ start_code::
 		out		[exp_io_ocmkai_ctrl_register_sel], a
 		out		[exp_io_ocmkai_ctrl_data], a
 
+		; Skip check of alreay loaded BIOS, when press [ESC] key.
+		ld		a, 0xF7
+		out		[0xAA], a
+		in		a, [0xA9]
+		and		a, 4
+		jr		z, skip_check
+
+		; Check already loaded BIOS.
+		ld		a, exp_io_ocmkai_ctrl_reg_memory_id
+		out		[exp_io_ocmkai_ctrl_register_sel], a
+		ld		a, 1
+		out		[exp_io_ocmkai_ctrl_data], a
+
+		ld		a, 0x80							;	Check DOS-ROM
+		ld		[ eseram8k_bank2 ], a
+		ld		hl, 0x8000
+		ld		a, [hl]
+		cp		a, 'A'
+		jr		nz, no_loaded
+		inc		hl
+		ld		a, [hl]
+		cp		a, 'B'
+		jr		nz, no_loaded
+
 		ld		a, exp_io_ocmkai_ctrl_reg_memory_id
 		out		[exp_io_ocmkai_ctrl_register_sel], a
 		xor		a, a
 		out		[exp_io_ocmkai_ctrl_data], a
 
-		; Check already loaded BIOS.
 		ld		a, 0x80							;	Check MAIN-ROM
 		ld		[ eseram8k_bank2 ], a
 		ld		hl, 0x8000
@@ -120,6 +143,8 @@ start_code::
 		jp		z, start_system
 
 no_loaded:
+
+skip_check:
 		ld		a, 0x40							;	Enable SD/MMC (Disable EPCS)
 		ld		[ eseram8k_bank0 ], a
 
@@ -331,6 +356,9 @@ start_system::
 		ld		[ eseram8k_bank2 ], a
 		ld		[ eseram8k_bank3 ], a
 
+		ld		a, 0xF0
+		out		[ primary_slot_register ], a
+
 		ld		a, [ 0x0000 ]					;  first byte
 		cp		a, 0xF3							; = DI ?
 		jp		nz, bios_read_error				;  error
@@ -358,10 +386,11 @@ read_first_sector::
 		ld		b, 1					; read 1 sector
 		ld		hl, buffer
 		call	read_sector
-		jr		c, no_match				; error
 
 		push	bc						; save next sector index
 		push	de
+		jr		c, no_match				; error
+
 
 		ld		hl, buffer + bios_image_signature
 		ld		de, bios_image_signature_reference

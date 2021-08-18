@@ -80,8 +80,8 @@ put09:
 ; --------------------------------------------------------------------
 message_initial_text::
 		ds		"Initial Program Loader for OneChipMSX.  "
-		ds		"                         Revision 4.0.6 "
-		ds		"       OCM-Kai Build date Aug.17th.2021 "
+		ds		"                         Revision 4.0.7 "
+		ds		"       OCM-Kai Build date Aug.19th.2021 "
 		db		0
 
 message_sd_boot::
