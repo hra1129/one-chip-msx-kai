@@ -1,9 +1,7 @@
 //
 // emsx_sdram_controller.v
-//	 ESE MSX-SYSTEM3 / MSX clone on a Cyclone FPGA (ALTERA)
-//	 Revision 1.00
 //
-// Copyright (c) 2006 Kazuhiro Tsujikawa (ESE Artists' factory)
+// Copyright (c) 2020-2021 Takayuki Hara
 // All rights reserved.
 //
 // Redistribution and use of this source code or any derivative works, are
@@ -32,8 +30,12 @@
 // ----------------------------------------------------------------------------
 //	2020.May.4th by t.hara
 //	-- Separated from emsx_top.
-//	-- Convert to VerilogHDL.
-//	-- Delete initial clear phase
+//	-- Redesigned to handle 32MB of space.
+//
+//	2021.August.25th by t.hara
+//	-- The initialization process for some memories is now limited to only 
+//	   when the power is turned on.
+//	-- Fixed to clear the MainROM area as well.
 //
 module emsx_sdram_controller (
 	input				reset,
@@ -97,7 +99,9 @@ module emsx_sdram_controller (
 	localparam	[4:0]	c_main_state_wait_clear_esescc1		= 5'd13;
 	localparam	[4:0]	c_main_state_clear_esescc2			= 5'd14;
 	localparam	[4:0]	c_main_state_wait_clear_esescc2		= 5'd15;
-	localparam	[4:0]	c_main_state_ready					= 5'd16;
+	localparam	[4:0]	c_main_state_clear_mainrom			= 5'd16;
+	localparam	[4:0]	c_main_state_wait_clear_mainrom		= 5'd17;
+	localparam	[4:0]	c_main_state_ready					= 5'd18;
 
 	localparam	[2:0]	c_sub_state_activate				= 3'd0;
 	localparam	[2:0]	c_sub_state_nop1					= 3'd1;
@@ -128,6 +132,7 @@ module emsx_sdram_controller (
 	reg		[ 7:0]	ff_mem_cpu_read_data;
 	reg		[ 7:0]	ff_vram_page				= 8'd0;
 	reg				ff_mem_ack;
+	reg				ff_skip_clear				= 1'b0;
 
 	// --------------------------------------------------------------------
 	//	Main State
@@ -154,11 +159,21 @@ module emsx_sdram_controller (
 				ff_main_state	<= c_main_state_wait_clear_esescc1;
 			c_main_state_clear_esescc2:
 				ff_main_state	<= c_main_state_wait_clear_esescc2;
+			c_main_state_clear_mainrom:
+				ff_main_state	<= c_main_state_wait_clear_mainrom;
 			c_main_state_ready:
-				ff_main_state	<= c_main_state_ready;
+				begin
+					ff_main_state	<= c_main_state_ready;
+					ff_skip_clear	<= 1'b1;
+				end
 			default:
 				if( (!ff_sub_state_drive && w_end_of_main_timer) || (ff_sub_state == c_sub_state_end_of_sub_state && !mem_vdp_dh_clk) ) begin
-					ff_main_state	<= ff_main_state + 5'd1;
+					if( ff_skip_clear && (ff_main_state == c_main_state_wait_mode_register_set) ) begin
+						ff_main_state	<= c_main_state_ready;
+					end
+					else begin
+						ff_main_state	<= ff_main_state + 5'd1;
+					end
 				end
 				else begin
 					//	hold
@@ -306,7 +321,12 @@ module emsx_sdram_controller (
 						ff_sdr_lower_dq_mask	<= 1'b1;
 					end
 					else begin
-						if( w_vdp_phase ) begin
+						if( ff_main_state > c_main_state_wait_mode_register_set && ff_main_state != c_main_state_ready ) begin
+							ff_sdram_command		<= c_sdr_command_write;
+							ff_sdr_upper_dq_mask	<= ~mem_cpu_address[0];
+							ff_sdr_lower_dq_mask	<=  mem_cpu_address[0];
+						end
+						else if( w_vdp_phase ) begin
 							if( mem_vdp_write ) begin
 								ff_sdram_command		<= c_sdr_command_write;
 								ff_sdr_upper_dq_mask	<= ~mem_vdp_address[16];
@@ -395,15 +415,14 @@ module emsx_sdram_controller (
 						ff_sdr_address[14:13]	<= 2'd0;
 						case( ff_main_state )
 						c_main_state_wait_clear_esescc2:		//	ESE-SCC2 400000h
-							ff_sdr_address[ 8: 0]	<= 9'b100_0000_00;
+							ff_sdr_address[12: 0]	<= 13'b000_0100_0000_00;
 						c_main_state_wait_clear_esescc1:		//	ESE-SCC1 500000h
-							ff_sdr_address[ 8: 0]	<= 9'b101_0000_00;
+							ff_sdr_address[12: 0]	<= 13'b000_0101_0000_00;
 						c_main_state_wait_clear_eseram:			//	ESE-RAM  600000h
-							ff_sdr_address[ 8: 0]	<= 9'b110_0000_00;
+							ff_sdr_address[12: 0]	<= 13'b000_0110_0000_00;
 						default:
-							ff_sdr_address[ 8: 0]	<= 9'd0;
+							ff_sdr_address[12: 0]	<= 13'd0;
 						endcase
-						ff_sdr_address[12: 0]	<= 13'd0;
 					end
 				end
 			default:
