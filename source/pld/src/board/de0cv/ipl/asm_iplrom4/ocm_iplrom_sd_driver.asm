@@ -1,11 +1,36 @@
-; --------------------------------------------------------------------
-;	IPLROM4 for OCM booting from MMC/SD/SDHC card
-;	without data compression
-; ====================================================================
-;	History
-;	ver 3.0.0	caro
-;	ver	4.0.0	t.hara
-; --------------------------------------------------------------------
+; ==============================================================================
+;	IPL-ROM for OCM-PLD v3.9 or later
+;	SD-Card Driver
+; ------------------------------------------------------------------------------
+; Copyright (c) 2021 Takayuki Hara
+; All rights reserved.
+;
+; Redistribution and use of this source code or any derivative works, are
+; permitted provided that the following conditions are met:
+;
+; 1. Redistributions of source code must retain the above copyright notice,
+;	 this list of conditions and the following disclaimer.
+; 2. Redistributions in binary form must reproduce the above copyright
+;	 notice, this list of conditions and the following disclaimer in the
+;	 documentation and/or other materials provided with the distribution.
+; 3. Redistributions may not be sold, nor may they be used in a commercial
+;	 product or activity without specific prior written permission.
+;
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+; "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+; TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+; PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+; CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+; EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+; PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+; OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+; ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+; ------------------------------------------------------------------------------
+; History:
+;   2021/Aug/20th  t.hara  Overall revision.
+; ==============================================================================
 
 ; --------------------------------------------------------------------
 ;	SD Card Command
@@ -389,64 +414,26 @@ sd_first_process::
 		ret		nz					;	go to srom_read ehen SD card is not FAT16 file system.
 
 sd_card_is_fat:
-		call	calculate_first_sector_in_bios_image
-		ret		c					;	first file on SD card is not BIOS image.
-		xor		a, a				;	Success (CY = 0)
-		ret
-		endscope
-
-; --------------------------------------------------------------------
-;	Calculate first sector in BIOS image.
-;	input)
-;		none
-;	output)
-;		CDE ... First sector number in BIOS image
-;		Cy .... 0: Failed, 1: Success
-;	break)
-;		af, bc, de, hl, ix
-; --------------------------------------------------------------------
-		scope	calculate_first_sector_in_bios_image
-calculate_first_sector_in_bios_image::
-		ld		ix, buffer			; PBR sector
-
 		; HL = reserved sectors
-		ld		l, [ix + pbr_reserved_sectors + 0]
-		ld		h, [ix + pbr_reserved_sectors + 1]
+		ld		hl, [buffer + pbr_reserved_sectors]
 
 		ld		a, c
 		add		hl, de
 		adc		a, 0
 		ld		c, a
 
-		; DE = root entries
-		ld		e, [ix + pbr_root_entries + 0]
-		ld		d, [ix + pbr_root_entries + 1]
-		ld		a, e
-		and		a, 0x0F
-		ld		b, 4
-loop1:
-		srl		d
-		rr		e
-		djnz	loop1
-
-		or		a, a
-		jr		z, skip1
-		inc		de
-skip1:
-		; calculate first sector address of BIOS image.
-		push	de
 		; Seek out the next sector of the FAT.
-		ld		b, [ix + pbr_num_of_fat]
-		ld		e, [ix + pbr_sectors_per_fat + 0]
-		ld		d, [ix + pbr_sectors_per_fat + 1]
+		ld		a, [buffer + pbr_num_of_fat]
+		ld		de, [buffer + pbr_sectors_per_fat]
+		ld		b, a
 		ld		a, c
-loop2:
+add_fat_size:
 		add		hl, de
 		adc		a, 0
-		djnz	loop2
-		pop		de
-		add		hl, de
-		ex		de, hl
+		djnz	add_fat_size
+
 		ld		c, a
+		ex		de, hl
+		xor		a, a				;	Success (CY = 0)
 		ret
 		endscope

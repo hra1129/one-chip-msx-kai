@@ -41,4 +41,4 @@ module iplrom (
 	reg		[ 7:0]	ff_dbi;
 
 	always @( posedge clk ) begin
-		case( adr )
+		case( adr[11:0] )

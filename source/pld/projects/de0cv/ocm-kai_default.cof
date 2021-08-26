@@ -13,9 +13,15 @@
 		</bit0>
 	</sof_data>
 	<hex_block>
-		<hex_filename>../../bios/ocm_msx2.hex</hex_filename>
+		<hex_filename>D:/download/DE0-CV/OCM-PLD/emsxcv/pld/bios/ocm_msx2_nextor.hex</hex_filename>
 		<hex_addressing>relative</hex_addressing>
-		<hex_offset>7864320</hex_offset>
+		<hex_offset>5242880</hex_offset>
+		<hex_little_endian>0</hex_little_endian>
+	</hex_block>
+	<hex_block>
+		<hex_filename>D:/download/DE0-CV/OCM-PLD/emsxcv/pld/bios/ocm_msx2_dos2.hex</hex_filename>
+		<hex_addressing>relative</hex_addressing>
+		<hex_offset>2097152</hex_offset>
 		<hex_little_endian>0</hex_little_endian>
 	</hex_block>
 	<version>10</version>
