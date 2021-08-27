@@ -119,7 +119,7 @@ architecture RTL of switched_io_ports is
     signal  prev_scan   : std_logic_vector(  1 downto 0 ) := "11";
 
     -- Machine Type ID (0-15)                                               -- 0 = 1chipMSX, 1 = Zemmix Neo, 2 = SM-X, 3 = SX-2, ..., 15 = Unknown
-    constant MachineID  : std_logic_vector(  3 downto 0 ) :=     "0011";    -- 3
+    constant MachineID  : std_logic_vector(  3 downto 0 ) :=     "0101";    -- 5 = DE0CV
 
     -- OCM-PLD version number (x \ 10).(y mod 10).(z[0~3])                  -- OCM-PLD version 0.0(.0) ~ 25.5(.3)
     constant ocm_pld_xy : std_logic_vector(  7 downto 0 ) := "00100111";    -- 39

@@ -284,6 +284,7 @@ module emsx_top(
 	reg		[2:0]	ff_hybstartcnt;
 	reg		[2:0]	ff_hybtoutcnt;
 	wire			reset;
+	wire			power_on_reset;
 	wire			w_sig10mhz;											// Added by t.hara in May/22th/2020
 	wire			w_sig5mhz;											// Added by t.hara in May/22th/2020
 	reg		[4:0]	ff_LogoRstCnt	= 5'b11111;
@@ -548,6 +549,7 @@ module emsx_top(
 	//--------------------------------------------------------------
 	clock_generator u_clock_generator (
 		.reset			( reset				),
+		.power_on_reset	( power_on_reset	),
 		.clk21m			( clk21m			),
 		.cpuclk			( cpuclk			),
 		.trueClk		( trueClk			),
@@ -683,7 +685,8 @@ module emsx_top(
 		.xSltRst_n			( xSltRst_n			),
 		.sync_reset			( sync_reset		),
 		.sig10mhz			( w_sig10mhz		),
-		.sig5mhz			( w_sig5mhz			)
+		.sig5mhz			( w_sig5mhz			),
+		.power_on_reset		( power_on_reset	)
 	);
 
 	//--------------------------------------------------------------
@@ -764,9 +767,7 @@ module emsx_top(
 
 	// DIP-SW latch
 	always @( posedge clk21m ) begin
-//		if( SdPaus = 1'b0 ) begin						// dismissed
-			ff_dip_req <= ~pDip;						// convert negative logic to positive logic, and latch
-//		end
+		ff_dip_req <= ~pDip;						// convert negative logic to positive logic, and latch
 	end
 
 	// Kana keyboard layout: 1=JIS layout
@@ -803,7 +804,7 @@ module emsx_top(
 							8'dz;
 
 	assign pSltRsv5		= 1'bz;
-	assign pSltRsv16	= 1'bz;
+	assign pSltRsv16	= ( ~reset ) & power_on_reset;			// can perform RESET_n lock on Cyclone I machine slot pins by applying a hardware patch
 	assign pSltSw1		= 1'bz;
 	assign pSltSw2		= 1'bz;
 

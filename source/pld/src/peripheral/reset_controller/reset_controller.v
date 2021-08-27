@@ -34,7 +34,9 @@
 //	May/21th/2020 ver1.00 first release by t.hara
 //		Separated from emsx_top.
 //
-
+//	Aug/27th/2021 ver1.01 by t.hara
+//		Added power_on_reset signal
+//
 module reset_controller (
 	input			memclk,
 	input			clk21m,
@@ -47,23 +49,30 @@ module reset_controller (
 	output			xSltRst_n,
 	output			sync_reset,
 	output			sig10mhz,
-	output			sig5mhz
+	output			sig5mhz,
+	output			power_on_reset
 );
-	reg		[ 1:0]	ff_mem_seq		= 2'b00;
-	reg		[15:0]	FreeCounter		= 16'd0;
-	reg				HoldRst_ena		= 1'b0;
-	reg		[ 3:0]	HardRst_cnt		= 4'd0;
-	reg				ff_sync_reset	= 1'b1;
+	reg		[ 1:0]	ff_mem_seq			= 2'b00;
+	reg		[19:0]	FreeCounter			= 20'd0;
+	reg				HoldRst_ena			= 1'b0;
+	reg		[ 3:0]	HardRst_cnt			= 4'd0;
+	reg				ff_sync_reset		= 1'b1;
+	reg				ff_power_on_reset	= 1'b0;
+
+	always @( posedge memclk ) begin
+		if( FreeCounter[19:15] == 5'b11001 ) begin		//	about 38ms
+			ff_power_on_reset <= 1'b1;
+		end
+	end
+	assign power_on_reset = ff_power_on_reset;
 
 	//	00 --> 01 --> 11 --> 10 --> 00
 	always @( posedge memclk ) begin
 		ff_mem_seq <= { ff_mem_seq[0], ~ff_mem_seq[1] };
 	end
 
-	always @( posedge memclk ) begin
-		if( ff_mem_seq == 2'b00 ) begin
-			FreeCounter <= FreeCounter + 16'd1;
-		end
+	always @( posedge clk21m ) begin
+		FreeCounter <= FreeCounter + 20'd1;
 	end
 
 	// hard reset timer

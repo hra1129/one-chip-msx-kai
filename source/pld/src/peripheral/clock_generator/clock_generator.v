@@ -37,6 +37,7 @@
 
 module clock_generator (
 	input			reset,
+	input			power_on_reset,
 	input			clk21m,
 	output			cpuclk,
 	output			trueClk,
@@ -92,13 +93,13 @@ module clock_generator (
 	assign clkdiv	= ff_clkdiv;
 
 	// cpu clock assignment
-	assign trueClk = //( !SdPaus                         ) ? 1'b1			:	// dismissed
+	assign trueClk = ( !power_on_reset                   ) ? 1'b1			:	// dismissed
 					( clksel && !reset                   ) ? ff_clkdiv[0]	:	// 10.74MHz
 					( !clksel5m_n && !reset              ) ? ff_clkdiv[1]	:	//	5.37MHz
 					ff_cpuclk;													//	3.58MHz
 
 	// slots clock assignment
-	assign pCpuClk = //( !SdPaus                         ) ? 1'b1			:	// dismissed
+	assign pCpuClk = ( !power_on_reset                   ) ? 1'b1			:	// dismissed
 					( clksel && !extclk3m && !reset      ) ? ff_clkdiv[0]	:	// 10.74MHz
 					( !clksel5m_n && !extclk3m && !reset ) ? ff_clkdiv[1]	:	//	5.37MHz
 					ff_cpuclk;													//	3.58MHz
