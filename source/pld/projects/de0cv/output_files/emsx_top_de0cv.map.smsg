@@ -1,10 +1,10 @@
-Info (10281): Verilog HDL Declaration information at sound_mixer.v(46): object "vFkeys" differs only in case from object "vFKeys" in the same scope File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/sound/mixer/sound_mixer.v Line: 46
-Warning (10273): Verilog HDL warning at ocm_bus_selector.v(358): extended using "x" or "z" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/peripheral/ocm/ocm_bus_selector.v Line: 358
-Warning (10273): Verilog HDL warning at ocm_bus_selector.v(363): extended using "x" or "z" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/peripheral/ocm/ocm_bus_selector.v Line: 363
-Warning (10273): Verilog HDL warning at ocm_bus_selector.v(368): extended using "x" or "z" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/peripheral/ocm/ocm_bus_selector.v Line: 368
-Warning (10273): Verilog HDL warning at ocm_bus_selector.v(373): extended using "x" or "z" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/peripheral/ocm/ocm_bus_selector.v Line: 373
-Warning (10273): Verilog HDL warning at emsx_sdram_controller.v(451): extended using "x" or "z" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/sdram/emsx_sdram_controller.v Line: 451
-Warning (10268): Verilog HDL information at tr_pcm.v(124): always construct contains both blocking and non-blocking assignments File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/sound/tr_pcm/tr_pcm.v Line: 124
-Warning (10268): Verilog HDL information at tr_pcm.v(255): always construct contains both blocking and non-blocking assignments File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/sound/tr_pcm/tr_pcm.v Line: 255
-Warning (10273): Verilog HDL warning at emsx_top.v(798): extended using "x" or "z" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/emsx_top.v Line: 798
-Warning (10273): Verilog HDL warning at emsx_top.v(804): extended using "x" or "z" File: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/src/emsx_top.v Line: 804
+Info (10281): Verilog HDL Declaration information at sound_mixer.v(46): object "vFkeys" differs only in case from object "vFKeys" in the same scope File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/sound/mixer/sound_mixer.v Line: 46
+Warning (10273): Verilog HDL warning at ocm_bus_selector.v(358): extended using "x" or "z" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/ocm/ocm_bus_selector.v Line: 358
+Warning (10273): Verilog HDL warning at ocm_bus_selector.v(363): extended using "x" or "z" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/ocm/ocm_bus_selector.v Line: 363
+Warning (10273): Verilog HDL warning at ocm_bus_selector.v(368): extended using "x" or "z" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/ocm/ocm_bus_selector.v Line: 368
+Warning (10273): Verilog HDL warning at ocm_bus_selector.v(373): extended using "x" or "z" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/ocm/ocm_bus_selector.v Line: 373
+Warning (10273): Verilog HDL warning at emsx_sdram_controller.v(451): extended using "x" or "z" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/sdram/emsx_sdram_controller.v Line: 451
+Warning (10268): Verilog HDL information at tr_pcm.v(126): always construct contains both blocking and non-blocking assignments File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/sound/tr_pcm/tr_pcm.v Line: 126
+Warning (10268): Verilog HDL information at tr_pcm.v(257): always construct contains both blocking and non-blocking assignments File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/sound/tr_pcm/tr_pcm.v Line: 257
+Warning (10273): Verilog HDL warning at emsx_top.v(798): extended using "x" or "z" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/emsx_top.v Line: 798
+Warning (10273): Verilog HDL warning at emsx_top.v(804): extended using "x" or "z" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/emsx_top.v Line: 804

@@ -149,7 +149,7 @@ start_of_code::
 		out		[exp_io_ocmkai_ctrl_data], a
 		ld		a, MAIN_ROM1_BANK & 0xFF
 		ld		[ eseram8k_bank2 ], a
-		dec		hl
+		ld		hl, 0x8000
 		ld		a, [hl]
 		cp		a, 0xF3
 		jr		nz, no_loaded

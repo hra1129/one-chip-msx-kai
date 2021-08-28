@@ -48,10 +48,12 @@ module sound_mixer #(
 	input	[ 9:0]			OpllAmp,
 	input	[14:0]			Scc1Amp,
 	input	[14:0]			Scc2Amp,
+	input	[15:0]			Opl3Amp,
 	input	[ 7:0]			tr_pcm_wave_out,
 	input	[ 2:0]			OpllVol,
 	input	[ 2:0]			SccVol,
 	input	[ 2:0]			PsgVol,
+	input	[ 2:0]			Opl3Vol,
 	input	[ 2:0]			MstrVol,
 	input					KeyClick,
 	output	[c_DAC_msbi:0]	DACin
@@ -83,6 +85,7 @@ module sound_mixer #(
 	wire	[ c_DACin_high - 2 : 0]		w_psg;
 	reg		[ c_DACin_high + 2 : 0]		ff_psg;
 	reg		[ c_DACin_high + 2 : 0]		ff_scc;
+	reg		[ c_DACin_high + 2 : 0]		ff_opl3;
 	wire	[ 18: 0]					w_scc;
 	reg		[  2: 0]					m_SccVol;
 	wire	[ c_DACin_high + 2 : 0]		chOpll;
@@ -170,6 +173,29 @@ module sound_mixer #(
 			ff_opll <= c_opll_offset + (chOpll - chOpll[c_DACin_high + 2: 3]);
 		end
 
+		// amplitude ramp of the OPL3 (mixer level equivalences: off, 4, 7 and 10 out of 13)
+		case( Opl3Vol )
+		3'b000, 3'b001:
+			begin
+				ff_tr_pcm[               11 :  0] <= Opl3Amp[15:4];
+				ff_tr_pcm[ c_DACin_high + 2 : 12] <= { (c_DACin_high + 2 - 11 + 1) { Opl3Amp[15] } };
+			end
+		3'b010, 3'b011, 3'b100:
+			begin
+				ff_tr_pcm[               10 :  0] <= Opl3Amp[15:5];
+				ff_tr_pcm[ c_DACin_high + 2 : 11] <= { (c_DACin_high + 2 - 10 + 1) { Opl3Amp[15] } };
+			end
+		3'b101, 3'b110:
+			begin
+				ff_tr_pcm[                9 :  0] <= Opl3Amp[15:6];
+				ff_tr_pcm[ c_DACin_high + 2 : 10] <= { (c_DACin_high + 2 -  9 + 1) { Opl3Amp[15] } };
+			end
+		default:
+			begin
+				ff_opl3							  <= { (c_DACin_high + 2 -  0 + 1) { Opl3Amp[15] } };
+			end
+		endcase
+
 		// amplitude ramp of the turboR PCM (mixer level equivalences: off, 1, 5 and 10 out of 13)
 		case( tr_pcm_vol )
 		3'b000, 3'b001:
@@ -196,7 +222,7 @@ module sound_mixer #(
 
 	always @( posedge clk21m ) begin
 		// ff_pre_dacin assignment
-		ff_pre_dacin <= (~ff_psg) + ff_scc + ff_opll + ff_tr_pcm;
+		ff_pre_dacin <= (~ff_psg) + ff_scc + ff_opll + ff_tr_pcm + ff_opl3;
 
 		// amplitude limiter
 		case( ff_pre_dacin[ c_DACin_high + 2 : c_DACin_high ] )

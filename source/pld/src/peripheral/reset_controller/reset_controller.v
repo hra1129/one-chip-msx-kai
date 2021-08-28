@@ -113,7 +113,7 @@ module reset_controller (
 	assign reset		= ( pSltRst_n == 1'b0 && RstKeyLock == 1'b0 && HardRst_cnt != 4'b0001 ) ? 1'b1 :
 						  ( swioRESET_n == 1'b0 || HardRst_cnt == 4'b0011 || HardRst_cnt == 4'b0010 || sdram_ready == 1'b0 ) ? 1'b1 :		// Modifyed by t.hara in 10th/May/2020
 						  1'b0;
-	assign xSltRst_n	= ~reset;
+	assign xSltRst_n	= ~reset & ff_power_on_reset;
 	assign sync_reset	= ff_sync_reset;
 	assign sig10mhz		= FreeCounter[0];
 	assign sig5mhz		= FreeCounter[1];

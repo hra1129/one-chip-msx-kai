@@ -1,5 +1,5 @@
 Assembler report for emsx_top_de0cv
-Fri Aug 27 21:59:58 2021
+Sat Aug 28 21:14:58 2021
 Quartus Prime Version 18.1.1 Build 646 04/11/2019 SJ Lite Edition
 
 
@@ -10,8 +10,8 @@ Quartus Prime Version 18.1.1 Build 646 04/11/2019 SJ Lite Edition
   2. Assembler Summary
   3. Assembler Settings
   4. Assembler Generated Files
-  5. Assembler Device Options: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/projects/de0cv/output_files/emsx_top_de0cv.sof
-  6. Assembler Device Options: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/projects/de0cv/output_files/emsx_top_de0cv.pof
+  5. Assembler Device Options: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/projects/de0cv/output_files/emsx_top_de0cv.sof
+  6. Assembler Device Options: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/projects/de0cv/output_files/emsx_top_de0cv.pof
   7. Assembler Messages
 
 
@@ -39,7 +39,7 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Fri Aug 27 21:59:58 2021 ;
+; Assembler Status      ; Successful - Sat Aug 28 21:14:58 2021 ;
 ; Revision Name         ; emsx_top_de0cv                        ;
 ; Top-level Entity Name ; emsx_top_de0cv                        ;
 ; Family                ; Cyclone V                             ;
@@ -54,35 +54,35 @@ https://fpgasoftware.intel.com/eula.
 +--------+---------+---------------+
 
 
-+--------------------------------------------------------------------------------------+
-; Assembler Generated Files                                                            ;
-+--------------------------------------------------------------------------------------+
-; File Name                                                                            ;
-+--------------------------------------------------------------------------------------+
-; D:/download/DE0-CV/OCM-PLD/emsxcv/pld/projects/de0cv/output_files/emsx_top_de0cv.sof ;
-; D:/download/DE0-CV/OCM-PLD/emsxcv/pld/projects/de0cv/output_files/emsx_top_de0cv.pof ;
-+--------------------------------------------------------------------------------------+
++----------------------------------------------------------------------------------------------------------+
+; Assembler Generated Files                                                                                ;
++----------------------------------------------------------------------------------------------------------+
+; File Name                                                                                                ;
++----------------------------------------------------------------------------------------------------------+
+; C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/projects/de0cv/output_files/emsx_top_de0cv.sof ;
+; C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/projects/de0cv/output_files/emsx_top_de0cv.pof ;
++----------------------------------------------------------------------------------------------------------+
 
 
-+----------------------------------------------------------------------------------------------------------------+
-; Assembler Device Options: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/projects/de0cv/output_files/emsx_top_de0cv.sof ;
-+----------------+-----------------------------------------------------------------------------------------------+
-; Option         ; Setting                                                                                       ;
-+----------------+-----------------------------------------------------------------------------------------------+
-; JTAG usercode  ; 0x0280CEEE                                                                                    ;
-; Checksum       ; 0x0280CEEE                                                                                    ;
-+----------------+-----------------------------------------------------------------------------------------------+
++------------------------------------------------------------------------------------------------------------------------------------+
+; Assembler Device Options: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/projects/de0cv/output_files/emsx_top_de0cv.sof ;
++----------------+-------------------------------------------------------------------------------------------------------------------+
+; Option         ; Setting                                                                                                           ;
++----------------+-------------------------------------------------------------------------------------------------------------------+
+; JTAG usercode  ; 0x027DB1FB                                                                                                        ;
+; Checksum       ; 0x027DB1FB                                                                                                        ;
++----------------+-------------------------------------------------------------------------------------------------------------------+
 
 
-+----------------------------------------------------------------------------------------------------------------+
-; Assembler Device Options: D:/download/DE0-CV/OCM-PLD/emsxcv/pld/projects/de0cv/output_files/emsx_top_de0cv.pof ;
-+--------------------+-------------------------------------------------------------------------------------------+
-; Option             ; Setting                                                                                   ;
-+--------------------+-------------------------------------------------------------------------------------------+
-; JTAG usercode      ; 0x00000000                                                                                ;
-; Checksum           ; 0x71A39E14                                                                                ;
-; Compression Ratio  ; 2                                                                                         ;
-+--------------------+-------------------------------------------------------------------------------------------+
++------------------------------------------------------------------------------------------------------------------------------------+
+; Assembler Device Options: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/projects/de0cv/output_files/emsx_top_de0cv.pof ;
++--------------------+---------------------------------------------------------------------------------------------------------------+
+; Option             ; Setting                                                                                                       ;
++--------------------+---------------------------------------------------------------------------------------------------------------+
+; JTAG usercode      ; 0x00000000                                                                                                    ;
+; Checksum           ; 0x71B046C4                                                                                                    ;
+; Compression Ratio  ; 2                                                                                                             ;
++--------------------+---------------------------------------------------------------------------------------------------------------+
 
 
 +--------------------+
@@ -91,14 +91,14 @@ https://fpgasoftware.intel.com/eula.
 Info: *******************************************************************
 Info: Running Quartus Prime Assembler
     Info: Version 18.1.1 Build 646 04/11/2019 SJ Lite Edition
-    Info: Processing started: Fri Aug 27 21:59:44 2021
+    Info: Processing started: Sat Aug 28 21:14:43 2021
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off emsx_top_de0cv -c emsx_top_de0cv
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (115030): Assembler is generating device programming files
 Info: Quartus Prime Assembler was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 4959 megabytes
-    Info: Processing ended: Fri Aug 27 21:59:58 2021
-    Info: Elapsed time: 00:00:14
-    Info: Total CPU time (on all processors): 00:00:11
+    Info: Peak virtual memory: 4958 megabytes
+    Info: Processing ended: Sat Aug 28 21:14:58 2021
+    Info: Elapsed time: 00:00:15
+    Info: Total CPU time (on all processors): 00:00:12
 
 
