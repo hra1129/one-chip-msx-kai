@@ -119,7 +119,7 @@ message_initial_text2::
 		ds		"Revision 4.1.0"
 		db		0
 message_initial_text3::
-		ds		"OCM-Kai Build date Aug.28th.2021 "
+		ds		"OCM-Kai Build date Aug.29th.2021 "
 		db		0
 
 message_sd_boot::

@@ -56,16 +56,19 @@ load_from_epcs::
 			; load BIOS image from EPCS serial ROM
 			ld			a, 0x60
 			ld			[ eseram8k_bank0 ], a
+			ld			a, [megasd_sd_register|(1<<12)]		; /CS=1 (address bit12)
 
 			; Check DIP-SW7 and select DualBIOS
 			ld			de, epcs_bios1_start_address
-			in			a, [ 0x42 ]
-			and			a, 0b01000000
-			ld			hl, message_srom_boot1
-			jr			z, skip1
+			ld			a, exp_io_1chipmsx_id
+			out			[ exp_io_vendor_id_port ], a
+			in			a, [ 0x42 ]							; DIP-SW status
+			and			a, 0b01000000						; check DIP-SW7
+			ld			hl, message_srom_boot1				; -- Select EPBIOS1, when DIP-SW7 is OFF
+			jr			nz, skip1
 
 			ld			d, epcs_bios2_start_address >> 8
-			ld			hl, message_srom_boot2
+			ld			hl, message_srom_boot2				; -- Select EPBIOS1, when DIP-SW7 is ON
 skip1:
 			jr			load_bios
 			endscope
@@ -84,7 +87,7 @@ skip1:
 ; ------------------------------------------------------------------------------
 			scope		read_sector_from_epcs
 read_sector_from_epcs::
-			push		de
+			push		de								; [001] target sector number
 			sla			e
 			rl			d								; de * 2
 			xor			a, a							; dea = byte address, Cy = 0
@@ -92,15 +95,15 @@ read_sector_from_epcs::
 			sla			c								; c = {number of sectors} * 2  : number of half sectors
 			ld			b, a							; b = 256
 
-			push		bc								; save number of half sectors
-			push		hl
+			push		bc								; [002] save number of half sectors
+			push		hl								; [003] destination address
 			ld			hl, megasd_sd_register|(0<<12)	; /CS=0 (address bit12)
 			ld			[hl], EPCS_READ_BYTES			; command byte
 			ld			[hl], d							; byte address b23-b16
 			ld			[hl], e							; byte address b15-b8
 			ld			[hl], a							; byte address b7-b0
 			ld			a, [hl]
-			pop			de								; de = adress of buffer
+			pop			de								; [003] de = adress of buffer
 
 read_all:
 read_half_sector:
@@ -113,8 +116,8 @@ read_half_sector:
 
 			ld			a, [megasd_sd_register|(1<<12)]	; /CS=1 (address bit12)
 
-			pop			hl								; H = number of half sectors
-			pop			de								; adress of sector
+			pop			hl								; [002] H = number of half sectors
+			pop			de								; [001] target sector number
 			srl			l
 			ld			h, 0
 			add			hl, de

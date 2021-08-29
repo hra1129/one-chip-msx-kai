@@ -109,6 +109,10 @@ VRAM_BANK			:= 0x1F80		;	No Connect			( 1F00000h - 1FFFFFFh )	1MB
 ; ------------------------------------------------------------------------------
 			scope	load_bios
 load_bios::
+			; Activate "OCM-Kai control device" and initialize MemoryID to 0.
+			ld			a, exp_io_ocmkai_ctrl_id
+			out			[ exp_io_vendor_id_port ], a
+
 			; Load the BIOS image
 			call		load_blocks
 			ret			c							; error
@@ -214,7 +218,7 @@ transfer_bios_image:
 			ld		b, [hl]							; Get number of blocks
 			inc		hl
 			push	hl								; save header index
-load_blocks:
+load_rom_image:
 			; set ESE-RAM bank registers
 			ld		[eseram8k_bank2], a				; ESE-RAM Bank2 (8KB)
 			inc		a
@@ -222,7 +226,7 @@ load_blocks:
 			inc		a
 			ld		c, a
 			push	bc								; save remain blocks and ESE-RAM Bank index
-	; load page 16 kb
+			; load page 16 kb
 			ld		de, [current_sector_low]
 			ld		bc, [current_sector_high]
 
@@ -238,13 +242,15 @@ load_blocks:
 			ld		a, '>'							; Display progress bar
 			call	putc
 			ld		a, c							; A = ESE-RAM Bank index
-			djnz	load_blocks						;
+			djnz	load_rom_image					;
 exit:
 			pop		hl								; load header index
 			jr		command_execution
 
 			; COMMAND2: Change ESERAM memory -------------------------------------------------
 change_eseram_memory:
+			ld		a, exp_io_ocmkai_ctrl_id
+			out		[ exp_io_vendor_id_port ], a
 			ld		a, exp_io_ocmkai_ctrl_reg_memory_id
 			out		[exp_io_ocmkai_ctrl_register_sel], a
 			ld		a, [hl]							; Get ESERAM memoryID
@@ -314,6 +320,9 @@ start_system::
 			ld		a, MAIN_ROM1_BANK & 0xFF
 			ld		[eseram8k_bank2], a
 
+			ld		a, '#'							; Display progress bar
+			call	putc
+
 			ld		a, [ 0x8000 ]					;  first byte
 			cp		a, 0xF3							; = DI ?
 			jp		nz, bios_read_error				;  error
@@ -334,9 +343,6 @@ start_system::
 			ld		[ eseram8k_bank3 ], a
 			ld		a, 0xC0
 			out		[ primary_slot_register ], a
-
-			ld		a, '#'							; Display progress bar
-			call	putc
 
 			rst		0x00							; start MSX BASIC
 			endscope
