@@ -110,45 +110,15 @@ VRAM_BANK			:= 0x1F80		;	No Connect			( 1F00000h - 1FFFFFFh )	1MB
 			scope	load_bios
 load_bios::
 			; Activate "OCM-Kai control device" and initialize MemoryID to 0.
-			ld			a, exp_io_ocmkai_ctrl_id
-			out			[ exp_io_vendor_id_port ], a
+			ld		a, exp_io_ocmkai_ctrl_id
+			out		[ exp_io_vendor_id_port ], a
 
-			; Load the BIOS image
-			call		load_blocks
-			ret			c							; error
-
-			; initialize ESE-RAM bank registers
-			xor			a, a
-			ld			[eseram8k_bank0], a				; init ESE-RAM Bank#0
-			inc			a
-			ld			[eseram8k_bank1], a				; init ESE-RAM Bank#1
-			ld			[eseram8k_bank2], a				; init ESE-RAM Bank#2
-			ld			[eseram8k_bank3], a				; init ESE-RAM Bank#3
-			ld			a, 0xC0
-			out			[primary_slot_register], a		; ff_ldbios_n <= '1' [sm_emsx_top.vhd]
-
-			rst			00								; reset MSX BASIC
-			endscope
-
-; ------------------------------------------------------------------------------
-;	load_blocks
-;	input:
-;		cde ... Target address of SD card or EPCS
-;	output:
-;		cde ... Next target address
-;	break:
-;		all
-;	comment:
-;		The sector size is 512 bytes only.
-; ------------------------------------------------------------------------------
-			scope		load_blocks
-load_blocks::
-			push	hl
+			push	hl								; [001] "Boot from xxxx"
 			call	read_first_sector
-			pop		hl
+			pop		hl								; [001] "Boot from xxxx"
 			ret		c								;	error
 
-			push	hl
+			push	hl								; [001] "Boot from xxxx"
 			ld		[current_sector_low ], de
 			ld		[current_sector_high], bc
 
@@ -187,7 +157,7 @@ pal_mode:
 			call	puts
 			ld		hl, 0 + 5 * 40					;	LOCATE 0,5
 			call	vdp_set_vram_address
-			pop		hl								;	HL = "Boot from xxx"
+			pop		hl								; [001] "Boot from xxxx"
 			call	puts
 			ld		hl, 0 + 7 * 40					;	LOCATE 0,7
 			call	vdp_set_vram_address
@@ -217,7 +187,7 @@ transfer_bios_image:
 			inc		hl
 			ld		b, [hl]							; Get number of blocks
 			inc		hl
-			push	hl								; save header index
+			push	hl								; [001] save header index
 load_rom_image:
 			; set ESE-RAM bank registers
 			ld		[eseram8k_bank2], a				; ESE-RAM Bank2 (8KB)
@@ -225,7 +195,7 @@ load_rom_image:
 			ld		[eseram8k_bank3], a				; ESE-RAM Bank3 (8KB)
 			inc		a
 			ld		c, a
-			push	bc								; save remain blocks and ESE-RAM Bank index
+			push	bc								; [002] save remain blocks and ESE-RAM Bank index
 			; load page 16 kb
 			ld		de, [current_sector_low]
 			ld		bc, [current_sector_high]
@@ -237,14 +207,14 @@ load_rom_image:
 			ld		[current_sector_low ], de
 			ld		[current_sector_high], bc
 
-			pop		bc								; load remain blocks and ESE-RAM Bank index
+			pop		bc								; [002] load remain blocks and ESE-RAM Bank index
 			jr		c, exit							; error
 			ld		a, '>'							; Display progress bar
 			call	putc
 			ld		a, c							; A = ESE-RAM Bank index
 			djnz	load_rom_image					;
 exit:
-			pop		hl								; load header index
+			pop		hl								; [001] load header index
 			jr		command_execution
 
 			; COMMAND2: Change ESERAM memory -------------------------------------------------
@@ -269,15 +239,15 @@ write_io:
 
 			; COMMAND4: Message --------------------------------------------------------------
 print_message:
-			push	hl
+			push	hl								; [001] header index
 			ld		hl, 0 + 6*40
 			call	vdp_set_vram_address
-			pop		hl
+			pop		hl								; [001] header index
 			call	puts
-			push	hl
+			push	hl								; [001] header index
 			ld		hl, 0 + 7*40
 			call	vdp_set_vram_address
-			pop		hl
+			pop		hl								; [001] header index
 			jr		command_execution
 
 			; COMMAND5: Fill dummy code ------------------------------------------------------
@@ -286,7 +256,7 @@ fill_dummy_code:
 			inc		hl
 			ld		b, [hl]							; Get number of blocks
 			inc		hl
-			push	hl								; save header index
+			push	hl								; [001] header index
 fill_blocks:
 			; set ESE-RAM bank registers
 			ld		[eseram8k_bank2], a				; ESE-RAM Bank2 (8KB)
@@ -294,13 +264,13 @@ fill_blocks:
 			ld		[eseram8k_bank3], a				; ESE-RAM Bank3 (8KB)
 			inc		a
 			ld		c, a
-			push	bc								; save remain blocks and ESE-RAM Bank index
+			push	bc								; [002] save remain blocks and ESE-RAM Bank index
 			ld		bc, 16384 - 1
 			ld		hl, 0x8000
 			ld		de, 0x8001
 			ld		[hl], c
 			ldir
-			pop		bc								; load remain blocks and ESE-RAM Bank index
+			pop		bc								; [002] load remain blocks and ESE-RAM Bank index
 			ld		a, '*'							; Display progress bar
 			call	putc
 			ld		a, c							; A = ESE-RAM Bank index
@@ -315,6 +285,7 @@ start_system::
 			ld		a, exp_io_ocmkai_ctrl_reg_memory_id
 			out		[exp_io_ocmkai_ctrl_register_sel], a
 
+			; change bank2 (0x8000..0x9FFF) to MAIN-ROM
 			ld		a, MAIN_ROM1_BANK >> 8
 			out		[exp_io_ocmkai_ctrl_data], a
 			ld		a, MAIN_ROM1_BANK & 0xFF
@@ -323,7 +294,7 @@ start_system::
 			ld		a, '#'							; Display progress bar
 			call	putc
 
-			ld		a, [ 0x8000 ]					;  first byte
+			ld		a, [ 0x8000 ]					;  first byte in MAIN-ROM
 			cp		a, 0xF3							; = DI ?
 			jp		nz, bios_read_error				;  error
 
@@ -363,11 +334,10 @@ read_first_sector::
 			ld		b, 1					; read 1 sector
 			ld		hl, buffer
 			call	read_sector
+			ret		c
 
-			push	bc						; save next sector index
-			push	de
-			jr		c, no_match				; error
-
+			push	bc						; [001] save next sector index (upper)
+			push	de						; [002] save next sector index (lower)
 
 			ld		hl, buffer + bios_image_signature
 			ld		de, bios_image_signature_reference
@@ -376,17 +346,17 @@ read_first_sector::
 check_signature_loop:
 			ld		a, [de]
 			cp		a, [hl]
-			jr		nz, no_match
+			jr		nz, no_match			; Success --> Zf=1, Cy=0: Error --> Zf=0
 			inc		de
 			inc		hl
 			djnz	check_signature_loop
-			jr		match					; Cy = 0 : success
+match:
+			pop		de						; [002] load next sector index (lower)
+			pop		bc						; [001] load next sector index (upper)
+			ret
 no_match:
 			scf								; Cy = 1 : error
-match:
-			pop		de						; load next sector index
-			pop		bc
-			ret
+			jr		match
 
 bios_image_signature_reference:
 			ds		"OCMB"

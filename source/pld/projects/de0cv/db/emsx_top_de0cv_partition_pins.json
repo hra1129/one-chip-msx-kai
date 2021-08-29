@@ -20,6 +20,38 @@
 					"strict" : false
 				},
 				{
+					"name" : "pCpuClk",
+					"strict" : false
+				},
+				{
+					"name" : "pSltRst_n",
+					"strict" : false
+				},
+				{
+					"name" : "pSltRsv16",
+					"strict" : false
+				},
+				{
+					"name" : "pSd_Cm",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed1[0]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed1[3]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed1[4]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed1[5]",
+					"strict" : false
+				},
+				{
 					"name" : "p7SegLed2[0]",
 					"strict" : false
 				},
@@ -41,70 +73,6 @@
 				},
 				{
 					"name" : "p7SegLed2[6]",
-					"strict" : false
-				},
-				{
-					"name" : "pCpuClk",
-					"strict" : false
-				},
-				{
-					"name" : "pSltRst_n",
-					"strict" : false
-				},
-				{
-					"name" : "pSltRsv16",
-					"strict" : false
-				},
-				{
-					"name" : "pLed[0]",
-					"strict" : false
-				},
-				{
-					"name" : "pSd_Cm",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed0[0]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed0[1]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed0[2]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed0[3]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed0[4]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed0[5]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed0[6]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed1[0]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed1[3]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed1[4]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed1[5]",
 					"strict" : false
 				},
 				{
@@ -153,6 +121,34 @@
 				},
 				{
 					"name" : "pMidiTxD",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed0[0]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed0[1]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed0[2]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed0[3]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed0[4]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed0[5]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed0[6]",
 					"strict" : false
 				},
 				{
@@ -244,6 +240,10 @@
 					"strict" : false
 				},
 				{
+					"name" : "pLed[0]",
+					"strict" : false
+				},
+				{
 					"name" : "pLed[1]",
 					"strict" : false
 				},
@@ -317,6 +317,26 @@
 				},
 				{
 					"name" : "pSltSltsl_n",
+					"strict" : false
+				},
+				{
+					"name" : "pSltSlts2_n",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[0]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[1]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[2]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[3]",
 					"strict" : false
 				},
 				{
@@ -433,26 +453,6 @@
 				},
 				{
 					"name" : "pMemDat[15]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltSlts2_n",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[0]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[1]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[2]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[3]",
 					"strict" : false
 				},
 				{

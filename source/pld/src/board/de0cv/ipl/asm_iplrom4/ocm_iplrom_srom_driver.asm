@@ -58,6 +58,11 @@ load_from_epcs::
 			ld			[ eseram8k_bank0 ], a
 			ld			a, [megasd_sd_register|(1<<12)]		; /CS=1 (address bit12)
 
+			; Read the first sector blank. Because the first access may fail.
+			ld			de, epcs_bios1_start_address
+			ld			hl, buffer
+			call		read_sector_from_epcs
+
 			; Check DIP-SW7 and select DualBIOS
 			ld			de, epcs_bios1_start_address
 			ld			a, exp_io_1chipmsx_id

@@ -18,12 +18,6 @@ STATE.STLINECHKLOOP 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1
 STATE.STSRCHCHKLOOP 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 STATE.STEXECEND 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 
-State Machine - |emsx_top_de0cv|emsx_top:U92|DEBUG_ENA
-Name DEBUG_ENA.00 DEBUG_ENA.10 DEBUG_ENA.01 
-DEBUG_ENA.10 0 0 0 
-DEBUG_ENA.01 0 1 1 
-DEBUG_ENA.00 1 1 0 
-
 State Machine - |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_SPRITE:U_SPRITE|SPSTATE
 Name SPSTATE.SPSTATE_PREPARE SPSTATE.SPSTATE_YTEST_DRAW SPSTATE.SPSTATE_IDLE 
 SPSTATE.SPSTATE_IDLE 0 0 0 
@@ -115,6 +109,12 @@ MtxSeq.MtxRead 0 0 0 1 0 0 1
 MtxSeq.MtxWrite 0 0 1 0 0 0 1 
 MtxSeq.MtxEnd 0 1 0 0 0 0 1 
 MtxSeq.MtxReset 1 0 0 0 0 0 1 
+
+State Machine - |emsx_top_de0cv|emsx_top:U92|DEBUG_ENA
+Name DEBUG_ENA.00 DEBUG_ENA.10 DEBUG_ENA.01 
+DEBUG_ENA.10 0 0 0 
+DEBUG_ENA.01 0 1 1 
+DEBUG_ENA.00 1 1 0 
 
 State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|UART:U1|tx_current_state_s
 Name tx_current_state_s.STATE_TX_FINISH tx_current_state_s.STATE_TX_STOP tx_current_state_s.STATE_TX_DATA tx_current_state_s.STATE_TX_START tx_current_state_s.STATE_TX_IDLE 
