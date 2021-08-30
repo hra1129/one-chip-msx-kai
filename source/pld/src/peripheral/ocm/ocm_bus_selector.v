@@ -390,6 +390,7 @@ module ocm_bus_selector (
 	assign adr			= ff_iSltAdr;
 
 	assign BusDir					=
+			( {pSltAdr[7:1], 1'd0} == 8'h06												) ? 1'b1 :		// I/O:06-07h / ESP WiFi Module
 			( {pSltAdr[7:4], 4'd0} == 8'h40 && (io40_n != 8'hFF || okaictrl_en == 1'b1)	) ? 1'b1 :		// I/O:40-4Fh / Switched I/O ports
 			( {pSltAdr[7:2], 2'd0} == 8'h98												) ? 1'b1 :		// I/O:98-9Bh / VDP (TMS9918/V9938/V9958)
 
@@ -400,6 +401,7 @@ module ocm_bus_selector (
 			(  pSltAdr[7:0]        == 8'hA7												) ? 1'b1 :		// I/O:A7h	  / Pause R800 (read only)
 			( {pSltAdr[7:2], 2'd0} == 8'hA8												) ? 1'b1 :		// I/O:A8-ABh / PPI (8255)
 			( {pSltAdr[7:1], 1'd0} == 8'hB4												) ? 1'b1 :		// I/O:B4-B5h / RTC (RP-5C01)
+			( {pSltAdr[7:3], 3'd0} == 8'hC0 && opl3_enabled								) ? 1'b1 :		// I/O:C0-C7h / OPL3
 			( {pSltAdr[7:1], 1'd0} == 8'hD8												) ? 1'b1 :		// I/O:D8-DBh / Kanji-data (JIS1+JIS2)
 			( {pSltAdr[7:1], 1'd0} == 8'hDA && JIS2_ena									) ? 1'b1 :		// I/O:D8-D9h / Kanji-data (JIS1 only)
 			( {pSltAdr[7:2], 2'd0} == 8'hE4												) ? 1'b1 :		// I/O:E4-E7h / S1990
@@ -672,6 +674,7 @@ module ocm_bus_selector (
 	assign VdpReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'h98                           ) ? req : 1'b0;					// I/O:98-9Bh	/ VDP (V9938/V9958)
 	assign PsgReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'hA0                           ) ? req : 1'b0;					// I/O:A0-A3h	/ PSG (AY-3-8910)
 	assign PpiReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'hA8                           ) ? req : 1'b0;					// I/O:A8-ABh	/ PPI (8255)
+	assign opl3_req				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:3], 3'd0 } == 8'hD0 && opl3_enabled           ) ? req : 1'b0;					// I/O:D0-D7h	/ OPL3
 	assign KanReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'hD8                           ) ? req : 1'b0;					// I/O:D8-DBh	/ Kanji-data
 	assign MapReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'hFC                           ) ? req :							// I/O:FC-FFh	/ Memory-mapper
 									( w_mem_mapper                                                                   ) ? req : 1'b0;					// MEM:			/ Memory-mapper

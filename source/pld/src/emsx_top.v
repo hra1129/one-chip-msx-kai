@@ -508,8 +508,9 @@ module emsx_top(
 	wire	[7:0]	opl3_dout_s;
 	wire	[15:0]	opl3_sound_s;
 	wire			opl3_req;
-	reg				opl3_enabled = 1'b0;
+	wire			opl3_ce;
 	wire	[2:0]	Opl3Vol;
+	reg				opl3_enabled;
 
 	// MSX-MIDI ports											// 2020/02/12 t.hara added
 	wire			tr_midi_req;
@@ -658,15 +659,14 @@ module emsx_top(
 
 	// virtual DIP-SW assignment (2/2)
 	always @( posedge clk21m ) begin
-//		if( SdPaus == 1'b0 ) begin						// dismissed
-			ff_Kmap				<=	swioKmap;			// keyboard layout assignment
-			ff_CmtScro			<=	swioCmt;
-			ff_DisplayMode[1]	<=	io42_id212[1];
-			ff_DisplayMode[0]	<=	io42_id212[2];
-			ff_Slot1Mode		<=	io42_id212[3];
-			ff_Slot2Mode[1]		<=	io42_id212[4];
-			ff_Slot2Mode[0]		<=	io42_id212[5];
-//		end
+		ff_Kmap				<=	swioKmap;			// keyboard layout assignment
+		ff_CmtScro			<=	swioCmt;
+		ff_DisplayMode[1]	<=	io42_id212[1];
+		ff_DisplayMode[0]	<=	io42_id212[2];
+		ff_Slot1Mode		<=	io42_id212[3];
+		ff_Slot2Mode[1]		<=	io42_id212[4];
+		ff_Slot2Mode[0]		<=	io42_id212[5];
+		opl3_enabled		<=	swioCmt;
 	end
 
 	//--------------------------------------------------------------
@@ -1532,10 +1532,11 @@ module emsx_top(
 		.addr				( adr[1:0]			),	// OPL and OPL2 uses adr(0) only
 		.dout				( opl3_dout_s		),
 		.din				( dbo				),
-		.we					( opl3_req			),
+		.we					( opl3_ce			),
 		.sample_l			( opl3_sound_s		),
 		.sample_r			(					)
 	);
+	assign opl3_ce	= opl3_req & ~pSltWr_n;
 
 	s1990 u_s1990 (
 		.clk21m					( clk21m					),
@@ -1720,7 +1721,7 @@ module emsx_top(
 	);
 
 	assign p_7seg_cpu_type	= ( ~processor_mode ) ? c_7seg_r : c_7seg_z;
-	assign p_7seg_debug		= { ~w_led_internal_firmware, 4'b1111, req_reset_primary_slot, w_ldbios_n };
+	assign p_7seg_debug		= { ~w_led_internal_firmware, 3'b111, opl3_enabled, req_reset_primary_slot, w_ldbios_n };
 
     // debug enabler 'SHIFT+PAUSE'
 	always @( posedge clk21m ) begin
