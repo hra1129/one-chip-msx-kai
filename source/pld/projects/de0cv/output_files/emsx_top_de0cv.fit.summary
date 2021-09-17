@@ -1,12 +1,12 @@
-Fitter Status : Successful - Mon Aug 30 21:59:59 2021
+Fitter Status : Successful - Fri Sep 17 22:28:37 2021
 Quartus Prime Version : 18.1.1 Build 646 04/11/2019 SJ Lite Edition
 Revision Name : emsx_top_de0cv
 Top-level Entity Name : emsx_top_de0cv
 Family : Cyclone V
 Device : 5CEBA4F23C7
 Timing Models : Final
-Logic utilization (in ALMs) : 8,913 / 18,480 ( 48 % )
-Total registers : 6436
+Logic utilization (in ALMs) : 8,915 / 18,480 ( 48 % )
+Total registers : 6456
 Total pins : 195 / 224 ( 87 % )
 Total virtual pins : 0
 Total block memory bits : 329,120 / 3,153,920 ( 10 % )

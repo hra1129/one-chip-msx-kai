@@ -1,5 +1,5 @@
 ; ==============================================================================
-;	IPL-ROM for OCM-PLD v3.9 or later
+;	IPL-ROM for OCM-PLD v3.4 or later
 ;	SD-Card Driver
 ; ------------------------------------------------------------------------------
 ; Copyright (c) 2021 Takayuki Hara
@@ -100,24 +100,49 @@ pbr_extend_bios_parameter_block	:= 0x01C	; 26bytes
 pbr_bootstrap_code				:= 0x03E	; 448bytes
 pbr_signature					:= 0x1FE	; 2bytes
 
+card_type						:= 0xFFCF	; 1byte: 2: MMC/SDHC, 3: SDHC
+
 ; --------------------------------------------------------------------
 ;	SD/SDHC/MMC command
 ;	input)
 ; --------------------------------------------------------------------
 		scope	set_sd_command
-set_acmd41::
-		ld		hl, megasd_sd_register
+set_sd_command::
+		ld		a, [card_type]		;	Card type : 2=MMC/SD, 3=SDHC
+		sub		a, 2
+		jr		z, set_sd_mmc
+		dec		a
+		jr		z, set_sdhc
+		scf
+		ret
+
+		;	for SDHC
+set_sdhc:
 		ld		a, [hl]
-		ld		[hl], 0x40 + SDACMD_APP_SEND_OP_COND
-		ld		[hl], 0x40
+		ld		[hl], b				;	set command code
 		ld		[hl], 0
+		ld		[hl], c
+		ld		[hl], d
+		ld		[hl], e
+		jr		set_src95
+
+		;	for SD/MMC
+set_sd_mmc:
+		sla		e					;	convert 'number of sector' to 'number of byte'
+		rl		d					;	cde = cde * 2
+		rl		c
+set_cmd2::
+		ld		a, [hl]
+		ld		[hl], b				;	set command code
+		ld		[hl], c
+		ld		[hl], d
+		ld		[hl], e
 		ld		[hl], 0
-		ld		[hl], 0
-		ld		[hl], 0x95
+set_src95:
+		ld		[hl], 0x95			;	CRC
 		jr		set_common
 
 set_cmd8::
-		ld		hl, megasd_sd_register
 		ld		a, [hl]
 		ld		[hl], 0x40 + SDCMD_SEND_IF_COND
 		ld		[hl], 0
@@ -125,53 +150,28 @@ set_cmd8::
 		ld		[hl], 0x01
 		ld		[hl], 0xAA
 		ld		[hl], 0x87
-		jr		set_common
-
-set_cmd0::
-		xor		a, a
-		ld		c, a				;	parameter = 0
-		ld		d, a
-		ld		e, a
-
-set_sd_command::
-		ld		hl, megasd_sd_register
-card_type	:=	$ + 1
-		ld		a, 0				;	Card type : 0=MMC, 1=SD, 2=SDHC
-		cp		a, [hl]
-		ld		[hl], b				;	set command code
-		bit		1, a
-		jr		z, set_sd_mmc
-
-		;	for SDHC
-		ld		[hl], 0
-		ld		[hl], c
-		ld		[hl], d
-		ld		[hl], e
-		jr		set_crc
-
-		;	for SD/MMC
-set_sd_mmc:
-		sla		e					;	convert 'number of sector' to 'number of byte'
-		rl		d					;	cde = cde * 2
-		rl		c
-		ld		[hl], c
-		ld		[hl], d
-		ld		[hl], e
-		ld		[hl], 0
-
-set_crc:
-		ld		[hl], 0x95			;	CS = 0x95
 
 set_common:
 		ld		a, [hl]
-		ld		b, 32
+		ld		b, 16				;	16 cycles
 wait_command_accept:
 		ld		a, [hl]
 		cp		a, 0x0FF
 		ccf
 		ret		nc					;	no error
-		djnz	wait_command_accept
-		scf							;	error
+		djnz	wait_command_accept	;	no flag change
+		ret							;	Cy = 1
+		endscope
+
+; --------------------------------------------------------------------
+;	Preinitialize
+;	input)
+; --------------------------------------------------------------------
+		scope	sd_preinitialize
+sd_preinitialize::
+		ld		a, 0x40
+		ld		[eseram8k_bank0], a						; BANK 40h
+		ld		a, [megasd_sd_register | (1 << 12)]		;	/CS = 1 (bit12)
 		ret
 		endscope
 
@@ -181,96 +181,115 @@ wait_command_accept:
 ; --------------------------------------------------------------------
 		scope	sd_initialize
 sd_initialize::
+		call	sd_initialize_sub
+		ret		c
+		ret		nz
+		ld		hl, card_type
+		ld		[hl], e
+		xor		a, a
+		ret
+
+sd_initialize_sub:
+		;	"/CS=1, DI=1" is input for a period of 74 clocks or more.
+		ld		hl, megasd_sd_register
 		ld		b, 10
 wait_cs:
-		ld		a, [0x5000]			;	/CS = 1 (bit12)
+		ld		a, [megasd_sd_register | (1 << 12)]		;	/CS = 1 (bit12)
 		djnz	wait_cs
 
-		ld		b, 0x40 + SDCMD_GO_IDLE_STATE
-		call	set_cmd0
+		ld		d, b				;	CDE = 0
+		ld		e, b
+		ld		bc, ((0x40 + SDCMD_GO_IDLE_STATE) << 8) | 0x00
+		call	set_cmd2			;	save CDE
 		ret		c					;	error
 
-		and		a, 0x0F7
+		and		a, 0x0F3
 		cp		a, 0x01				;	bit0 - in idle state?
-		scf							;	CY = 1
 		ret		nz					;	error (SD is not idle state when bit0 is zero.)
 
 		; SD is idle state.
-		call	set_cmd8
+		call	set_cmd8			;	save CDE
+		ret		c					;	error
 		cp		a, 1
 		jr		nz, detect_mmc		;	Not SD Card
 
 		; case of SD Card
 		ld		a, [hl]
+		nop
 		ld		a, [hl]
+		nop
 		ld		a, [hl]
 		and		a, 0x0F
 		cp		a, 1
-		scf							;	CY = 1
 		ret		nz					;	error
 
 		ld		a, [hl]
 		cp		a, 0xAA
-		scf							;	CY = 1
 		ret		nz
 
 repeat_app_cmd:
-		ld		b, 0x40 + SDCMD_APP_CMD
-		call	set_cmd0
+		ld		b, (0x40 + SDCMD_APP_CMD)		;	CDE = 0
+		call	set_cmd2			;	save CDE
 		ret		c					;	error
-		and		a, 4				;	bit2 = 1 - illegal command
-		jr		z, command_ok
+		cp		a, 1
+		ret		nz					;	error
+
+		ld		bc, ((0x40 + SDACMD_APP_SEND_OP_COND) << 8) | 0x40
+		call	set_cmd2			;	save CDE
+		ret		c					;	error
+		and		a, 1
+		jr		nz, repeat_app_cmd
+
+		ld		b, (0x40 + SDCMD_READ_OCR)
+		call	set_cmd2
+		ret		c					;	error
+
+		ld		a, [hl]
+		cp		a, [hl]
+		cp		a, [hl]
+		cp		a, [hl]
+		bit		6, a
+		ld		e, 2				;	SD = 2
+		jr		z, not_sdhc
+		inc		e					;	SDHC = 3
+not_sdhc:
+		xor		a, a
+		ret
 
 detect_mmc:
-		xor		a, a				;	card_type = 0 (MMC)
-		ld		[card_type], a
+		ld		b, (0x40 + SDCMD_APP_CMD)	;	CDE = 0
+		call	set_cmd2			; save CDE
+		ret		c
+		bit		2, a
+		jr		nz, skip2
+		cp		a, 1
+		ret		nz
 
-		ld		b, 0x40 + SDCMD_SEND_IO_COND
-		call	set_cmd0
-		jr		skip1
-
-command_ok:
-		ld		a, 1				;	card_type = 1 (SD Card)
-		ld		[card_type], a
-
-		call	set_acmd41			;	SDACMD_APP_SEND_OP_COND
-
-skip1:
+		ld		b, 0x40 + SDACMD_APP_SEND_OP_COND
+		call	set_cmd2			;	save CDE
 		ret		c					;	error
-
-		cp		a, 0x01				;	bit0 - in idle state?
-		jr		z, repeat_app_cmd	;	Yes, idle state. repeat app_cmd
-
-		; in_idle_state = 0
-		or		a, a				;	CY = 0
-		jr		z, initialize_ok
-
-		scf
-		ret							;	error
-initialize_ok:
-		ld		a, [card_type]
-		or		a, a				;	Is card_type MMC?
-		ret		z					;	Yes, return.
-
-		; case of SD Card
-		ld		b,0x40 + SDCMD_READ_OCR
-		call	set_cmd0
-		ret		c					;	error
-		ld		a, [hl]				;	read CCS (bit 6)
-		cp		a, [hl]
-		cp		a, [hl]
-		cp		a, [hl]
-		bit		6, a				;	CCS = 1 ?
-		ret		z					;	This is SD Card. (CCS = 0)
-		ld		a, 2				;	card_type = 2 (SDHC card)
-		ld		[card_type], a
+		bit		2, a
+		jr		nz, skip2
+		and		a, 1				;	Cy = 0, a = 0 or 1
+		jr		nz, detect_mmc		;	if a == 1 goto detect_mmc
+		ld		e, 2				;	MMC = 2
 		ret
+
+skip2:
+		ld		b, 0x40 + SDCMD_SEND_IO_COND
+		call	set_cmd2			;	save CDE
+		ret		c					;	error
+		cp		a, 1
+		jr		z, detect_mmc
+		xor		a, a				;	Cy = 0
+		ret							;	Unknown card: e = 0
 		endscope
 
 ; --------------------------------------------------------------------
 ;	Read sectors from MMC/SD/SDHC card
 ;	input)
 ;		B   = number of sectors
+;		HL  = read buffer
 ;		CDE = sector number
 ; --------------------------------------------------------------------
 		scope	sd_read_sector
@@ -287,6 +306,7 @@ sd_read_sector::
 		push	bc
 
 		ld		b, 0x40 + SDCMD_READ_SINGLE_BLK
+		ld		hl, megasd_sd_register
 		call	set_sd_command
 		jr		c, retry_init
 
@@ -317,40 +337,14 @@ read_wait:
 		inc		de
 		ld		a, d
 		or		a, e
+
 		jr		nz, skip
 
 		inc		c
 skip:
 		djnz	sd_read_sector		;	next sector
-		or		a, a				;	Cy = 0
+
 		ret
-		endscope
-
-; --------------------------------------------------------------------
-;	Search "FAT"
-; --------------------------------------------------------------------
-		scope	search_fat
-search_fat::
-		ld		hl, buffer
-		ld		bc, 0x80
-
-search_loop:
-		ld		a, 'F'
-		cpir
-		jr		z, found_f
-		ret							;	no FAT (Z = 0)
-
-found_f:
-		push	hl
-		ld		d, [hl]
-		inc		hl
-		ld		e, [hl]
-		ld		hl, 'A' * 256 + 'T'
-		or		a, a
-		sbc		hl, de
-		pop		hl
-		jr		nz, search_loop
-		ret							; FAT (Z = 1)
 		endscope
 
 ; --------------------------------------------------------------------
@@ -358,82 +352,25 @@ found_f:
 ; --------------------------------------------------------------------
 		scope	search_active_partition_on_mbr
 search_active_partition_on_mbr::
-		ld		b, 4							; number of partition entry
-		ld		ix, buffer + mbr_1st_partition	; offset in sector
+		ld		b, 4															; number of partition entry
+		ld		hl, buffer + mbr_1st_partition + mbr_partition_lba_begin_sector	; offset in sector
 test_partition_loop:
-		ld		e, [ix + mbr_partition_lba_begin_sector + 0]
-		ld		d, [ix + mbr_partition_lba_begin_sector + 1]
-		ld		c, [ix + mbr_partition_lba_begin_sector + 2]
+		ld		e, [hl]
+		inc		hl
+		ld		d, [hl]
+		inc		hl
+		ld		c, [hl]
 		ld		a, c
 		or		a, d
 		or		a, e
 		ret		nz					; if CDE != 0 then found partition
 
 		; failed, and test next partition.
-		ld		de, 16
-		add		ix, de
+		ld		de, 16 - 2
+		add		hl, de
 		djnz	test_partition_loop
 
 		; Not found a partition.
 		scf							; CY = 1, error
-		ret
-		endscope
-
-; --------------------------------------------------------------------
-;	Process to find the first sector of the BIOS image file.
-;	input)
-;		none
-;	output)
-;		CDE ... First sector number in BIOS image
-;		Cy .... 0: Failed, 1: Success
-;	break)
-;		af, bc, de, hl
-; --------------------------------------------------------------------
-		scope	sd_first_process
-sd_first_process::
-		;	Read Sector#0 (MBR)
-		ld		bc, 0x100			;	B = 1 (1 sector)
-		ld		d, c				;	CDE = 0x000000 (Sector #0)
-		ld		e, c
-		ld		hl, buffer
-		call	sd_read_sector
-		ret		c					;	go to srom_read when SD card read is error.
-
-		call	search_active_partition_on_mbr
-		ret		c					;	go to srom_read when partition is not found.
-
-		push	de
-		push	bc
-		ld		b, 1
-		ld		hl, buffer
-		call	sd_read_sector
-		call	search_fat
-		pop		bc
-		pop		de
-		scf
-		ret		nz					;	go to srom_read ehen SD card is not FAT16 file system.
-
-sd_card_is_fat:
-		; HL = reserved sectors
-		ld		hl, [buffer + pbr_reserved_sectors]
-
-		ld		a, c
-		add		hl, de
-		adc		a, 0
-		ld		c, a
-
-		; Seek out the next sector of the FAT.
-		ld		a, [buffer + pbr_num_of_fat]
-		ld		de, [buffer + pbr_sectors_per_fat]
-		ld		b, a
-		ld		a, c
-add_fat_size:
-		add		hl, de
-		adc		a, 0
-		djnz	add_fat_size
-
-		ld		c, a
-		ex		de, hl
-		xor		a, a				;	Success (CY = 0)
 		ret
 		endscope

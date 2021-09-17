@@ -1,5 +1,5 @@
 ; ==============================================================================
-;	IPL-ROM v4.00 for OCM-PLD v3.9/OCM-Kai or later
+;	IPL-ROM v4.00 for OCM-PLD v3.4/OCM-Kai or later
 ; ------------------------------------------------------------------------------
 ; Copyright (c) 2021 Takayuki Hara
 ; All rights reserved.
@@ -40,7 +40,7 @@
 ;		BugFix
 ;	ver	4.0.4	t.hara	August/10th/2020
 ;		Modified register access for OCM-Kai control device
-;	ver	4.1.0	t.hara	August/23rd/2020
+;	ver	4.1.0	t.hara	September/15th/2021
 ;		Supported DualBIOS.
 ;		Support to search the BIOS file in FAT file system.
 ; --------------------------------------------------------------------
@@ -120,17 +120,18 @@ rom_code_address::
 
 		org		dram_code_address
 start_of_code::
+		xor		a, a
+		ld		[card_type], a
+
+		call	sd_preinitialize
+
 		; Activate "OCM-Kai control device" and initialize MemoryID to 0.
 		ld		a, exp_io_ocmkai_ctrl_id
 		out		[ exp_io_vendor_id_port ], a
 
-		; Initialize Primary Slot Register
-		ld		a, 0xFC							; Page0 is slot0. Page1, Page2 and Page3 is slot3
-		out		[ primary_slot_register ], a
-
-		; Request reset primary slot at read 0000h
-		ld		a, 3
+		ld		a, exp_io_ocmkai_ctrl_reg_memory_id
 		out		[exp_io_ocmkai_ctrl_register_sel], a
+		xor		a, a
 		out		[exp_io_ocmkai_ctrl_data], a
 
 		; Skip check of alreay loaded BIOS, when press [ESC] key.
@@ -141,8 +142,9 @@ start_of_code::
 		jr		z, skip_check
 
 		; Check already loaded BIOS.
-		ld		a, exp_io_ocmkai_ctrl_reg_memory_id
-		out		[exp_io_ocmkai_ctrl_register_sel], a
+		ld		a, [bios_updating]
+		cp		a, 0xD4							; If it's a quick reset, boot EPBIOS.
+		jr		z, force_bios_load_from_epbios
 
 		; -- Check MAIN-ROM
 		xor		a, a							;	LD A, MAIN_ROM1_BANK >> 8
@@ -165,7 +167,9 @@ skip_check:
 		ld		hl, 0x0000						;	Pattern Name Table
 		call	vdp_set_vram_address
 
+force_bios_load_from_sdcard::
 		call	load_from_sdcard
+force_bios_load_from_epbios::
 		call	load_from_epcs
 
 bios_read_error::
@@ -178,8 +182,20 @@ bios_read_error::
 		halt
 
 ; --------------------------------------------------------------------
+msg_enter::
+		ds		"[Enter]"
+		db		0
+msg_sd_preinit::
+		ds		"[SdPre]"
+		db		0
+msg_end_of_init::
+		ds		"[EOINIT]"
+		db		0
+
+; --------------------------------------------------------------------
 ;	subroutines
 ; --------------------------------------------------------------------
+		include "ocm_iplrom_load_epcs.asm"
 		include "ocm_iplrom_srom_driver.asm"
 		include "ocm_iplrom_load_bios.asm"
 		include "ocm_iplrom_fat_driver.asm"
@@ -187,6 +203,12 @@ bios_read_error::
 		include "ocm_iplrom_message.asm"
 		include "ocm_iplrom_vdp_driver.asm"
 end_of_code:
+	remain_fat_sectors	:= $							; 2bytes
+	root_entries		:= $ + 2						; 3bytes
+	data_area			:= $ + 5						; 3bytes
+	current_sector_low	:= $ + 8						; 2bytes
+	current_sector_high	:= $ + 10						; 2bytes
+	bios_updating		:= $ + 12						; 1byte: 0xD4: Updating now, the others: Not loaded
 
 		if ( (end_of_code - start_of_code) + (rom_code_address - entry_point) ) > 4096
 			error "The size is too BIG. (" + ( (end_of_code - start_of_code) + (rom_code_address - entry_point) ) + "byte)"

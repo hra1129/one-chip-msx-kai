@@ -32,71 +32,37 @@
 ;   2021/Aug/09th  t.hara  Overall revision.
 ; ==============================================================================
 
-; --------------------------------------------------------------------
-;	EPCS Operation Codes
-; --------------------------------------------------------------------
-EPCS_WRITE_ENABLE		:= 0b0000_0110
-EPCS_WRITE_DISABLE		:= 0b0000_0100
-EPCS_READ_STATUS		:= 0b0000_0101
-EPCS_READ_BYTES			:= 0b0000_0011
-EPCS_READ_SILICON_ID	:= 0b1010_1011			; require EPCS1/4/16/64
-EPCS_FAST_READ			:= 0b0000_1011
-EPCS_WRITE_STATUS		:= 0b0000_0001
-EPCS_WRITE_BYTES		:= 0b0000_0010
-EPCS_ERASE_BULK			:= 0b1100_0111
-EPCS_ERASE_SECTOR		:= 0b1101_1000
-EPCS_READ_DEVICE_ID		:= 0b1001_1111			; require EPCS128 or later
-
 ; ------------------------------------------------------------------------------
-;	read_sector_from_epcs
-;	input:
-;		DE .... target sector number
-;		HL .... destination address
-;		B ..... number of sectors (1-127)
-;	output:
-;		Cy .... 0: success, 1: error
-;		DE .... next sector number
-;	comment:
-;		-
-; ------------------------------------------------------------------------------
-			scope		read_sector_from_epcs
-read_sector_from_epcs::
-			push		de
-			sla			e
-			rl			d								; de * 2
-			xor			a, a							; dea = byte address, Cy = 0
-			ld			c, b
-			sla			c								; c = {number of sectors} * 2  : number of half sectors
-			ld			b, a							; b = 256
+			scope		load_from_epcs
+load_from_epcs::
+			ld			hl, read_sector_from_epcs
+			ld			[ read_sector_cbr ], hl
 
-			push		bc								; save number of half sectors
-			push		hl
-			ld			hl, megasd_sd_register|(0<<12)	; /CS=0 (address bit12)
-			ld			[hl], EPCS_READ_BYTES			; command byte
-			ld			[hl], d							; byte address b23-b16
-			ld			[hl], e							; byte address b15-b8
-			ld			[hl], a							; byte address b7-b0
-			ld			a, [hl]
-			pop			de								; de = adress of buffer
+			; load BIOS image from EPCS serial ROM
+			ld			a, 0x60
+			ld			[ eseram8k_bank0 ], a
+			ld			a, [megasd_sd_register|(1<<12)]		; /CS=1 (address bit12)
 
-read_all:
-read_half_sector:
-			ld			a, [hl]							; read 1byte
-			ld			[de], a							; write 1byte to buffer
-			inc			de
-			djnz		read_half_sector
-			dec			c
-			jr			nz, read_all
+			; Read the first sector blank. Because the first access may fail.
+			ld			de, epcs_bios1_start_address
+			ld			hl, buffer
+			call		read_sector_from_epcs
 
-			ld			a, [megasd_sd_register|(1<<12)]	; /CS=1 (address bit12)
+			; Check DIP-SW7 and select DualBIOS
+			ld			de, epcs_bios1_start_address
+			ld			a, exp_io_1chipmsx_id
+			out			[ exp_io_vendor_id_port ], a
+			in			a, [ 0x42 ]							; DIP-SW status
+			and			a, 0b01000000						; check DIP-SW7
+			ld			hl, message_srom_boot1				; -- Select EPBIOS1, when DIP-SW7 is OFF
+			jr			nz, skip1
 
-			pop			hl								; H = number of half sectors
-			pop			de								; adress of sector
-			srl			l
-			ld			h, 0
-			add			hl, de
-			ex			de, hl							; next sector (512 byte)
-			xor			a, a							; Cy = 0
-			ret
+			ld			d, epcs_bios2_start_address >> 8
+			ld			hl, message_srom_boot2				; -- Select EPBIOS1, when DIP-SW7 is ON
+skip1:
+			jr			load_bios
 			endscope
 
+			if (epcs_bios1_start_address & 0x0FF) != (epcs_bios2_start_address & 0x0FF)
+				error "Please set the same value for LSB 8bit of epcs_bios1_start_address and LSB 8bit of epcs_bios2_start_address."
+			endif

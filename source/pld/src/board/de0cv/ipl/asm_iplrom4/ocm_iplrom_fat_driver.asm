@@ -1,6 +1,6 @@
 ; ==============================================================================
-;	IPL-ROM for OCM-PLD v3.9 or later
-;	FAT File System Driver
+;	IPL-ROM for OCM-PLD v3.4 or later
+;	SD-Card Driver
 ; ------------------------------------------------------------------------------
 ; Copyright (c) 2021 Takayuki Hara
 ; All rights reserved.
@@ -61,8 +61,47 @@ dir_entry_size					:= dir_next_entry
 load_from_sdcard::
 			ld			a, 0x40
 			ld			[eseram8k_bank0], a				; BANK 40h
-			call		sd_first_process
-			ret			c
+
+sd_first_process:
+			;	Read Sector#0 (MBR)
+			ld			bc, 0x100			;	B = 1 (1 sector)
+			ld			d, c				;	CDE = 0x000000 (Sector #0)
+			ld			e, c
+			ld			hl, buffer
+			call		sd_read_sector
+			ret			c					;	go to srom_read when SD card read is error.
+
+			call		search_active_partition_on_mbr
+			ret			c					;	go to srom_read when partition is not found.
+
+			push		de
+			push		bc
+			ld			b, 1
+			ld			hl, buffer
+			call		sd_read_sector
+			pop			bc
+			pop			de
+
+sd_card_is_fat:
+			; HL = reserved sectors
+			ld			hl, [buffer + pbr_reserved_sectors]
+
+			; Seek out the next sector of the FAT.
+			ld			a, [buffer + pbr_num_of_fat]
+			ld			b, a
+			ld			a, c
+			add			hl, de
+			adc			a, 0
+			ld			de, [buffer + pbr_sectors_per_fat]
+
+			; -- AHL = AHL + DE * B
+add_fat_size:
+			add			hl, de
+			adc			a, 0				;	Success (CY = 0)
+			djnz		add_fat_size		;	no flag change
+
+			ld			c, a				;	no flag change
+			ex			de, hl				;	no flag change
 			endscope
 
 			scope		search_bios_name
@@ -107,19 +146,19 @@ get_next_sector:
 			ld			[root_entries + 2], a
 
 			ld			b, 512 / dir_entry_size
-			ld			hl, fat_buffer
+			ld			hl, fat_buffer + 10
 search_loop:
 			push		hl
 			push		bc
 
 			ld			b, 11
-			ld			de, bios_name
+			ld			de, bios_name + 10
 strcmp:
 			ld			a, [de]
 			cp			a, [hl]
 			jr			nz, no_match
-			inc			de					; no flag change
-			inc			hl					; no flag change
+			dec			de					; no flag change
+			dec			hl					; no flag change
 			djnz		strcmp				; no flag change
 no_match:
 			pop			bc					; no flag change
@@ -145,23 +184,18 @@ no_match:
 
 bios_name:
 			ds			"OCMKBIOSDAT"
-remain_fat_sectors:
-			dw			0
-root_entries::
-			space		3
-data_area::
-			space		3
 			endscope
 
 			scope		found_bios_name
 found_bios_name::
-			ld			de, dir_attribute
+			ld			de, dir_attribute - 10
 			add			hl, de
 
 			; check attribute
 			;     Exit with an error if it is a volume label, directory, or long file name entry
 			ld			a, [hl]
 			and			a, attr_volume_id | attr_directory
+no_match_exit::
 			scf
 			ret			nz						; error
 
@@ -199,7 +233,7 @@ loop:
 			scope		load_sdbios
 load_sdbios::
 			ld			hl, sd_read_sector
-			ld			[read_sector_hook], hl
+			ld			[read_sector_cbr], hl
 
 			ld			hl, message_sd_boot
 			jp			load_bios

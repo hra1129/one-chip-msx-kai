@@ -113,6 +113,10 @@ load_bios::
 			ld		a, exp_io_ocmkai_ctrl_id
 			out		[ exp_io_vendor_id_port ], a
 
+			; Start to load BIOS
+			ld		a, 0xD4
+			ld		[bios_updating], a
+
 			push	hl								; [001] "Boot from xxxx"
 			call	read_first_sector
 			pop		hl								; [001] "Boot from xxxx"
@@ -301,10 +305,6 @@ start_system::
 			ld		a, DOS_BANK >> 8				; Default MemoryID for MegaSDHC
 			out		[exp_io_ocmkai_ctrl_data], a
 
-			; Activate 1chipMSX device
-			ld		a, exp_io_1chipmsx_id
-			out		[ exp_io_vendor_id_port ], a	; I/O address 0x40 is 1chipMSX device in expanded I/O.
-
 			; Initialize MegaSDHC bank registers
 			xor		a, a
 			ld		[ eseram8k_bank0 ], a
@@ -314,6 +314,18 @@ start_system::
 			ld		[ eseram8k_bank3 ], a
 			ld		a, 0xC0
 			out		[ primary_slot_register ], a
+
+			; Finished load BIOS image
+			ld		[bios_updating], a
+
+			; -- Request reset primary slot at read 0000h and change to customized clock
+			ld		a, 3
+			out		[exp_io_ocmkai_ctrl_register_sel], a
+			out		[exp_io_ocmkai_ctrl_data], a
+
+			; Activate 1chipMSX device
+			ld		a, exp_io_1chipmsx_id
+			out		[ exp_io_vendor_id_port ], a	; I/O address 0x40 is 1chipMSX device in expanded I/O.
 
 			rst		0x00							; start MSX BASIC
 			endscope
@@ -374,11 +386,6 @@ bios_image_signature_reference:
 ; --------------------------------------------------------------------
 			scope		read_sector
 read_sector::
-read_sector_hook	:= $ + 1
+read_sector_cbr		:= $ + 1
 			jp			sd_read_sector
 			endscope
-
-current_sector_low:
-			dw		0
-current_sector_high:
-			dw		0
