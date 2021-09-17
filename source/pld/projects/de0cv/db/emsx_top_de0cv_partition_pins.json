@@ -4,10 +4,6 @@
 			"name" : "Top",
 			"pins" : [
 				{
-					"name" : "pSd_Cm",
-					"strict" : false
-				},
-				{
 					"name" : "pLed[9]",
 					"strict" : false
 				},
@@ -41,6 +37,10 @@
 				},
 				{
 					"name" : "p7SegLed3[5]",
+					"strict" : false
+				},
+				{
+					"name" : "pSd_Cm",
 					"strict" : false
 				},
 				{

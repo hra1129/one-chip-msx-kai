@@ -302,6 +302,10 @@ start_system::
 			cp		a, 0xF3							; = DI ?
 			jp		nz, bios_read_error				;  error
 
+			ld		a, [ 0x8000 + 0x002D ]
+			or		a, a
+			call	nz, set_msx2_palette
+
 			ld		a, DOS_BANK >> 8				; Default MemoryID for MegaSDHC
 			out		[exp_io_ocmkai_ctrl_data], a
 

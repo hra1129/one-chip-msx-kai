@@ -1,5 +1,5 @@
 Assembler report for emsx_top_de0cv
-Fri Sep 17 22:28:57 2021
+Fri Sep 17 22:51:53 2021
 Quartus Prime Version 18.1.1 Build 646 04/11/2019 SJ Lite Edition
 
 
@@ -39,7 +39,7 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Fri Sep 17 22:28:57 2021 ;
+; Assembler Status      ; Successful - Fri Sep 17 22:51:53 2021 ;
 ; Revision Name         ; emsx_top_de0cv                        ;
 ; Top-level Entity Name ; emsx_top_de0cv                        ;
 ; Family                ; Cyclone V                             ;
@@ -69,8 +69,8 @@ https://fpgasoftware.intel.com/eula.
 +----------------+-------------------------------------------------------------------------------------------------------------------+
 ; Option         ; Setting                                                                                                           ;
 +----------------+-------------------------------------------------------------------------------------------------------------------+
-; JTAG usercode  ; 0x028273B8                                                                                                        ;
-; Checksum       ; 0x028273B8                                                                                                        ;
+; JTAG usercode  ; 0x02842AC4                                                                                                        ;
+; Checksum       ; 0x02842AC4                                                                                                        ;
 +----------------+-------------------------------------------------------------------------------------------------------------------+
 
 
@@ -80,7 +80,7 @@ https://fpgasoftware.intel.com/eula.
 ; Option             ; Setting                                                                                                       ;
 +--------------------+---------------------------------------------------------------------------------------------------------------+
 ; JTAG usercode      ; 0x00000000                                                                                                    ;
-; Checksum           ; 0x715A1F66                                                                                                    ;
+; Checksum           ; 0x718AD87B                                                                                                    ;
 ; Compression Ratio  ; 2                                                                                                             ;
 +--------------------+---------------------------------------------------------------------------------------------------------------+
 
@@ -91,14 +91,14 @@ https://fpgasoftware.intel.com/eula.
 Info: *******************************************************************
 Info: Running Quartus Prime Assembler
     Info: Version 18.1.1 Build 646 04/11/2019 SJ Lite Edition
-    Info: Processing started: Fri Sep 17 22:28:43 2021
+    Info: Processing started: Fri Sep 17 22:51:39 2021
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off emsx_top_de0cv -c emsx_top_de0cv
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (115030): Assembler is generating device programming files
 Info: Quartus Prime Assembler was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 4962 megabytes
-    Info: Processing ended: Fri Sep 17 22:28:57 2021
+    Info: Peak virtual memory: 4960 megabytes
+    Info: Processing ended: Fri Sep 17 22:51:53 2021
     Info: Elapsed time: 00:00:14
-    Info: Total CPU time (on all processors): 00:00:11
+    Info: Total CPU time (on all processors): 00:00:12
 
 

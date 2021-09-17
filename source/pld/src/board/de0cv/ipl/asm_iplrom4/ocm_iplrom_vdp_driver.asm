@@ -24,7 +24,7 @@ vdp_initialize::
 		ld		hl, vdp_control_regs
 		ld		bc, ((vdp_control_regs_end - vdp_control_regs) << 8) | vdp_port1
 		otir
-		ld		bc, ((vdp_palette_regs_end - vdp_palette_regs) << 8) | vdp_port2
+		ld		bc, ((vdp_msx1_palette_regs_end - vdp_msx1_palette_regs) << 8) | vdp_port2
 		otir
 
 		;	Initialize the first 16KB of VRAM.
@@ -96,6 +96,31 @@ loop3:
 		endscope
 
 ; --------------------------------------------------------------------
+;	set_msx2_palette
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		B,C,D,E
+;	comment:
+;
+; --------------------------------------------------------------------
+		scope	set_msx2_palette
+set_msx2_palette::
+		push	af
+		ld		a, 2
+		out		[ vdp_port1 ], a
+		ld		a, 0x90
+		out		[ vdp_port1 ], a
+		ld		bc, ((vdp_msx2_palette_regs_end - vdp_msx2_palette_regs) << 8) | vdp_port2
+		ld		hl, vdp_msx2_palette_regs
+		otir
+		pop		af
+		ret
+		endscope
+
+; --------------------------------------------------------------------
 ;	VDP datas
 ; --------------------------------------------------------------------
 vdp_control_regs:
@@ -107,7 +132,7 @@ vdp_control_regs:
 		db		0x00, 0x90				; 0x00 -> R#16: Palette selector #0
 vdp_control_regs_end:
 
-vdp_palette_regs:
+vdp_msx1_palette_regs:
 		db		0x00, 0x00				; 0
 		db		0x00, 0x00				; 1
 		db		0x33, 0x05				; 2
@@ -124,6 +149,21 @@ vdp_palette_regs:
 		db		0x55, 0x03				; 13
 		db		0x55, 0x05				; 14
 		db		0x77, 0x07				; 15
-vdp_palette_regs_end:
+vdp_msx1_palette_regs_end:
+
+vdp_msx2_palette_regs::						; MSX2 colors
+			db		0x11, 0x06				; 2
+			db		0x33, 0x07				; 3
+			db		0x17, 0x01				; 4
+			db		0x27, 0x03				; 5
+			db		0x51, 0x01				; 6
+			db		0x27, 0x06				; 7
+			db		0x71, 0x01				; 8
+			db		0x73, 0x03				; 9
+			db		0x61, 0x06				; 10
+			db		0x64, 0x06				; 11
+			db		0x11, 0x04				; 12
+			db		0x65, 0x02				; 13
+vdp_msx2_palette_regs_end::
 
 include "zg6x8_font.asm"
