@@ -1,5 +1,5 @@
-bios_image_maker.exe ocm_msx2_epcs.cfg              OCMKBIOS.DAT.OCM_MSX2_NEXTOR_EPCS
-bios_image_maker.exe ocm_msx2_nextor_epcs.cfg       OCMKBIOS.DAT.OCM_MSX2_EPCS
+bios_image_maker.exe ocm_msx2_epcs.cfg              OCMKBIOS.DAT.OCM_MSX2_EPCS
+bios_image_maker.exe ocm_msx2_nextor_epcs.cfg       OCMKBIOS.DAT.OCM_MSX2_NEXTOR_EPCS
 
 bios_image_maker.exe ocm_msx2.cfg                   OCMKBIOS.DAT.OCM_MSX2
 bios_image_maker.exe ocm_msx2_msg_off.cfg           OCMKBIOS.DAT.OCM_MSX2_MSG_OFF

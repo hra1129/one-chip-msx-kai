@@ -52,7 +52,7 @@ load_from_epcs::
 			ld			de, epcs_bios1_start_address
 			ld			a, exp_io_1chipmsx_id
 			out			[ exp_io_vendor_id_port ], a
-			in			a, [ 0x42 ]							; DIP-SW status
+			in			a, [ 0x4C ]							; DIP-SW status
 			and			a, 0b01000000						; check DIP-SW7
 			ld			hl, message_srom_boot1				; -- Select EPBIOS1, when DIP-SW7 is OFF
 			jr			nz, skip1
