@@ -108,7 +108,6 @@ entity VDP_SSG is
 		REG_R9_INTERLACE_MODE	: in	std_logic;
 		REG_R9_Y_DOTS			: in	std_logic;
 		REG_R18_ADJ				: in	std_logic_vector(  7 downto 0 );
-		REG_R19_HSYNC_INT_LINE	: in	std_logic_vector(  7 downto 0 );
 		REG_R23_VSTART_LINE		: in	std_logic_vector(  7 downto 0 );
 		REG_R25_MSK				: in	std_logic;
 		REG_R27_H_SCROLL		: in	std_logic_vector(  2 downto 0 );
