@@ -1,0 +1,806 @@
+# vsim -c -t 1ps -do "run.do" tb 
+# Start time: 06:52:48 on Dec 21,2021
+# Loading sv_std.std
+# Loading work.tb
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading work.vdp_package
+# Loading work.vdp(rtl)
+# Loading work.vdp_ntsc_pal(rtl)
+# Loading work.vdp_vga(rtl)
+# Loading work.vdp_doublebuf(rtl)
+# Loading work.vdp_linebuf(rtl)
+# Loading work.vdp_interrupt(rtl)
+# Loading work.vdp_ssg(rtl)
+# Loading work.vdp_colordec(rtl)
+# Loading work.vdp_text12(rtl)
+# Loading work.vdp_graphic123m(rtl)
+# Loading work.vdp_graphic4567(rtl)
+# ** Warning: (vsim-3473) Component instance "U_FIFOMEM : RAM" is not bound.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567 File: ../../vdp_graphic4567.vhd
+# Loading work.vdp_sprite(rtl)
+# Loading work.vdp_spinforam(rtl)
+# ** Warning: (vsim-3473) Component instance "U_EVEN_LINE_BUF : RAM" is not bound.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE File: ../../vdp_sprite.vhd
+# ** Warning: (vsim-3473) Component instance "U_ODD_LINE_BUF : RAM" is not bound.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE File: ../../vdp_sprite.vhd
+# Loading work.vdp_register(rtl)
+# ** Warning: (vsim-3473) Component instance "U_PALETTEMEMRB : RAM" is not bound.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER File: ../../vdp_register.vhd
+# ** Warning: (vsim-3473) Component instance "U_PALETTEMEMG : RAM" is not bound.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER File: ../../vdp_register.vhd
+# Loading work.vdp_command(rtl)
+# Loading work.vdp_wait_control(rtl)
+# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATARB_OUT, and its initial value is not used.
+# Therefore, simulation behavior may occur that is not in compliance with
+# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATARB_OUT.
+# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATAG_OUT, and its initial value is not used.
+# Therefore, simulation behavior may occur that is not in compliance with
+# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATAG_OUT.
+# do run.do
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE/ISPINFORAM
+# ** Warning: CONV_INTEGER: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, and it has been converted to 0.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE/ISPINFORAM
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC123M
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC123M
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_TEXT12
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_TEXT12
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_TEXT12
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_TEXT12
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_COLORDEC
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_COLORDEC
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_BO
+# ** Warning: CONV_INTEGER: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, and it has been converted to 0.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_BO
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_GO
+# ** Warning: CONV_INTEGER: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, and it has been converted to 0.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_GO
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_RO
+# ** Warning: CONV_INTEGER: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, and it has been converted to 0.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_RO
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_BE
+# ** Warning: CONV_INTEGER: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, and it has been converted to 0.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_BE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_GE
+# ** Warning: CONV_INTEGER: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, and it has been converted to 0.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_GE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_RE
+# ** Warning: CONV_INTEGER: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, and it has been converted to 0.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_RE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_TEXT12
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_TEXT12
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC123M
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 12592857 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 12592857 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 12965289 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 12965289 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13151505 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13151505 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13337721 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13337721 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13523937 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13523937 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13710153 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13710153 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13896369 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 13896369 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14082585 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14082585 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14268801 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14268801 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14455017 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14455017 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14641233 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14641233 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14827449 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 14827449 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15013665 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15013665 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15199881 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15199881 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15386097 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15386097 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15572313 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15572313 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15758529 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15758529 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15944745 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 15944745 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16130961 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16130961 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16317177 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16317177 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16503393 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16503393 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16689609 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16689609 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16875825 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 16875825 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17062041 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17062041 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17248257 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17248257 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17434473 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17434473 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17620689 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17620689 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17806905 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17806905 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17993121 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 17993121 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 18179337 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 18179337 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 18365553 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 18365553 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 18551769 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 18551769 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 18924201 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 18924201 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19110417 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19110417 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19296633 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19296633 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19482849 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19482849 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19669065 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19669065 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19855281 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 19855281 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20041497 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20041497 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20227713 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20227713 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20413929 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20413929 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20600145 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20600145 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20786361 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20786361 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20972577 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 20972577 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21158793 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21158793 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21345009 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21345009 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21531225 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21531225 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21717441 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21717441 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21903657 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 21903657 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22089873 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22089873 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22276089 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22276089 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22462305 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22462305 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22648521 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22648521 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22834737 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 22834737 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23020953 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23020953 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23207169 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23207169 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23393385 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23393385 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23579601 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23579601 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23765817 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23765817 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23952033 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 23952033 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 24138249 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 24138249 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 24324465 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 24324465 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 24510681 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 24510681 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 24883113 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 24883113 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25069329 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25069329 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25255545 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25255545 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25441761 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25441761 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25627977 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25627977 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25814193 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 25814193 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26000409 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26000409 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26186625 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26186625 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26372841 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26372841 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26559057 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26559057 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26745273 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26745273 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26931489 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 26931489 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27117705 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27117705 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27303921 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27303921 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27490137 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27490137 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27676353 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27676353 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27862569 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 27862569 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28048785 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28048785 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28235001 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28235001 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28421217 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28421217 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28607433 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28607433 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28793649 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28793649 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28979865 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 28979865 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29166081 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29166081 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29352297 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29352297 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29538513 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29538513 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29724729 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29724729 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29910945 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 29910945 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 30097161 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 30097161 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 30283377 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 30283377 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 30469593 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 30469593 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 30842025 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 30842025 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31028241 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31028241 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31214457 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31214457 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31400673 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31400673 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31586889 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31586889 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31773105 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31773105 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31959321 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 31959321 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32145537 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32145537 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32331753 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32331753 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32517969 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32517969 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32704185 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32704185 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32890401 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 32890401 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33076617 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33076617 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33262833 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33262833 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33449049 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33449049 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33635265 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33635265 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33821481 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 33821481 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34007697 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34007697 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34193913 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34193913 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34380129 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34380129 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34566345 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34566345 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34752561 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34752561 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34938777 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 34938777 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 35124993 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 35124993 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 35311209 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 35311209 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 35497425 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 35497425 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Fatal: (vsim-3734) Index value 640 is out of range 639 downto 0.
+#    Time: 35543979 ps  Iteration: 2  Process: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_RO/line__115 File: ../../vdp_linebuf.vhd
+# Fatal error in Architecture RTL at ../../vdp_linebuf.vhd line 115
+# 
+# HDL call sequence:
+# Stopped at ../../vdp_linebuf.vhd 115 Architecture RTL
+# 
+# End time: 06:52:49 on Dec 21,2021, Elapsed time: 0:00:01
+# Errors: 1, Warnings: 384

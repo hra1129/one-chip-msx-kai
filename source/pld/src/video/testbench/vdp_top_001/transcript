@@ -1,0 +1,2 @@
+# OpenFile C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/video/testbench/vdp_top_001/vsim.wlf
+add wave -position end vsim:/tb/u_vdp/*
