@@ -1,5 +1,5 @@
 # vsim -c -t 1ps -do "run.do" tb 
-# Start time: 06:52:48 on Dec 21,2021
+# Start time: 07:08:21 on Dec 21,2021
 # Loading sv_std.std
 # Loading work.tb
 # Loading std.standard
@@ -315,6 +315,18 @@
 #    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 2444085 ps  Iteration: 6  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 2444085 ps  Iteration: 6  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 2444085 ps  Iteration: 7  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 2444085 ps  Iteration: 7  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 2444085 ps  Iteration: 7  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 2444085 ps  Iteration: 7  Instance: /tb/u_vdp/U_SPRITE
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 12592857 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
@@ -802,5 +814,5 @@
 # HDL call sequence:
 # Stopped at ../../vdp_linebuf.vhd 115 Architecture RTL
 # 
-# End time: 06:52:49 on Dec 21,2021, Elapsed time: 0:00:01
-# Errors: 1, Warnings: 384
+# End time: 07:08:22 on Dec 21,2021, Elapsed time: 0:00:01
+# Errors: 1, Warnings: 390

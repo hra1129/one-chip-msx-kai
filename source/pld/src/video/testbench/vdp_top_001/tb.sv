@@ -44,11 +44,26 @@ module tb;
 	reg				FORCED_V_MODE;		// IN	STD_LOGIC;
 	reg				LEGACY_VGA;			// IN	STD_LOGIC
 
+	reg		[7:0]	vram[0:131071];
+
 	// -------------------------------------------------------------
 	//	clock generator
 	// -------------------------------------------------------------
 	always #(clk_base/2) begin
 		CLK21M	<= ~CLK21M;
+	end
+
+	// -------------------------------------------------------------
+	//	VRAM
+	// -------------------------------------------------------------
+	always @( posedge CLK21M ) begin
+		if( PRAMWE_N == 1'b0 ) begin
+			vram[ PRAMADR ] <= PRAMDBO;
+		end
+		if( PRAMOE_N == 1'b0 ) begin
+			PRAMDBI[ 7:0] <= vram[ { PRAMADR[16:1], 1'b0 } ];
+			PRAMDBI[15:8] <= vram[ { PRAMADR[16:1], 1'b1 } ];
+		end
 	end
 
 	// -------------------------------------------------------------
@@ -87,6 +102,34 @@ module tb;
 		.LEGACY_VGA			( LEGACY_VGA		)
 	);
 
+	// -------------------------------------------------------------
+	//	functions
+	// -------------------------------------------------------------
+	task write_reg(
+		input		[7:0]		address,
+		input		[7:0]		data
+	);
+		ADR <= { 8'd0, address };
+		DBO <= data;
+		REQ <= 1'b1;
+		WRT <= 1'b1;
+		@( posedge CLK21M );
+
+		REQ <= 1'b0;
+		WRT <= 1'b0;
+		repeat( 15 ) @( posedge CLK21M );
+	endtask
+
+	// -------------------------------------------------------------
+	task write_ctrl_reg(
+		input		[7:0]		address,
+		input		[7:0]		data
+	);
+		write_reg( 'h99, data );
+		write_reg( 'h99, address | 'h80 );
+	endtask
+
+	// -------------------------------------------------------------
 	initial begin
 		CLK21M = 0;
 		RESET = 1;
@@ -107,6 +150,9 @@ module tb;
 		RESET = 0;
 		@( posedge CLK21M );
 
+		// screen 1
+		write_ctrl_reg( 0, 'h00 );
+		write_ctrl_reg( 1, 'h10 );
 		repeat( 500000 ) @( negedge CLK21M );
 		$finish;
 	end
