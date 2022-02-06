@@ -1,45 +1,75 @@
 # vsim -c -t 1ps -do "run.do" tb 
-# Start time: 07:08:21 on Dec 21,2021
+# Start time: 06:33:50 on Jan 20,2022
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: ../../vdp_graphic4567.vhd(202): (vopt-3473) Component instance "U_FIFOMEM : RAM" is not bound.
+#         Region: tb.u_vdp.U_VDP_GRAPHIC4567
+# ** Warning: ../../vdp_sprite.vhd(400): (vopt-3473) Component instance "U_EVEN_LINE_BUF : RAM" is not bound.
+#         Region: tb.u_vdp.U_SPRITE
+# ** Warning: ../../vdp_sprite.vhd(414): (vopt-3473) Component instance "U_ODD_LINE_BUF : RAM" is not bound.
+#         Region: tb.u_vdp.U_SPRITE
+# ** Warning: ../../vdp_register.vhd(367): (vopt-3473) Component instance "U_PALETTEMEMRB : RAM" is not bound.
+#         Region: tb.u_vdp.U_VDP_REGISTER
+# ** Warning: ../../vdp_register.vhd(376): (vopt-3473) Component instance "U_PALETTEMEMG : RAM" is not bound.
+#         Region: tb.u_vdp.U_VDP_REGISTER
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=5.
+# //  Questa Intel Starter FPGA Edition-64
+# //  Version 2021.2 win64 Apr 14 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
 # Loading sv_std.std
-# Loading work.tb
+# Loading work.tb(fast)
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
 # Loading ieee.std_logic_arith(body)
 # Loading ieee.std_logic_unsigned(body)
 # Loading work.vdp_package
-# Loading work.vdp(rtl)
-# Loading work.vdp_ntsc_pal(rtl)
-# Loading work.vdp_vga(rtl)
-# Loading work.vdp_doublebuf(rtl)
-# Loading work.vdp_linebuf(rtl)
-# Loading work.vdp_interrupt(rtl)
-# Loading work.vdp_ssg(rtl)
-# Loading work.vdp_colordec(rtl)
-# Loading work.vdp_text12(rtl)
-# Loading work.vdp_graphic123m(rtl)
-# Loading work.vdp_graphic4567(rtl)
+# Loading work.vdp(rtl)#1
+# Loading work.vdp_vga(rtl)#1
+# Loading work.vdp_ssg(rtl)#1
+# Loading work.vdp_colordec(rtl)#1
+# Loading work.vdp_text12(rtl)#1
 # ** Warning: (vsim-3473) Component instance "U_FIFOMEM : RAM" is not bound.
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567 File: ../../vdp_graphic4567.vhd
-# Loading work.vdp_sprite(rtl)
-# Loading work.vdp_spinforam(rtl)
+# Loading work.vdp_sprite(rtl)#1
 # ** Warning: (vsim-3473) Component instance "U_EVEN_LINE_BUF : RAM" is not bound.
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE File: ../../vdp_sprite.vhd
 # ** Warning: (vsim-3473) Component instance "U_ODD_LINE_BUF : RAM" is not bound.
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SPRITE File: ../../vdp_sprite.vhd
-# Loading work.vdp_register(rtl)
+# Loading work.vdp_register(rtl)#1
 # ** Warning: (vsim-3473) Component instance "U_PALETTEMEMRB : RAM" is not bound.
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER File: ../../vdp_register.vhd
 # ** Warning: (vsim-3473) Component instance "U_PALETTEMEMG : RAM" is not bound.
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER File: ../../vdp_register.vhd
-# Loading work.vdp_command(rtl)
-# Loading work.vdp_wait_control(rtl)
-# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATARB_OUT, and its initial value is not used.
+# Loading work.vdp_command(rtl)#1
+# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATARB_OUT(7), and its initial value is not used.
 # Therefore, simulation behavior may occur that is not in compliance with
-# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATARB_OUT.
-# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATAG_OUT, and its initial value is not used.
+# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATARB_OUT(7).
+# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATARB_OUT(6 downto 4), and its initial value is not used.
 # Therefore, simulation behavior may occur that is not in compliance with
-# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATAG_OUT.
+# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATARB_OUT(6 downto 4).
+# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATARB_OUT(3), and its initial value is not used.
+# Therefore, simulation behavior may occur that is not in compliance with
+# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATARB_OUT(3).
+# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATARB_OUT(2 downto 0), and its initial value is not used.
+# Therefore, simulation behavior may occur that is not in compliance with
+# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATARB_OUT(2 downto 0).
+# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATAG_OUT(7 downto 3), and its initial value is not used.
+# Therefore, simulation behavior may occur that is not in compliance with
+# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATAG_OUT(7 downto 3).
+# ** Warning: (vsim-8684) No drivers exist on out port /tb/u_vdp/U_VDP_REGISTER/PALETTEDATAG_OUT(2 downto 0), and its initial value is not used.
+# Therefore, simulation behavior may occur that is not in compliance with
+# the VHDL standard as the initial values come from the base signal /tb/u_vdp/PALETTEDATAG_OUT(2 downto 0).
 # do run.do
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_REGISTER
@@ -182,10 +212,6 @@
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_SSG
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_vdp/U_VDP_VGA
@@ -242,15 +268,15 @@
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SSG
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SPRITE
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
@@ -271,6 +297,18 @@
 #    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SSG
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_SPRITE
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
@@ -283,8 +321,6 @@
 #    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_TEXT12
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_TEXT12
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
@@ -294,16 +330,6 @@
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
-#    Time: 0 ps  Iteration: 2  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
-# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 5  Instance: /tb/u_vdp/U_VDP_GRAPHIC4567
@@ -807,12 +833,12 @@
 #    Time: 35497425 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 35497425 ps  Iteration: 1  Instance: /tb/u_vdp/U_SPRITE
-# ** Fatal: (vsim-3734) Index value 640 is out of range 639 downto 0.
-#    Time: 35543979 ps  Iteration: 2  Process: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_RO/line__115 File: ../../vdp_linebuf.vhd
-# Fatal error in Architecture RTL at ../../vdp_linebuf.vhd line 115
+# ** Fatal: (vsim-3421) Value 640 is out of range 0 to 639.
+#    Time: 35543979 ps  Iteration: 2  Process: /tb/u_vdp/U_VDP_VGA/DBUF/U_BUF_RO/line__115 File: ../../vdp_linebuf.vhd Line: 115
+# Fatal error in Block U_BUF_RO at ../../vdp_linebuf.vhd line 115
 # 
 # HDL call sequence:
-# Stopped at ../../vdp_linebuf.vhd 115 Architecture RTL
+# Stopped at ../../vdp_linebuf.vhd 115 Block U_BUF_RO
 # 
-# End time: 07:08:22 on Dec 21,2021, Elapsed time: 0:00:01
-# Errors: 1, Warnings: 390
+# End time: 06:33:55 on Jan 20,2022, Elapsed time: 0:00:05
+# Errors: 1, Warnings: 397

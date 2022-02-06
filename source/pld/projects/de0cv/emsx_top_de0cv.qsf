@@ -6,7 +6,7 @@ set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CEBA4F23C7
 set_global_assignment -name TOP_LEVEL_ENTITY "emsx_top_de0cv"
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1
-set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "21.1.0 Lite Edition"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "MON MAY  5 11:54:18 2014"
 set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
 
@@ -899,6 +899,7 @@ set_location_assignment PIN_P14 -to p7SegLed5[3]
 set_location_assignment PIN_C1 -to p7SegLed5[4]
 set_location_assignment PIN_C2 -to p7SegLed5[5]
 set_location_assignment PIN_W19 -to p7SegLed5[6]
+set_global_assignment -name VERILOG_FILE ../../src/peripheral/megasd/megasd.v
 set_global_assignment -name VHDL_FILE ../../src/peripheral/fifo/fifo.vhd
 set_global_assignment -name VHDL_FILE ../../src/peripheral/uart/uart.vhd
 set_global_assignment -name VHDL_FILE ../../src/wifi/wifi.vhd
@@ -981,7 +982,6 @@ set_global_assignment -name VHDL_FILE ../../src/peripheral/keyboard/eseps2.vhd
 set_global_assignment -name VHDL_FILE ../../src/peripheral/kanji/kanji.vhd
 set_global_assignment -name VHDL_FILE ../../src/peripheral/keyboard/keymap.vhd
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/mapper/mapper.v
-set_global_assignment -name VHDL_FILE ../../src/peripheral/megasd/megasd.vhd
 set_global_assignment -name VHDL_FILE ../../src/peripheral/sram/ram.vhd
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/rtc/rtc.v
 set_global_assignment -name VHDL_FILE ../../src/peripheral/switch_io/swioports.vhd

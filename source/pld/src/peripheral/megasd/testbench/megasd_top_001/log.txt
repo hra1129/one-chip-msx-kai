@@ -1,0 +1,24 @@
+# vsim -c -t 1ps -do "run.do" tb 
+# Start time: 21:53:02 on Feb 06,2022
+# Loading sv_std.std
+# Loading work.tb
+# Loading work.megasd
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading work.megasd_org(rtl)
+# do run.do
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_megasd_org
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_megasd_org
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_megasd_org
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_megasd_org
+# ** Note: $finish    : tb.sv(696)
+#    Time: 49155851206 ps  Iteration: 2  Instance: /tb
+# End time: 21:53:36 on Feb 06,2022, Elapsed time: 0:00:34
+# Errors: 0, Warnings: 4

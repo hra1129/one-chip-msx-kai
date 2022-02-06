@@ -1,0 +1,134 @@
+m255
+K4
+z2
+!s99 nomlopt
+!s11f vlog 2021.2 2021.04, Apr 14 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/i8253/test_of_counter
+T_opt
+!s110 1642628802
+V;NRH@XE<1fIoD1^eAnK452
+04 2 4 work tb fast 0
+=1-48a472fa6527-61e886c1-107-9a8
+!s124 OEM10U2 
+o-quiet -auto_acc_if_foreign -work work
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.2;73
+vi8253
+Z2 !s110 1642628796
+!i10b 1
+!s100 3DQl6Q4Lc6lcDfho`KPzR3
+IAj:[g@OW[FV=TEkK`4<U33
+R0
+w1587503262
+8../i8253.v
+F../i8253.v
+!i122 0
+L0 38 266
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+Z4 OL;L;2021.2;73
+r1
+!s85 0
+31
+Z5 !s108 1642628796.000000
+Z6 !s107 ../i8253_counter.v|../i8253_control.v|../i8253_clk_en.v|../i8253.v|
+Z7 !s90 ../i8253.v|../i8253_clk_en.v|../i8253_control.v|../i8253_counter.v|
+!i113 0
+Z8 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vi8253_clk_en
+R2
+!i10b 1
+!s100 37i8i?YK?L_Jd9^5KcjAT3
+Ikfj]G2L[VK7>zC1g9mBP`1
+R0
+Z9 w1581803397
+8../i8253_clk_en.v
+F../i8253_clk_en.v
+!i122 0
+L0 38 25
+R3
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 0
+R8
+R1
+vi8253_control
+R2
+!i10b 1
+!s100 <BafX2fDeNg];=UoMLEbR1
+IN?:E^?RXBVlhNW^8dRBeO0
+R0
+w1582202652
+8../i8253_control.v
+F../i8253_control.v
+!i122 0
+L0 38 225
+R3
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 0
+R8
+R1
+vi8253_counter
+R2
+!i10b 1
+!s100 3aeg6jZZE[[_f0kM>Eh6X2
+IJk1zh5Dlo58>Wz[5VHLIz0
+R0
+R9
+8../i8253_counter.v
+F../i8253_counter.v
+!i122 0
+L0 38 299
+R3
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 0
+R8
+R1
+vtb
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+!s110 1642628797
+!i10b 1
+!s100 PmXQe_:lD54SCii:Ga7db2
+ILL`ePHAW1NXb[7[0KSUAj0
+S1
+R0
+w1581803444
+8tb.sv
+Ftb.sv
+!i122 1
+L0 1 399
+R3
+R4
+r1
+!s85 0
+31
+R5
+!s107 tb.sv|
+!s90 tb.sv|
+!i113 0
+R8
+R1

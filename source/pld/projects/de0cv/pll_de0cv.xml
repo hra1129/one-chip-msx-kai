@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<instance entity-name="altera_pll" version="18.1" >
+<instance entity-name="altera_pll" version="20.1" >
 <generic name="debug_print_output" value="false" />
 <generic name="debug_use_rbc_taf_method" value="false" />
 <generic name="device_family" value="Cyclone V" />
-<generic name="device" value="5CEBA2F17A7" />
-<generic name="gui_device_speed_grade" value="1" />
+<generic name="device" value="Unknown" />
+<generic name="gui_device_speed_grade" value="2" />
 <generic name="gui_pll_mode" value="Fractional-N PLL" />
 <generic name="gui_reference_clock_frequency" value="50.0" />
 <generic name="gui_channel_spacing" value="0.0" />

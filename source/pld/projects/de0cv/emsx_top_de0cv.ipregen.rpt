@@ -1,6 +1,6 @@
 IP Upgrade report for emsx_top_de0cv
-Tue Dec 07 06:06:24 2021
-Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+Tue Jan 25 06:13:25 2022
+Quartus Prime Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
 
 
 ---------------------
@@ -16,7 +16,7 @@ Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 ----------------
 ; Legal Notice ;
 ----------------
-Copyright (C) 2020  Intel Corporation. All rights reserved.
+Copyright (C) 2021  Intel Corporation. All rights reserved.
 Your use of Intel Corporation's design tools, logic functions 
 and other software and tools, and any partner logic 
 functions, and any output files from any of the foregoing 
@@ -36,8 +36,8 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------------------------------------------------------+
 ; IP Upgrade Summary                                                         ;
 +------------------------------+---------------------------------------------+
-; IP Components Upgrade Status ; Passed - Tue Dec 07 06:06:24 2021           ;
-; Quartus Prime Version        ; 20.1.1 Build 720 11/11/2020 SJ Lite Edition ;
+; IP Components Upgrade Status ; Passed - Tue Jan 25 06:13:25 2022           ;
+; Quartus Prime Version        ; 21.1.0 Build 842 10/21/2021 SJ Lite Edition ;
 ; Revision Name                ; emsx_top_de0cv                              ;
 ; Top-level Entity Name        ; emsx_top_de0cv                              ;
 ; Family                       ; Cyclone V                                   ;
@@ -49,7 +49,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------+----------------+---------+-----------------------------------------+-----------------------------------------+-----------------------------------------+---------+
 ; Entity Name ; Component Name ; Version ; Original Source File                    ; Generation File Path                    ; New Source File                         ; Message ;
 +-------------+----------------+---------+-----------------------------------------+-----------------------------------------+-----------------------------------------+---------+
-; pll_de0cv   ; altera_pll     ; 18.1    ; ../../src/board/de0cv/pll/pll_de0cv.qip ; ../../src/board/de0cv/pll/pll_de0cv.vhd ; ../../src/board/de0cv/pll/pll_de0cv.qip ;         ;
+; pll_de0cv   ; altera_pll     ; 20.1    ; ../../src/board/de0cv/pll/pll_de0cv.qip ; ../../src/board/de0cv/pll/pll_de0cv.vhd ; ../../src/board/de0cv/pll/pll_de0cv.qip ;         ;
 +-------------+----------------+---------+-----------------------------------------+-----------------------------------------+-----------------------------------------+---------+
 
 
@@ -59,11 +59,11 @@ https://fpgasoftware.intel.com/eula.
 Info (11902): Backing up file "../../src/board/de0cv/pll/pll_de0cv.vhd" to "../../src/board/de0cv/pll/pll_de0cv.BAK.vhd"
 Info (11837): Started upgrading IP component altera_pll with file "../../src/board/de0cv/pll/pll_de0cv.vhd"
 Info (11131): Completed upgrading IP component altera_pll with file "../../src/board/de0cv/pll/pll_de0cv.vhd"
-Info (23030): Evaluation of Tcl script c:/intelfpga_lite/20.1/quartus/common/tcl/internal/ip_regen/ip_regen.tcl was successful
+Info (23030): Evaluation of Tcl script c:/intelfpga_lite/21.1/quartus/common/tcl/internal/ip_regen/ip_regen.tcl was successful
 Info: Quartus Prime Shell was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 4853 megabytes
-    Info: Processing ended: Tue Dec 07 06:06:24 2021
-    Info: Elapsed time: 00:00:42
-    Info: Total CPU time (on all processors): 00:00:29
+    Info: Peak virtual memory: 4879 megabytes
+    Info: Processing ended: Tue Jan 25 06:13:25 2022
+    Info: Elapsed time: 00:00:36
+    Info: Total CPU time (on all processors): 00:00:24
 
 

@@ -1167,18 +1167,13 @@ module emsx_top(
 	megasd u_megasd (
 		.clk21m				( clk21m				),
 		.reset				( reset					),
-		.clkena				( clkena				),
 		.req				( ErmReq				),
-		.ack				( 						),
 		.wrt				( wrt					),
 		.adr				( adr					),
-		.dbi				( 						),
 		.dbo				( dbo					),
 		.ramreq				( ErmRam				),
 		.ramwrt				( ErmWrt				),
 		.ramadr				( ErmAdr				),
-		.ramdbi				( RamDbi				),
-		.ramdbo				( 						),
 		.mmcdbi				( MmcDbi				),
 		.mmcena				( MmcEna				),
 		.mmcact				( MmcAct				),
@@ -1522,21 +1517,23 @@ module emsx_top(
 		.pMidiIntr			( tr_midi_intr		)
 	);
 
-	opl3 #(
-		.OPLCLK				( 86000000			)	//	opl_clk in Hz
-	) u_opl3 (
-		.clk				( clk21m			),
-		.clk_opl			( memclk			),	//	86MHz
-		.rst_n				( ~reset			),
-		.irq_n				(					),
-		.addr				( adr[1:0]			),	// OPL and OPL2 uses adr(0) only
-		.dout				( opl3_dout_s		),
-		.din				( dbo				),
-		.we					( opl3_ce			),
-		.sample_l			( opl3_sound_s		),
-		.sample_r			(					)
-	);
-	assign opl3_ce	= opl3_req & ~pSltWr_n;
+//	opl3 #(
+//		.OPLCLK				( 86000000			)	//	opl_clk in Hz
+//	) u_opl3 (
+//		.clk				( clk21m			),
+//		.clk_opl			( memclk			),	//	86MHz
+//		.rst_n				( ~reset			),
+//		.irq_n				(					),
+//		.addr				( adr[1:0]			),	// OPL and OPL2 uses adr(0) only
+//		.dout				( opl3_dout_s		),
+//		.din				( dbo				),
+//		.we					( opl3_ce			),
+//		.sample_l			( opl3_sound_s		),
+//		.sample_r			(					)
+//	);
+//	assign opl3_ce	= opl3_req & ~pSltWr_n;
+	assign opl3_sound_s = 'd0;
+	assign opl3_dout_s = 'd0;
 
 	s1990 u_s1990 (
 		.clk21m					( clk21m					),
