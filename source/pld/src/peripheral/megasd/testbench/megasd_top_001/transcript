@@ -1,6 +1,2 @@
 # OpenFile C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/megasd/testbench/megasd_top_001/vsim.wlf
-do C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/megasd/testbench/megasd_top_001/wave_compare.do
-# ** Error: (vish-4014) No objects found matching '/tb/u_megasd/w_req'.
-# Executing ONERROR command at macro C:\Users\hra\Documents\github\one-chip-msx-kai\source\pld\src\peripheral\megasd\testbench\megasd_top_001\wave_compare.do line 5
-# ** Error: (vish-4014) No objects found matching '/tb/u_megasd/w_wrt'.
-# Executing ONERROR command at macro C:\Users\hra\Documents\github\one-chip-msx-kai\source\pld\src\peripheral\megasd\testbench\megasd_top_001\wave_compare.do line 6
+add wave -position end vsim:/tb/u_megasd/*

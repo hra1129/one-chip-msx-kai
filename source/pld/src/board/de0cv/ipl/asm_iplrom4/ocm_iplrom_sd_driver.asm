@@ -64,6 +64,14 @@ SDACMD_SET_WR_BLOCK_ERASE_COUNT	:= 23
 SDACMD_APP_SEND_OP_COND			:= 41
 
 ; --------------------------------------------------------------------
+;	SD card type
+; --------------------------------------------------------------------
+TYPE_UNKNOWN					:= 0
+TYPE_MMC						:= 1
+TYPE_SDSD						:= 2
+TYPE_SDHC						:= 3
+
+; --------------------------------------------------------------------
 ;	Master Boot Record Offset
 ; --------------------------------------------------------------------
 mbr_boot_strap_loader			:= 0
@@ -103,18 +111,55 @@ pbr_signature					:= 0x1FE	; 2bytes
 card_type						:= 0xFFCF	; 1byte: 2: MMC/SDHC, 3: SDHC
 
 ; --------------------------------------------------------------------
+;	SEND CMD0
+;	input)
+;		hl .... megasd_sd_register
+; --------------------------------------------------------------------
+		scope	send_cmd0
+send_cmd0::
+		ld		bc, (16 << 8) | 0
+		ld		a, [hl]								; dummy read
+		call	wait_busy
+		ld		[hl], 0x40 | SDCMD_GO_IDLE_STATE	; CMD0 command
+		call	wait_busy
+		ld		[hl], c								; CMD0 parameter 1st
+		call	wait_busy
+		ld		[hl], c								; CMD0 parameter 2nd
+		call	wait_busy
+		ld		[hl], c								; CMD0 parameter 3rd
+		call	wait_busy
+		ld		[hl], c								; CMD0 parameter 4th
+		call	wait_busy
+		ld		[hl], 0x95							; CMD0 CRC
+		call	wait_busy
+		ld		a, [hl]								; dummy read
+		call	wait_busy
+get_r1_wait:
+		ld		a, [hl]								; read R1
+		call	wait_busy
+		ld		a, [megasd_last_data_register]
+		cp		a, 0xFF
+		ccf
+		ret		nc
+		djnz	get_r1_wait
+		ret
+
+wait_busy::
+		ld		a, [megasd_status_register]
+		rlca
+		jr		c, wait_busy
+		ret
+		endscope
+
+; --------------------------------------------------------------------
 ;	SD/SDHC/MMC command
 ;	input)
 ; --------------------------------------------------------------------
 		scope	set_sd_command
 set_sd_command::
-		ld		a, [card_type]		;	Card type : 2=MMC/SD, 3=SDHC
-		sub		a, 2
-		jr		z, set_sd_mmc
-		dec		a
-		jr		z, set_sdhc
-		scf
-		ret
+		ld		a, [card_type]		;	Card type
+		cp		a, TYPE_SDHC
+		jr		c, set_sd_mmc
 
 		;	for SDHC
 set_sdhc:
@@ -131,29 +176,20 @@ set_sd_mmc:
 		sla		e					;	convert 'number of sector' to 'number of byte'
 		rl		d					;	cde = cde * 2
 		rl		c
-set_cmd2::
+send_command::
 		ld		a, [hl]
 		ld		[hl], b				;	set command code
 		ld		[hl], c
 		ld		[hl], d
 		ld		[hl], e
 		ld		[hl], 0
+
 set_src95:
 		ld		[hl], 0x95			;	CRC
-		jr		set_common
 
-set_cmd8::
+		ld		b, 16				;	retry count = 16
+receive_response::
 		ld		a, [hl]
-		ld		[hl], 0x40 + SDCMD_SEND_IF_COND
-		ld		[hl], 0
-		ld		[hl], 0
-		ld		[hl], 0x01
-		ld		[hl], 0xAA
-		ld		[hl], 0x87
-
-set_common:
-		ld		a, [hl]
-		ld		b, 16				;	16 cycles
 wait_command_accept:
 		ld		a, [hl]
 		cp		a, 0x0FF
@@ -164,125 +200,202 @@ wait_command_accept:
 		endscope
 
 ; --------------------------------------------------------------------
-;	Preinitialize
-;	input)
-; --------------------------------------------------------------------
-		scope	sd_preinitialize
-sd_preinitialize::
-		ld		a, 0x40
-		ld		[eseram8k_bank0], a						; BANK 40h
-		ld		a, [megasd_sd_register | (1 << 12)]		;	/CS = 1 (bit12)
-		ret
-		endscope
-
-; --------------------------------------------------------------------
 ;	Initialize SD card
 ;	input)
+;		none
+;	output)
+;		HL .... mega_sd_register
+;		Cy .... 1: error, 0: others
+;		Zf .... 0: error, 0: others
 ; --------------------------------------------------------------------
 		scope	sd_initialize
 sd_initialize::
-		call	sd_initialize_sub
-		ret		c
-		ret		nz
-		ld		hl, card_type
-		ld		[hl], e
-		xor		a, a
-		ret
+		;	Set low speed mode
+		ld		a, 0x80				; Low speed and data enable mode
+		ld		[megasd_mode_register], a
 
-sd_initialize_sub:
 		;	"/CS=1, DI=1" is input for a period of 74 clocks or more.
+		;	"/CS = 1, DI = 1 の状態で 74clock 以上クロックを投入する.
 		ld		hl, megasd_sd_register
 		ld		b, 10
 wait_cs:
 		ld		a, [megasd_sd_register | (1 << 12)]		;	/CS = 1 (bit12)
+		call	wait_busy
 		djnz	wait_cs
 
-		ld		d, b				;	CDE = 0
-		ld		e, b
-		ld		bc, ((0x40 + SDCMD_GO_IDLE_STATE) << 8) | 0x00
-		call	set_cmd2			;	save CDE
+		;	send SDCMD_GO_IDLE_STATE (CMD0)
+		call	send_cmd0
 		ret		c					;	error
 
+		;	Check R1 Response
 		and		a, 0x0F3
 		cp		a, 0x01				;	bit0 - in idle state?
 		ret		nz					;	error (SD is not idle state when bit0 is zero.)
 
-		; SD is idle state.
-		call	set_cmd8			;	save CDE
-		ret		c					;	error
-		cp		a, 1
-		jr		nz, detect_mmc		;	Not SD Card
+		; Set high speed mode
+		xor		a, a				; High speed and data enable mode
+		ld		[megasd_mode_register], a
+		endscope
 
-		; case of SD Card
-		ld		a, [hl]
-		nop
-		ld		a, [hl]
-		nop
-		ld		a, [hl]
-		and		a, 0x0F
-		cp		a, 1
-		ret		nz					;	error
-
-		ld		a, [hl]
-		cp		a, 0xAA
-		ret		nz
-
-repeat_app_cmd:
-		ld		b, (0x40 + SDCMD_APP_CMD)		;	CDE = 0
-		call	set_cmd2			;	save CDE
-		ret		c					;	error
-		cp		a, 1
-		ret		nz					;	error
-
-		ld		bc, ((0x40 + SDACMD_APP_SEND_OP_COND) << 8) | 0x40
-		call	set_cmd2			;	save CDE
-		ret		c					;	error
-		and		a, 1
-		jr		nz, repeat_app_cmd
-
-		ld		b, (0x40 + SDCMD_READ_OCR)
-		call	set_cmd2
-		ret		c					;	error
-
-		ld		a, [hl]
-		cp		a, [hl]
-		cp		a, [hl]
-		cp		a, [hl]
-		bit		6, a
-		ld		e, 2				;	SD = 2
-		jr		z, not_sdhc
-		inc		e					;	SDHC = 3
-not_sdhc:
+; --------------------------------------------------------------------
+;	Send initialize command and detect card type.
+;	input)
+;		DE = 0
+;	output)
+;		Cy ............ 1: error
+;		Others ........ success
+;		[card_type] ... card type code
+; --------------------------------------------------------------------
+		scope	send_init_command
+send_init_command::
 		xor		a, a
-		ret
-
-detect_mmc:
-		ld		b, (0x40 + SDCMD_APP_CMD)	;	CDE = 0
-		call	set_cmd2			; save CDE
-		ret		c
-		bit		2, a
-		jr		nz, skip2
+		ld		[card_type], a
+		; ---------------------------------------------------------------------
+		; CMD8 (Voltage Check Command)
+		;   bit 47 46 45-40 39-22 21   20   19-16 15-08   07-01 00
+		;       S  D  Index Resv. PCIe PCIe VHS   Pattern CRC7  E
+		;
+		; Response (Format R7)
+		;   bit 39-32 31-28 27-12 11-08 07-00
+		;       R1    Ver.  Resv. Vacc. pattern
+		;
+		;  Vacc. ... Voltage accepted
+		;            0000b  Not defined
+		;            0001b  2.7 ... 3.6V
+		;            0010b  Reserved for Low Voltage Range
+		;            0100b  Reserved
+		;            1000b  Reserved
+		;            Others Not defined
+		; ---------------------------------------------------------------------
+		ld		a, [hl]
+		ld		[hl], 0x40 | SDCMD_SEND_IF_COND
+		ld		[hl], 0
+		ld		[hl], 0
+		ld		[hl], 0x01					; VHS = 2.7 ... 3.6V
+		ld		[hl], 0xAA					; Pattern
+		ld		[hl], 0x87					; CRC7, E
+		ld		b, 16						; retry count
+		call	receive_response
+		ret		c							; error
 		cp		a, 1
-		ret		nz
+		jr		nz, check_sd1				; Not SD version 2, go to check SD version 1.
 
-		ld		b, 0x40 + SDACMD_APP_SEND_OP_COND
-		call	set_cmd2			;	save CDE
-		ret		c					;	error
-		bit		2, a
-		jr		nz, skip2
-		and		a, 1				;	Cy = 0, a = 0 or 1
-		jr		nz, detect_mmc		;	if a == 1 goto detect_mmc
-		ld		e, 2				;	MMC = 2
-		ret
+		ld		a, [hl]						; R7 bit31-24
+		ld		a, [hl]						; R7 bit23-16
+		ld		a, [hl]						; R7 bit15-08
+		and		a, 0x0F						; A = R7 bit11-08 = Voltage accepted
+		cp		a, 1						; 1 = 2.7 ... 3.6V
+		ld		a, [hl]						; R7 bit07-00
+		ret		nz							; error when mismatch
+		cp		a, 0xAA						; Check pattern
+		ret		nz							; error when mismatch
 
-skip2:
-		ld		b, 0x40 + SDCMD_SEND_IO_COND
-		call	set_cmd2			;	save CDE
-		ret		c					;	error
+		; Try initialize SDHC card.
+		;
+		; ---------------------------------------------------------------------
+		; ACMD41
+		;   bit 47 46 45-40  39   38  37 36  35   34-33 32   31-16 15-08 07-01 00
+		;       S  D  Index  Busy HCS FB XPC HO2T Rsv.  S18R OCR   Resv. CRC7  E
+		;       0  1  101001 0    X   0  X   X    00    X    XX    00    XX    1
+		;
+		;  { HCS, HO2T }
+		;    00b : SDSC Supported Host
+		;    10b : SDHC/SDXC Supported Host
+		;    11b :   Over 2TB Supported Host
+		;    01b : N/A
+		;
+		; Send SDACMD_APP_SEND_OP_COND(ACMD41). Initialize connection for SDHC.
+		; SDカードに対して SDACMD_APP_SEND_OP_COND(ACMD41), { HCS, HO2T } = 10b で接続初期化を指示。
+retry_acmd41_v2:
+		ld		bc, ((0x40 | SDCMD_APP_CMD) << 8) | 0x00
+		call	send_command
+		ret		c							;	error
 		cp		a, 1
-		jr		z, detect_mmc
-		xor		a, a				;	Cy = 0
-		ret							;	Unknown card: e = 0
+		ret		nz							;	error
+
+		ld		bc, ((0x40 | SDACMD_APP_SEND_OP_COND) << 8) | 0x40
+		call	send_command
+		ret		c							;	error
+		and		a, 1
+		jr		nz, retry_acmd41_v2
+
+		; ---------------------------------------------------------------------
+		; CMD58
+		;   bit 47 46 45-40  39  38-35 34  33-17 16-08 07-01 00
+		;       S  D  Index  MIO FNO   BUS ADDR  BUC   CRC7  E
+		;       0  1  111010 X   XX    X   17bit XX    XX    1
+		;
+		;   MIO (Memory or I/O)
+		;     0: Memory Extension
+		;     1: I/O Extension
+		;
+		;  FNO (Function No.)
+		;
+		;  BUS (Block Unit Select)
+		;     0: 512 Bytes
+		;     1: 32768 Bytes
+		;
+		;  BUC (Block Unit Count)
+		;     0: 1 unit
+		;     1: 2 units
+		;       :
+		;
+		;  After initialization is completed, the host should get CCS information in the response of CMD58.
+		;  CCS is valid when the card accepted CMD8 and after the completion of initialization.
+		;  CCS=0 means that the card is SDSD. CCS=1 means that the card is SDHC or SDXC.
+		;
+		; Send SDCMD_READ_OCR(CMD58). And receive OCR datas.
+		; SDカードに対して SDCMD_READ_OCR(CMD58) を送信して OCRデータを読み取る。
+		ld		bc, ((0x40 | SDCMD_READ_OCR) << 8) | 0x00		; READ_OCR
+		call	send_command				;	Send command and receive R1
+		jr		c, check_mmc				;	go to check MMC card, when error
+
+		ld		a, [hl]						;	receive OCR 1st (bit31-24)
+		cp		a, [hl]						;	receive OCR 2nd (bit23-16)
+		cp		a, [hl]						;	receive OCR 3rd (bit15-08)
+		cp		a, [hl]						;	receive OCR 4th (bit07-00)
+		bit		6, a						;	check CCS bit (bit6 on OCR 1st)
+		ld		a, TYPE_SDSD
+		jr		z, is_byte_access
+		inc		a							;	TYPE_SDHC
+is_byte_access:
+		ld		[card_type], a
+		xor		a, a
+		ret									;	success (Cy = 0, Z = 1)
+
+check_sd1:
+		; Send SDACMD_APP_SEND_OP_COND(ACMD41). Initialize connection for SDHC.
+		; SDカードに対して SDACMD_APP_SEND_OP_COND(ACMD41), { HCS, HO2T } = 00b で接続初期化を指示。
+retry_acmd41_v1:
+		ld		bc, ((0x40 | SDCMD_APP_CMD) << 8) | 0x00
+		call	send_command
+		jr		c, check_mmc				;	go to check MMC, when error
+		cp		a, 1
+		jr		nz, check_mmc				;	go to check MMC, when error
+
+		ld		bc, ((0x40 | SDACMD_APP_SEND_OP_COND) << 8) | 0x00
+		call	send_command
+		jr		c, check_mmc				;	go to check MMC, when error
+		and		a, 1
+		jr		nz, retry_acmd41_v1
+		ld		a, TYPE_SDSD
+		ld		[card_type], a
+		ret									;	success (Cy = 0, Z = 1)
+
+check_mmc:
+		; Send SDCMD_SEND_IO_COND(CMD1). Initialize connection for MMC.
+		; SDカードに対して SDCMD_SEND_IO_COND(CMD1) で接続初期化を指示。
+retry_cmd1:
+		ld		bc, ((0x40 | SDCMD_SEND_IO_COND) << 8) | 0x00
+		call	send_command				;	Send command and receive R1
+		ret		c							; if Cy = 1 then error
+		bit		2, a
+		ret		nz							; if bit2 on R1 then error
+		and		a, 1
+		jr		nz, retry_cmd1
+		ld		a, TYPE_MMC
+		ld		[card_type], a
+		ret
 		endscope
 
 ; --------------------------------------------------------------------

@@ -1,0 +1,10 @@
+(1) Wait 1msec over.
+	No care.
+	Because always 1msec over when reset sequence.
+
+(2) Change to low speed mode. (336kHz)
+
+(3) send dummy 74clock over to the SD card.
+	send 10bytes (80clock) with CS = DI = high.
+
+(4) send CMD0 and check response.

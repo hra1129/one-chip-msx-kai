@@ -1,0 +1,3 @@
+# OpenFile C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/test/cpu/cpu_change/vsim.wlf
+add wave -position end vsim:/tb/u_z80/*
+add wave -position end vsim:/tb/u_r800/*

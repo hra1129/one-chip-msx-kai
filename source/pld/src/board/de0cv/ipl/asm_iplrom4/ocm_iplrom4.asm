@@ -54,7 +54,11 @@ epcs_bios2_start_address				:= 0x500000 >> 9
 ; --------------------------------------------------------------------
 ;	MegaSD Information
 ; --------------------------------------------------------------------
-megasd_sd_register						:= 0x4000			; Register of SD/SDHC/MMC/EPCS Controller (4000h-57FFh)
+megasd_sd_register						:= 0x4000			; Command register for read/write access of SD/SDHC/MMC/EPCS Controller (4000h-57FFh)
+megasd_mode_register					:= 0x5800			; Mode register for write access of SD/SDHC/MMC/EPCS Controller (5800h-5FFFh)
+megasd_status_register					:= 0x5800			; status register for read access of SD/SDHC/MMC/EPCS Controller (5800h-5BFFh)
+megasd_last_data_register				:= 0x5C00			; last data register for read access of SD/SDHC/MMC/EPCS Controller (5C00h-5FFFh)
+
 eseram8k_bank0							:= 0x6000			; 4000h~5FFFh bank selector
 eseram8k_bank1							:= 0x6800			; 6000h~7FFFh bank selector
 eseram8k_bank2							:= 0x7000			; 8000h~9FFFh bank selector
@@ -120,10 +124,9 @@ rom_code_address::
 
 		org		dram_code_address
 start_of_code::
-		xor		a, a
-		ld		[card_type], a
-
-		call	sd_preinitialize
+		call	vdp_initialize
+		ld		hl, 0x0000						;	Pattern Name Table
+		call	vdp_set_vram_address
 
 		; Activate "OCM-Kai control device" and initialize MemoryID to 0.
 		ld		a, exp_io_ocmkai_ctrl_id
@@ -144,7 +147,7 @@ start_of_code::
 		; Check already loaded BIOS.
 		ld		a, [bios_updating]
 		cp		a, 0xD4							; If it's a quick reset, boot EPBIOS.
-		jr		z, force_bios_load_from_epbios
+		jr		z, force_bios_load_from_sdcard
 
 		; -- Check MAIN-ROM
 		xor		a, a							;	LD A, MAIN_ROM1_BANK >> 8
@@ -160,12 +163,7 @@ start_of_code::
 		cp		a, 0xC3
 		jp		z, start_system
 no_loaded:
-
 skip_check:
-		call	vdp_initialize
-
-		ld		hl, 0x0000						;	Pattern Name Table
-		call	vdp_set_vram_address
 
 force_bios_load_from_sdcard::
 		call	load_from_sdcard

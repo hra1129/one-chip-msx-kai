@@ -1164,6 +1164,7 @@ module emsx_top(
 		.dbi				( RomDbi				)
 	);
 
+	wire	[7:0]		megasd_debug;
 	megasd u_megasd (
 		.clk21m				( clk21m				),
 		.reset				( reset					),
@@ -1185,7 +1186,8 @@ module emsx_top(
 		.epc_cs				( EPC_CS				),
 		.epc_oe				( EPC_OE				),
 		.epc_di				( EPC_DI				),
-		.epc_do				( EPC_DO				)
+		.epc_do				( EPC_DO				),
+		.debug				( megasd_debug			)
 	);
 
 	assign pSd_Dt[2:0]	= 3'bzzz;
@@ -1710,7 +1712,8 @@ module emsx_top(
 		.reset						( reset						),
 		.processor_mode				( 1'b0						),		//	R800
 		.z80_pc						( 16'd0						),
-		.r800_pc					( { { 3'd0, vFKeys[6] }, { 2'd0, vFKeys[5], vFKeys[4] }, { 3'd0, af_mask }, af_speed }	),
+		//.r800_pc					( { { 3'd0, vFKeys[6] }, { 2'd0, vFKeys[5], vFKeys[4] }, { 3'd0, af_mask }, af_speed }	),
+		.r800_pc					( { 8'h00, megasd_debug }	),
 		.p_7seg_address_0			( p_7seg_address_0			),
 		.p_7seg_address_1			( p_7seg_address_1			),
 		.p_7seg_address_2			( p_7seg_address_2			),

@@ -18,12 +18,6 @@ STATE.STLINECHKLOOP 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1
 STATE.STSRCHCHKLOOP 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 STATE.STEXECEND 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 
-State Machine - |emsx_top_de0cv|emsx_top:U92|ff_logo_timeout
-Name ff_logo_timeout.00 ff_logo_timeout.10 ff_logo_timeout.01 
-ff_logo_timeout.00 0 0 0 
-ff_logo_timeout.01 1 0 1 
-ff_logo_timeout.10 1 1 0 
-
 State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|UART:U1|tx_current_state_s
 Name tx_current_state_s.STATE_TX_FINISH tx_current_state_s.STATE_TX_STOP tx_current_state_s.STATE_TX_DATA tx_current_state_s.STATE_TX_START tx_current_state_s.STATE_TX_IDLE 
 tx_current_state_s.STATE_TX_IDLE 0 0 0 0 0 
@@ -40,6 +34,18 @@ rx_current_state_s.STATE_RX_DATA 0 0 1 0 1
 rx_current_state_s.STATE_RX_STOP 0 1 0 0 1 
 rx_current_state_s.STATE_RX_FINISH 1 0 0 0 1 
 
+State Machine - |emsx_top_de0cv|emsx_top:U92|ff_logo_timeout
+Name ff_logo_timeout.00 ff_logo_timeout.10 ff_logo_timeout.01 
+ff_logo_timeout.00 0 0 0 
+ff_logo_timeout.01 1 0 1 
+ff_logo_timeout.10 1 1 0 
+
+State Machine - |emsx_top_de0cv|emsx_top:U92|DEBUG_ENA
+Name DEBUG_ENA.00 DEBUG_ENA.10 DEBUG_ENA.01 
+DEBUG_ENA.10 0 0 0 
+DEBUG_ENA.01 0 1 1 
+DEBUG_ENA.00 1 1 0 
+
 State Machine - |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_SPRITE:U_SPRITE|SPSTATE
 Name SPSTATE.SPSTATE_PREPARE SPSTATE.SPSTATE_YTEST_DRAW SPSTATE.SPSTATE_IDLE 
 SPSTATE.SPSTATE_IDLE 0 0 0 
@@ -52,25 +58,6 @@ FF_SSTATE.SSTATE_A 0 0 0 0
 FF_SSTATE.SSTATE_B 0 0 1 1 
 FF_SSTATE.SSTATE_C 0 1 0 1 
 FF_SSTATE.SSTATE_D 1 0 0 1 
-
-State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|my_cmd_state
-Name my_cmd_state.STATE_CMD_FINISH my_cmd_state.STATE_CMD_DATA my_cmd_state.STATE_CMD_IDLE 
-my_cmd_state.STATE_CMD_IDLE 0 0 0 
-my_cmd_state.STATE_CMD_DATA 0 1 1 
-my_cmd_state.STATE_CMD_FINISH 1 0 1 
-
-State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|my_rx_state
-Name my_rx_state.STATE_RX_FINISH my_rx_state.STATE_RX_WAITDATA my_rx_state.STATE_RX_DATA my_rx_state.STATE_RX_IDLE 
-my_rx_state.STATE_RX_IDLE 0 0 0 0 
-my_rx_state.STATE_RX_DATA 0 0 1 1 
-my_rx_state.STATE_RX_WAITDATA 0 1 0 1 
-my_rx_state.STATE_RX_FINISH 1 0 0 1 
-
-State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|my_tx_state
-Name my_tx_state.STATE_TX_FINISH my_tx_state.STATE_TX_DATA my_tx_state.STATE_TX_IDLE 
-my_tx_state.STATE_TX_IDLE 0 0 0 
-my_tx_state.STATE_TX_DATA 0 1 1 
-my_tx_state.STATE_TX_FINISH 1 0 1 
 
 State Machine - |emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|ff_state
 Name ff_state.state_command ff_state.state_sync_char2 ff_state.state_sync_char1 ff_state.state_mode 
@@ -109,6 +96,25 @@ ff_tx_state.tx_state_data_bit 0 1 0 1 0
 ff_tx_state.tx_state_parity_bit 1 0 0 1 0 
 ff_tx_state.tx_state_stop_bit 0 0 0 1 1 
 
+State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|my_cmd_state
+Name my_cmd_state.STATE_CMD_FINISH my_cmd_state.STATE_CMD_DATA my_cmd_state.STATE_CMD_IDLE 
+my_cmd_state.STATE_CMD_IDLE 0 0 0 
+my_cmd_state.STATE_CMD_DATA 0 1 1 
+my_cmd_state.STATE_CMD_FINISH 1 0 1 
+
+State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|my_rx_state
+Name my_rx_state.STATE_RX_FINISH my_rx_state.STATE_RX_WAITDATA my_rx_state.STATE_RX_DATA my_rx_state.STATE_RX_IDLE 
+my_rx_state.STATE_RX_IDLE 0 0 0 0 
+my_rx_state.STATE_RX_DATA 0 0 1 1 
+my_rx_state.STATE_RX_WAITDATA 0 1 0 1 
+my_rx_state.STATE_RX_FINISH 1 0 0 1 
+
+State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|my_tx_state
+Name my_tx_state.STATE_TX_FINISH my_tx_state.STATE_TX_DATA my_tx_state.STATE_TX_IDLE 
+my_tx_state.STATE_TX_IDLE 0 0 0 
+my_tx_state.STATE_TX_DATA 0 1 1 
+my_tx_state.STATE_TX_FINISH 1 0 1 
+
 State Machine - |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|Ps2Seq
 Name Ps2Seq.Ps2Stop Ps2Seq.Ps2Txd Ps2Seq.Ps2Rxd Ps2Seq.Ps2Idle 
 Ps2Seq.Ps2Idle 0 0 0 0 
@@ -125,9 +131,3 @@ MtxSeq.MtxRead 0 0 0 1 0 0 1
 MtxSeq.MtxWrite 0 0 1 0 0 0 1 
 MtxSeq.MtxEnd 0 1 0 0 0 0 1 
 MtxSeq.MtxReset 1 0 0 0 0 0 1 
-
-State Machine - |emsx_top_de0cv|emsx_top:U92|DEBUG_ENA
-Name DEBUG_ENA.00 DEBUG_ENA.10 DEBUG_ENA.01 
-DEBUG_ENA.10 0 0 0 
-DEBUG_ENA.01 0 1 1 
-DEBUG_ENA.00 1 1 0 

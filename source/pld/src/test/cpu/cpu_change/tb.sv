@@ -312,10 +312,17 @@ module tb;
 		end
 
 		//	NOP
-		repeat( 50 ) begin
+//		repeat( 50 ) begin
 			dbi			<= 8'h00;
-			@( negedge pSltRd_n );
-		end
+//			@( negedge pSltRd_n );
+//		end
+
+		@( posedge clk );
+
+		//	wait signal
+		WAIT_n			<= 1'b0;
+		repeat( 1000 ) @( posedge clk );
+		WAIT_n			<= 1'b1;
 
 		//	NOP
 		dbi			<= 8'h00;

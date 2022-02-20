@@ -46,7 +46,7 @@ module megasd (
 	output				ramwrt,
 	output		[19:0]	ramadr,
 
-	output reg	[7:0]	mmcdbi,
+	output		[7:0]	mmcdbi,
 	output				mmcena,
 	output				mmcact,
 
@@ -59,7 +59,9 @@ module megasd (
 	output 				epc_cs,
 	output				epc_oe,
 	output reg			epc_di,
-	input				epc_do
+	input				epc_do,
+
+	output	[7:0]		debug
 );
 	reg		[ 7:0]	ff_bank0;
 	reg		[ 6:0]	ff_bank1;
@@ -75,13 +77,14 @@ module megasd (
 
 	wire			w_is_mmc_bank;
 
-
 	reg				ff_low_speed_mode;
 	reg				ff_data_en;
+	reg				ff_read_busy;
 	wire			w_epc_mode;
 
 	reg		[7:0]	ff_recv_data;
 	reg		[7:0]	ff_send_data;
+	reg		[7:0]	ff_mmcdbi;
 
 	reg				ff_mmc_cs;
 	reg				ff_epc_cs;
@@ -143,23 +146,23 @@ module megasd (
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset == 1'b1 ) begin
-			ff_mmc_ck	<= 1'b1;
-			ff_epc_ck	<= 1'b1;
+			ff_mmc_ck	<= 1'b0;
+			ff_epc_ck	<= 1'b0;
 		end
 		else if( w_clk_enable ) begin
-			if( (ff_data_seq[4:1] != 4'd2) && (ff_data_seq[4:2] != 3'd0) ) begin
+			if( (ff_data_seq[4:1] != 4'd10) && (ff_data_seq[4:2] != 3'd0) ) begin
 				if( w_epc_mode == 1'b0 ) begin
 					ff_mmc_ck <= ff_data_seq[0];
-					ff_epc_ck <= 1'b1;
+					ff_epc_ck <= 1'b0;
 				end
 				else begin
-					ff_mmc_ck <= 1'b1;
+					ff_mmc_ck <= 1'b0;
 					ff_epc_ck <= ff_data_seq[0];
 				end
 			end
 			else begin
-				ff_mmc_ck <= 1'b1;
-				ff_epc_ck <= 1'b1;
+				ff_mmc_ck <= 1'b0;
+				ff_epc_ck <= 1'b0;
 			end
 		end
 		else begin
@@ -196,6 +199,23 @@ module megasd (
 		else if( req && wrt && (adr[15:12] == 4'd5) && (adr[11] == 1'b1) && w_is_mmc_bank ) begin
 			ff_low_speed_mode	<= dbo[7];
 			ff_data_en			<= ~dbo[0];
+		end
+		else begin
+			//	hold
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_read_busy	<= 1'b0;
+		end
+		else if( req && !wrt && (adr[15:12] == 4'd5) && (adr[11:10] == 2'b10) && w_is_mmc_bank ) begin
+			//	Address 0x5800-0x5BFF
+			ff_read_busy	<= 1'b1;
+		end
+		else if( req && !wrt && w_is_mmc_bank ) begin
+			//	Address 0x4000-0x57FF, 0x5C00-0x5FFF
+			ff_read_busy	<= 1'b0;
 		end
 		else begin
 			//	hold
@@ -239,15 +259,18 @@ module megasd (
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset == 1'b1 ) begin
-			mmcdbi <= 8'hFF;
+			ff_mmcdbi <= 8'hFF;
 		end
 		else if( ff_data_seq == 5'd2 ) begin
-			mmcdbi <= ff_recv_data;
+			ff_mmcdbi <= ff_recv_data;
 		end
 		else begin
 			//	hold
 		end
 	end
+
+	assign mmcdbi	= (ff_read_busy) ? { ff_data_active, 7'd0 } : ff_mmcdbi;
+	assign debug	= ff_mmcdbi;
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset == 1'b1 ) begin
@@ -272,7 +295,7 @@ module megasd (
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset == 1'b1 ) begin
 			mmc_di <= 1'bZ;
-			epc_di <= 1'bZ;
+			epc_di <= 1'b1;
 		end
 		else if( ff_data_seq == 5'd0 ) begin
 			//	hold

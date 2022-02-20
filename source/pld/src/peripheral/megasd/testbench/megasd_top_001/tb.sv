@@ -52,8 +52,8 @@ module tb;
 	wire			w_epc_ck_ne;
 	reg		[7:0]	ff_mmc_data;
 	reg		[7:0]	ff_epc_data;
-	reg				ff_mmc_do;
-	reg				ff_epc_do;
+	wire			ff_mmc_do;
+	wire			ff_epc_do;
 	reg		[7:0]	ff_mmc_recv;
 	reg		[7:0]	ff_epc_recv;
 	reg		[7:0]	data;
@@ -96,7 +96,6 @@ module tb;
 	assign w_epc_ck_ne =  ff_epc_ck & ~epc_ck;
 
 	always @( negedge mmc_ck ) begin
-		ff_mmc_do	<= ff_mmc_data[7];
 		ff_mmc_data	<= { ff_mmc_data[6:0], 1'b1 };
 	end
 
@@ -105,13 +104,15 @@ module tb;
 	end
 
 	always @( negedge epc_ck ) begin
-		ff_epc_do	<= ff_epc_data[7];
 		ff_epc_data <= { ff_epc_data[6:0], 1'b1 };
 	end
 
 	always @( posedge epc_ck ) begin
 		ff_epc_recv <= { ff_epc_recv[6:0], epc_di };
 	end
+
+	assign ff_mmc_do = ff_mmc_data[7];
+	assign ff_epc_do = ff_epc_data[7];
 
 	assign mmc_do = ff_mmc_do;
 	assign epc_do = ff_epc_do;
@@ -247,8 +248,6 @@ module tb;
 		wrt = 0;
 		adr = 0;
 		dbo = 0;
-		ff_mmc_do = 1;
-		ff_epc_do = 1;
 		ff_mmc_data = 0;
 		ff_epc_data = 0;
 		s_test_name = "Prepare";
@@ -491,17 +490,33 @@ module tb;
 		ff_mmc_data = 8'b10101010;
 		read_reg( 16'h4000, data );
 		assert( data == 8'b10101010 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
+		assert( data == 8'b10101010 );
 
 		ff_mmc_data = 8'b11001100;
 		read_reg( 16'h4000, data );
+		assert( data == 8'b11001100 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
 		assert( data == 8'b11001100 );
 
 		ff_mmc_data = 8'b11110000;
 		read_reg( 16'h4000, data );
 		assert( data == 8'b11110000 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
+		assert( data == 8'b11110000 );
 
 		ff_mmc_data = 8'b10101010;
 		read_reg( 16'h4000, data );
+		assert( data == 8'b10101010 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
 		assert( data == 8'b10101010 );
 
 		write_reg( 16'h5800, 8'b00000001 );		//	High speed mode and disable datas.
@@ -547,17 +562,33 @@ module tb;
 		ff_mmc_data = 8'b10101010;
 		read_reg( 16'h4000, data );
 		assert( data == 8'b10101010 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
+		assert( data == 8'b10101010 );
 
 		ff_mmc_data = 8'b11001100;
 		read_reg( 16'h4000, data );
+		assert( data == 8'b11001100 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
 		assert( data == 8'b11001100 );
 
 		ff_mmc_data = 8'b11110000;
 		read_reg( 16'h4000, data );
 		assert( data == 8'b11110000 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
+		assert( data == 8'b11110000 );
 
 		ff_mmc_data = 8'b10101010;
 		read_reg( 16'h4000, data );
+		assert( data == 8'b10101010 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
 		assert( data == 8'b10101010 );
 
 		write_reg( 16'h5800, 8'b00000001 );		//	High speed mode and disable datas.
@@ -622,17 +653,33 @@ module tb;
 		ff_epc_data = 8'b10101010;
 		read_reg( 16'h4000, data );
 		assert( data == 8'b10101010 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
+		assert( data == 8'b10101010 );
 
 		ff_epc_data = 8'b11001100;
 		read_reg( 16'h4000, data );
+		assert( data == 8'b11001100 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
 		assert( data == 8'b11001100 );
 
 		ff_epc_data = 8'b11110000;
 		read_reg( 16'h4000, data );
 		assert( data == 8'b11110000 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
+		assert( data == 8'b11110000 );
 
 		ff_epc_data = 8'b10101010;
 		read_reg( 16'h4000, data );
+		assert( data == 8'b10101010 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
 		assert( data == 8'b10101010 );
 
 		write_reg( 16'h5800, 8'b00000001 );		//	High speed mode and disable datas.
@@ -678,17 +725,33 @@ module tb;
 		ff_epc_data = 8'b10101010;
 		read_reg( 16'h4000, data );
 		assert( data == 8'b10101010 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
+		assert( data == 8'b10101010 );
 
 		ff_epc_data = 8'b11001100;
 		read_reg( 16'h4000, data );
+		assert( data == 8'b11001100 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
 		assert( data == 8'b11001100 );
 
 		ff_epc_data = 8'b11110000;
 		read_reg( 16'h4000, data );
 		assert( data == 8'b11110000 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
+		assert( data == 8'b11110000 );
 
 		ff_epc_data = 8'b10101010;
 		read_reg( 16'h4000, data );
+		assert( data == 8'b10101010 );
+		read_reg( 16'h5800, data );
+		assert( data == 8'b00000000 );
+		read_reg( 16'h5C00, data );
 		assert( data == 8'b10101010 );
 
 		write_reg( 16'h5800, 8'b00000001 );		//	High speed mode and disable datas.
