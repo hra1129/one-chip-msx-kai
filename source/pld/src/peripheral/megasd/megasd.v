@@ -325,7 +325,7 @@ module megasd (
 			ff_mmc_cs		<= 1'b1;
 			ff_epc_cs		<= 1'b1;
 		end
-		else if( req && (adr[15:13] == 3'b010) && (adr[12:11] != 2'b11) && w_is_mmc_bank && ff_data_seq == 5'd0 && ff_data_en ) begin
+		else if( req && (adr[15:13] == 3'b010) && (adr[12:11] != 2'b11) && w_is_mmc_bank && ff_data_seq == 5'd0 ) begin
 			//	Memory mapped I/O 4000-57FFh
 			ff_mmc_cs		<=  w_epc_mode | adr[12];
 			ff_epc_cs		<= !w_epc_mode | adr[12];

@@ -116,10 +116,10 @@ message_initial_text1::
 		ds		"Initial Program Loader for OneChipMSX."
 		db		0
 message_initial_text2::
-		ds		"Revision 4.1.1"
+		ds		"Revision 4.1.2"
 		db		0
 message_initial_text3::
-		ds		"OCM-Kai Build date Sep.17th.2021 "
+		ds		"OCM-Kai Build date Feb.22th.2022 "
 		db		0
 
 message_sd_boot::

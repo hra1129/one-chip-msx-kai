@@ -38,17 +38,22 @@ load_from_epcs::
 			ld			hl, read_sector_from_epcs
 			ld			[ read_sector_cbr ], hl
 
-			; Change to EPCS access bank, and change to High speed and data enable mode
+			; Change to EPCS access bank, and change to High speed and data disable mode
 			ld			a, 0x60
 			ld			[ eseram8k_bank0 ], a
-			ld			[megasd_mode_register], a			; bit7 = 0, bit0 = 0
+			inc			a
+			ld			[megasd_mode_register], a			; bit7 = 0, bit0 = 1 : high speed and data disable
 
-			; load BIOS image from EPCS serial ROM
-			ld			b, 10
+			; /CS=1
+			ld			b, 160
 dummy_read:
 			ld			a, [megasd_sd_register|(1<<12)]		; /CS=1 (address bit12)
 			nop
 			djnz		dummy_read
+
+			ld			a, [megasd_sd_register|(0<<12)]		; /CS=0 (address bit12)
+			xor			a, a
+			ld			[megasd_mode_register], a			; bit7 = 0, bit0 = 0 : high speed and data enable
 
 			; Check DIP-SW7 and select DualBIOS
 			ld			de, epcs_bios1_start_address

@@ -756,6 +756,28 @@ module tb;
 
 		write_reg( 16'h5800, 8'b00000001 );		//	High speed mode and disable datas.
 
+		// ---------------------------------------------------------
+		s_test_name = "EPCS Read [002]";
+		write_reg( 16'h6000, 8'h60 );				//	Change to EPCS Bank
+		write_reg( 16'h5800, 8'b00000001 );		//	High speed mode and disable datas.
+
+		ff_epc_data = 8'b10101010;
+		read_reg( 16'h5000, data );
+		assert( data == 8'b10101010 );
+
+		ff_epc_data = 8'b10101010;
+		read_reg( 16'h4000, data );
+		assert( data == 8'b10101010 );
+
+		ff_epc_data = 8'b11110000;
+		read_reg( 16'h5000, data );
+		assert( data == 8'b11110000 );
+
+		ff_epc_data = 8'b11110000;
+		read_reg( 16'h4000, data );
+		assert( data == 8'b11110000 );
+		write_reg( 16'h5800, 8'b00000001 );		//	High speed mode and disable datas.
+
 		$finish;
 	end
 endmodule

@@ -1,5 +1,5 @@
 # vsim -c -t 1ps -do "run.do" tb 
-# Start time: 06:42:33 on Feb 20,2022
+# Start time: 06:40:25 on Feb 22,2022
 # Loading sv_std.std
 # Loading work.tb
 # Loading work.megasd
@@ -9,6 +9,9 @@
 # Loading ieee.std_logic_arith(body)
 # Loading ieee.std_logic_unsigned(body)
 # Loading work.megasd_org(rtl)
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'u_megasd'.  Expected 22, found 21.
+#    Time: 0 ps  Iteration: 0  Instance: /tb/u_megasd File: tb.sv Line: 123
+# ** Warning: (vsim-3722) tb.sv(123): [TFMPC] - Missing connection for port 'debug'.
 # do run.do
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_megasd_org
@@ -18,7 +21,11 @@
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_megasd_org
 # ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
 #    Time: 0 ps  Iteration: 0  Instance: /tb/u_megasd_org
-# ** Note: $finish    : tb.sv(759)
-#    Time: 49164789190 ps  Iteration: 2  Instance: /tb
-# End time: 06:42:51 on Feb 20,2022, Elapsed time: 0:00:18
-# Errors: 0, Warnings: 4
+# ** Error: Assertion error.
+#    Time: 49166185750 ps  Scope: tb File: tb.sv Line: 774
+# ** Error: Assertion error.
+#    Time: 49166465062 ps  Scope: tb File: tb.sv Line: 778
+# ** Note: $finish    : tb.sv(781)
+#    Time: 49166744374 ps  Iteration: 2  Instance: /tb
+# End time: 06:40:43 on Feb 22,2022, Elapsed time: 0:00:18
+# Errors: 2, Warnings: 6
