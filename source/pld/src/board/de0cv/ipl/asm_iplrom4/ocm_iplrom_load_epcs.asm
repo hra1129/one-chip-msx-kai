@@ -1,5 +1,5 @@
 ; ==============================================================================
-;	IPL-ROM for OCM-PLD v3.4 or later
+;	IPL-ROM for OCM-PLD v3.9.1 or later
 ;	EPCS Serial ROM Driver
 ; ------------------------------------------------------------------------------
 ; Copyright (c) 2021 Takayuki Hara
@@ -45,11 +45,13 @@ load_from_epcs::
 			ld			[megasd_mode_register], a			; bit7 = 0, bit0 = 1 : high speed and data disable
 
 			; /CS=1
-			ld			b, 160
+			ld			bc, 0
 dummy_read:
 			ld			a, [megasd_sd_register|(1<<12)]		; /CS=1 (address bit12)
-			nop
-			djnz		dummy_read
+			dec			bc
+			ld			a, c
+			or			a, b
+			jr			nz, dummy_read
 
 			ld			a, [megasd_sd_register|(0<<12)]		; /CS=0 (address bit12)
 			xor			a, a

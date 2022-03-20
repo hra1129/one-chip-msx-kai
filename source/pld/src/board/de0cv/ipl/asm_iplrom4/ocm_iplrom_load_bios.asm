@@ -112,6 +112,8 @@ load_bios::
 			; Activate "OCM-Kai control device" and initialize MemoryID to 0.
 			ld		a, exp_io_ocmkai_ctrl_id
 			out		[ exp_io_vendor_id_port ], a
+			ld		a, exp_io_ocmkai_ctrl_reg_memory_id
+			out		[exp_io_ocmkai_ctrl_register_sel], a
 
 			; Start to load BIOS
 			ld		a, 0xD4

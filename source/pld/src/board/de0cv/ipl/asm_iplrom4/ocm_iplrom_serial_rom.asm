@@ -1,5 +1,5 @@
 ; ==============================================================================
-;	IPL-ROM for OCM-PLD v3.4 or later
+;	IPL-ROM for OCM-PLD v3.9.1 or later
 ;	EPCS Serial ROM Driver
 ; ------------------------------------------------------------------------------
 ; Copyright (c) 2021 Takayuki Hara
@@ -61,42 +61,46 @@ EPCS_READ_DEVICE_ID		:= 0b1001_1111			; require EPCS128 or later
 ; ------------------------------------------------------------------------------
 			scope		read_sector_from_epcs
 read_sector_from_epcs::
-			push		de
-			sla			e
-			rl			d								; de * 2
-			xor			a, a							; dea = byte address, Cy = 0
-			ld			c, b
-			sla			c								; c = {number of sectors} * 2  : number of half sectors
-			ld			b, a							; b = 256
+			push		de								; target sector number
 
-			push		bc								; save number of half sectors
+			ex			de, hl							; de = de * 2
+			add			hl, hl
+			ex			de, hl
+			xor			a, a							; dea = byte address, Cy = 0
+			ld			c, a							; C = 0
+
+			push		bc								; save number of sectors
 			push		hl
 			ld			hl, megasd_sd_register|(0<<12)	; /CS=0 (address bit12)
 			ld			[hl], EPCS_READ_BYTES			; command byte
+			nop
 			ld			[hl], d							; byte address b23-b16
+			nop
 			ld			[hl], e							; byte address b15-b8
+			nop
 			ld			[hl], a							; byte address b7-b0
+			nop
 			ld			a, [hl]
 			pop			de								; de = adress of buffer
 
+			sla			b								; b = number of half sectors
 read_all:
-read_half_sector:
-			ld			a, [hl]							; read 1byte
-			ld			[de], a							; write 1byte to buffer
+			ld			a, [hl]							; ¦ DE0CV ‚Å‚Í LDIR ‚Å“Ç‚Þ‚ÆŽæ‚è‚±‚Ú‚·ƒP[ƒX‚ª‚ ‚é
+			ld			[de], a
 			inc			de
-			djnz		read_half_sector
-			dec			c
+			dec			bc
+			ld			a, c
+			or			a, b
 			jr			nz, read_all
 
 			ld			a, [megasd_sd_register|(1<<12)]	; /CS=1 (address bit12)
 
-			pop			hl								; H = number of half sectors
-			pop			de								; adress of sector
-			srl			l
+			pop			hl								; H = number of sectors
+			pop			de								; target sector number
+			ld			l, h
 			ld			h, 0
-			add			hl, de
+			add			hl, de							; Cy = 0
 			ex			de, hl							; next sector (512 byte)
-			xor			a, a							; Cy = 0
 			ret
 			endscope
 

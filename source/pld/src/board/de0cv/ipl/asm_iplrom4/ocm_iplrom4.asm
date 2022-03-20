@@ -108,95 +108,108 @@ bios_image_command_blocks				:= 5
 ; --------------------------------------------------------------------
 ;	main program
 ; --------------------------------------------------------------------
-		org		0x0000
+		org			0x0000
 entry_point:
 		;	Initialize Stack Pointer
 		di
-		ld		sp, 0xFFFF
+		ld			sp, 0xFFFF
 
 		;	Copy IPLROM to DRAM
-		ld		bc, end_of_code - start_of_code
-		ld		de, dram_code_address
-		ld		hl, rom_code_address
+		ld			bc, end_of_code - start_of_code
+		ld			de, dram_code_address
+		ld			hl, rom_code_address
 		ldir
-		jp		start_of_code
+		jp			start_of_code
 rom_code_address::
 
-		org		dram_code_address
+		org			dram_code_address
 start_of_code::
-		call	vdp_initialize
-		ld		hl, 0x0000						;	Pattern Name Table
-		call	vdp_set_vram_address
+		call		vdp_initialize
+		ld			hl, 0x0000						;	Pattern Name Table
+		call		vdp_set_vram_address
 
 		; Activate "OCM-Kai control device" and initialize MemoryID to 0.
-		ld		a, exp_io_ocmkai_ctrl_id
-		out		[ exp_io_vendor_id_port ], a
+		ld			a, exp_io_ocmkai_ctrl_id
+		out			[ exp_io_vendor_id_port ], a
 
-		ld		a, exp_io_ocmkai_ctrl_reg_memory_id
-		out		[exp_io_ocmkai_ctrl_register_sel], a
-		xor		a, a
-		out		[exp_io_ocmkai_ctrl_data], a
+		ld			a, exp_io_ocmkai_ctrl_reg_memory_id
+		out			[exp_io_ocmkai_ctrl_register_sel], a
+		xor			a, a
+		out			[exp_io_ocmkai_ctrl_data], a
+
+		; check power on reset
+		ld			a, 0x40
+		ld			[eseram8k_bank0], a				; BANK 40h
+
+		ld			a, [megasd_status_register]
+		rrca										; Is the activation this time PowerOnReset?
+		jr			nc, not_power_on_reset
+		ld			[bios_updating], a				; Clear bios_updating flag.
+not_power_on_reset:
+
+		call		sd_initialize
 
 		; Skip check of alreay loaded BIOS, when press [ESC] key.
-		ld		a, 0xF7
-		out		[0xAA], a
-		in		a, [0xA9]
-		and		a, 4
-		jr		z, skip_check
+		ld			a, 0xF7
+		out			[0xAA], a
+		in			a, [0xA9]
+		and			a, 4
+		jr			z, skip_check
 
 		; Check already loaded BIOS.
-		ld		a, [bios_updating]
-		cp		a, 0xD4							; If it's a quick reset, boot EPBIOS.
-		jr		z, force_bios_load_from_sdcard
+check_already_loaded::
+		ld			a, [bios_updating]
+		cp			a, 0xD4							; If it's a quick reset, boot EPBIOS.
+		jr			z, force_bios_load_from_sdcard
 
 		; -- Check MAIN-ROM
-		xor		a, a							;	LD A, MAIN_ROM1_BANK >> 8
-		out		[exp_io_ocmkai_ctrl_data], a
-		ld		a, MAIN_ROM1_BANK & 0xFF
-		ld		[ eseram8k_bank2 ], a
-		ld		hl, 0x8000
-		ld		a, [hl]
-		cp		a, 0xF3
-		jr		nz, no_loaded
-		inc		hl
-		ld		a, [hl]
-		cp		a, 0xC3
-		jp		z, start_system
+		xor			a, a							;	LD A, MAIN_ROM1_BANK >> 8
+		out			[exp_io_ocmkai_ctrl_data], a
+		ld			a, MAIN_ROM1_BANK & 0xFF
+		ld			[ eseram8k_bank2 ], a
+		ld			hl, 0x8000
+		ld			a, [hl]
+		cp			a, 0xF3
+		jr			nz, no_loaded
+		inc			hl
+		ld			a, [hl]
+		cp			a, 0xC3
+		jp			z, start_system
 no_loaded:
 skip_check:
 
 force_bios_load_from_sdcard::
-		call	load_from_sdcard
+		call		load_from_sdcard
 force_bios_load_from_epbios::
-		call	load_from_epcs
+		call		load_from_epcs
 
 bios_read_error::
-		ld		hl, 0 + 6 * 40					;	LOCATE 0,6
-		call	vdp_set_vram_address
-		xor		a, a
-		ld		[putc], a						;	replace code to 'nop'. (Force puts error message.)
-		ld		hl, message_bios_read_error
-		call	puts
+		ld			hl, 0 + 6 * 40					;	LOCATE 0,6
+		call		vdp_set_vram_address
+		xor			a, a
+		ld			[putc], a						;	replace code to 'nop'. (Force puts error message.)
+		ld			hl, message_bios_read_error
+		call		puts
 		halt
 
 ; --------------------------------------------------------------------
 msg_enter::
-		ds		"[Enter]"
-		db		0
+		ds			"[Enter]"
+		db			0
 msg_sd_preinit::
-		ds		"[SdPre]"
-		db		0
+		ds			"[SdPre]"
+		db			0
 msg_end_of_init::
-		ds		"[EOINIT]"
-		db		0
+		ds			"[EOINIT]"
+		db			0
 
 ; --------------------------------------------------------------------
 ;	subroutines
 ; --------------------------------------------------------------------
 		include "ocm_iplrom_load_epcs.asm"
-		include "ocm_iplrom_srom_driver.asm"
 		include "ocm_iplrom_load_bios.asm"
 		include "ocm_iplrom_fat_driver.asm"
+		include "ocm_iplrom_serial_rom.asm"
 		include "ocm_iplrom_sd_driver.asm"
 		include "ocm_iplrom_message.asm"
 		include "ocm_iplrom_vdp_driver.asm"

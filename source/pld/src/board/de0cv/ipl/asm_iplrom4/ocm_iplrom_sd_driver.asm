@@ -1,5 +1,5 @@
 ; ==============================================================================
-;	IPL-ROM for OCM-PLD v3.4 or later
+;	IPL-ROM for OCM-PLD v3.9.1 or later
 ;	SD-Card Driver
 ; ------------------------------------------------------------------------------
 ; Copyright (c) 2021 Takayuki Hara
@@ -111,47 +111,6 @@ pbr_signature					:= 0x1FE	; 2bytes
 card_type						:= 0xFFCF	; 1byte: 2: MMC/SDHC, 3: SDHC
 
 ; --------------------------------------------------------------------
-;	SEND CMD0
-;	input)
-;		hl .... megasd_sd_register
-; --------------------------------------------------------------------
-		scope	send_cmd0
-send_cmd0::
-		ld		bc, (16 << 8) | 0
-		ld		a, [hl]								; dummy read
-		call	wait_busy
-		ld		[hl], 0x40 | SDCMD_GO_IDLE_STATE	; CMD0 command
-		call	wait_busy
-		ld		[hl], c								; CMD0 parameter 1st
-		call	wait_busy
-		ld		[hl], c								; CMD0 parameter 2nd
-		call	wait_busy
-		ld		[hl], c								; CMD0 parameter 3rd
-		call	wait_busy
-		ld		[hl], c								; CMD0 parameter 4th
-		call	wait_busy
-		ld		[hl], 0x95							; CMD0 CRC
-		call	wait_busy
-		ld		a, [hl]								; dummy read
-		call	wait_busy
-get_r1_wait:
-		ld		a, [hl]								; read R1
-		call	wait_busy
-		ld		a, [megasd_last_data_register]
-		cp		a, 0xFF
-		ccf
-		ret		nc
-		djnz	get_r1_wait
-		ret
-
-wait_busy::
-		ld		a, [megasd_status_register]
-		rlca
-		jr		c, wait_busy
-		ret
-		endscope
-
-; --------------------------------------------------------------------
 ;	SD/SDHC/MMC command
 ;	input)
 ; --------------------------------------------------------------------
@@ -191,10 +150,10 @@ set_src95:
 receive_response::
 		ld		a, [hl]
 wait_command_accept:
-		ld		a, [hl]
+		ld		a, [hl]				;	receive R1 response
 		cp		a, 0x0FF
 		ccf
-		ret		nc					;	no error
+		ret		nc					;	no error, and return R1 response
 		djnz	wait_command_accept	;	no flag change
 		ret							;	Cy = 1
 		endscope
@@ -210,46 +169,56 @@ wait_command_accept:
 ; --------------------------------------------------------------------
 		scope	sd_initialize
 sd_initialize::
-		;	Set low speed mode
-		ld		a, 0x80				; Low speed and data enable mode
+		;	ブロックリードの途中でリセットされた場合、/CS=1にしてもブロックリード状態が維持されるカードがある
+		;	その場合、CMD0等の各コマンドを正常に処理できないので、まずは 1ブロック分空読みして読み捨てる。
+		xor		a, a								; High speed and data enable mode
+		ld		[megasd_mode_register], a
+		ld		b, a
+		inc		a
+		ld		hl, megasd_sd_register				;	/CS = 0 (bit12)
+dummy_read:
+		cp		a, [hl]								; read 512bytes
+		djnz	dummy_read
+		dec		a
+		jr		z, dummy_read
+
+		;	"/CS=1,DI=1"
+		xor		a, a								; High speed and data enable mode
 		ld		[megasd_mode_register], a
 
 		;	"/CS=1, DI=1" is input for a period of 74 clocks or more.
-		;	"/CS = 1, DI = 1 の状態で 74clock 以上クロックを投入する.
-		ld		hl, megasd_sd_register
+		;	"/CS=1, DI=1" の状態で 74clock 以上クロックを投入する.
 		ld		b, 10
 wait_cs:
-		ld		a, [megasd_sd_register | (1 << 12)]		;	/CS = 1 (bit12)
-		call	wait_busy
-		djnz	wait_cs
+		ld		a, [(megasd_sd_register | (1 << 12)) >> 8]	;	/CS = 1 (bit12)
+		djnz	wait_cs								; B = 0
 
 		;	send SDCMD_GO_IDLE_STATE (CMD0)
-		call	send_cmd0
-		ret		c					;	error
+		ld		hl, megasd_sd_register
+		ld		a, [hl]								; dummy read
+		ld		[hl], 0x40 | SDCMD_GO_IDLE_STATE	; CMD0 command
+		ld		[hl], b								; CMD0 parameter 1st
+		ld		[hl], b								; CMD0 parameter 2nd
+		ld		[hl], b								; CMD0 parameter 3rd
+		ld		[hl], b								; CMD0 parameter 4th
+		ld		[hl], 0x95							; CMD0 CRC
+		ld		b, 16
+get_r1_wait:
+		ld		a, [hl]								; read R1
+		cp		a, 0xFF
+		jr		c, skip
+		djnz	get_r1_wait
+		scf
+		ret											; error
+skip:
 
 		;	Check R1 Response
 		and		a, 0x0F3
-		cp		a, 0x01				;	bit0 - in idle state?
-		ret		nz					;	error (SD is not idle state when bit0 is zero.)
+		sub		a, 0x01								;	bit0 - in idle state?
+		ret		nz									;	error (SD is not idle state when bit0 is zero.)
 
-		; Set high speed mode
-		xor		a, a				; High speed and data enable mode
-		ld		[megasd_mode_register], a
-		endscope
-
-; --------------------------------------------------------------------
-;	Send initialize command and detect card type.
-;	input)
-;		DE = 0
-;	output)
-;		Cy ............ 1: error
-;		Others ........ success
-;		[card_type] ... card type code
-; --------------------------------------------------------------------
-		scope	send_init_command
-send_init_command::
-		xor		a, a
 		ld		[card_type], a
+
 		; ---------------------------------------------------------------------
 		; CMD8 (Voltage Check Command)
 		;   bit 47 46 45-40 39-22 21   20   19-16 15-08   07-01 00
@@ -267,24 +236,24 @@ send_init_command::
 		;            1000b  Reserved
 		;            Others Not defined
 		; ---------------------------------------------------------------------
-		ld		a, [hl]
+		cp		a, [hl]
 		ld		[hl], 0x40 | SDCMD_SEND_IF_COND
-		ld		[hl], 0
-		ld		[hl], 0
+		ld		[hl], a
+		ld		[hl], a
 		ld		[hl], 0x01					; VHS = 2.7 ... 3.6V
 		ld		[hl], 0xAA					; Pattern
 		ld		[hl], 0x87					; CRC7, E
 		ld		b, 16						; retry count
 		call	receive_response
 		ret		c							; error
-		cp		a, 1
+		dec		a
 		jr		nz, check_sd1				; Not SD version 2, go to check SD version 1.
 
 		ld		a, [hl]						; R7 bit31-24
 		ld		a, [hl]						; R7 bit23-16
 		ld		a, [hl]						; R7 bit15-08
 		and		a, 0x0F						; A = R7 bit11-08 = Voltage accepted
-		cp		a, 1						; 1 = 2.7 ... 3.6V
+		dec		a							; 1 = 2.7 ... 3.6V
 		ld		a, [hl]						; R7 bit07-00
 		ret		nz							; error when mismatch
 		cp		a, 0xAA						; Check pattern
@@ -310,7 +279,7 @@ retry_acmd41_v2:
 		ld		bc, ((0x40 | SDCMD_APP_CMD) << 8) | 0x00
 		call	send_command
 		ret		c							;	error
-		cp		a, 1
+		dec		a
 		ret		nz							;	error
 
 		ld		bc, ((0x40 | SDACMD_APP_SEND_OP_COND) << 8) | 0x40
@@ -370,7 +339,7 @@ retry_acmd41_v1:
 		ld		bc, ((0x40 | SDCMD_APP_CMD) << 8) | 0x00
 		call	send_command
 		jr		c, check_mmc				;	go to check MMC, when error
-		cp		a, 1
+		dec		a
 		jr		nz, check_mmc				;	go to check MMC, when error
 
 		ld		bc, ((0x40 | SDACMD_APP_SEND_OP_COND) << 8) | 0x00
@@ -406,12 +375,19 @@ retry_cmd1:
 ;		CDE = sector number
 ; --------------------------------------------------------------------
 		scope	sd_read_sector
+timeout:
+		pop		bc
+		pop		de
+		scf
+		ret							;	timeout error
 retry_init:
 		call	sd_initialize
 		pop		bc
 		pop		de
 		pop		hl
 		ret		c					;	initialize error
+		scf
+		ret		nz					;	initialize error
 
 sd_read_sector::
 		push	hl
@@ -433,14 +409,19 @@ sd_read_sector::
 		push	de
 		push	bc
 		ex		de, hl
-		ld		bc, 0x200			;	512bytes
 		ld		hl, megasd_sd_register
-
+		ld		b, h				;	BC = 0x4000
+		ld		c, l
 read_wait:
+		dec		bc
+		ld		a, c
+		or		a, b
+		jr		z, timeout
 		ld		a, [hl]
 		cp		a, 0x0FE
 		jr		nz, read_wait
 
+		ld		bc, 0x200			;	512bytes
 		ldir						;	read sector
 		ex		de, hl
 		ld		a, [de]
@@ -457,33 +438,5 @@ read_wait:
 skip:
 		djnz	sd_read_sector		;	next sector
 
-		ret
-		endscope
-
-; --------------------------------------------------------------------
-;	test MBR (Search partition)
-; --------------------------------------------------------------------
-		scope	search_active_partition_on_mbr
-search_active_partition_on_mbr::
-		ld		b, 4															; number of partition entry
-		ld		hl, buffer + mbr_1st_partition + mbr_partition_lba_begin_sector	; offset in sector
-test_partition_loop:
-		ld		e, [hl]
-		inc		hl
-		ld		d, [hl]
-		inc		hl
-		ld		c, [hl]
-		ld		a, c
-		or		a, d
-		or		a, e
-		ret		nz					; if CDE != 0 then found partition
-
-		; failed, and test next partition.
-		ld		de, 16 - 2
-		add		hl, de
-		djnz	test_partition_loop
-
-		; Not found a partition.
-		scf							; CY = 1, error
 		ret
 		endscope

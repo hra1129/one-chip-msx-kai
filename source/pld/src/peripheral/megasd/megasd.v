@@ -68,16 +68,12 @@ module megasd (
 	reg		[ 7:0]	ff_bank2;
 	reg		[ 7:0]	ff_bank3;
 
-	reg		[ 4:0]	ff_divider;
-	wire			w_336k;
-	wire			w_clk_enable;
-
 	reg		[4:0]	ff_data_seq;
 	reg				ff_data_active;
 
 	wire			w_is_mmc_bank;
 
-	reg				ff_low_speed_mode;
+	reg				ff_power_on_reset = 1'b1;
 	reg				ff_data_en;
 	reg				ff_read_busy;
 	wire			w_epc_mode;
@@ -128,28 +124,12 @@ module megasd (
 	// SD/MMC card access
 	//--------------------------------------------------------------
 
-	//	Clock divider
-	always @( posedge reset or posedge clk21m ) begin
-		if( reset ) begin
-			ff_divider	<= 5'd0;
-		end
-		else if( req ) begin
-			ff_divider	<= 5'd0;
-		end
-		else begin
-			ff_divider	<= ff_divider + 5'd1;
-		end
-	end
-
-	assign w_336k		= (ff_divider == 5'd31) ? 1'b1 : 1'b0;
-	assign w_clk_enable	= (ff_low_speed_mode) ? w_336k : 1'b1;
-
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset == 1'b1 ) begin
 			ff_mmc_ck	<= 1'b0;
 			ff_epc_ck	<= 1'b0;
 		end
-		else if( w_clk_enable ) begin
+		else begin
 			if( (ff_data_seq[4:1] != 4'd10) && (ff_data_seq[4:2] != 3'd0) ) begin
 				if( w_epc_mode == 1'b0 ) begin
 					ff_mmc_ck <= ff_data_seq[0];
@@ -164,9 +144,6 @@ module megasd (
 				ff_mmc_ck <= 1'b0;
 				ff_epc_ck <= 1'b0;
 			end
-		end
-		else begin
-			//	hold
 		end
 	end
 
@@ -184,7 +161,7 @@ module megasd (
 					w_is_mmc_bank == 1'b1 && ff_data_seq == 5'd0 && ff_data_en ) begin
 				ff_data_seq <= 5'd21;
 			end
-			else if( w_clk_enable && (ff_data_seq != 5'd0) ) begin
+			else if( ff_data_seq != 5'd0 ) begin
 				ff_data_seq <= ff_data_seq - 5'd1;
 			end
 		end
@@ -193,12 +170,11 @@ module megasd (
 	//	Mode register (5800h-5FFFh)
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
-			ff_low_speed_mode	<= 1'b0;
 			ff_data_en			<= 1'b1;
 		end
 		else if( req && wrt && (adr[15:12] == 4'd5) && (adr[11] == 1'b1) && w_is_mmc_bank ) begin
-			ff_low_speed_mode	<= dbo[7];
 			ff_data_en			<= ~dbo[0];
+			ff_power_on_reset	<= 1'b0;
 		end
 		else begin
 			//	hold
@@ -230,7 +206,7 @@ module megasd (
 		else if( req && ((adr[15:12] == 4'd4) || (adr[15:11] == { 4'd5, 1'b0 })) && w_is_mmc_bank ) begin
 			ff_data_active	<= ff_data_en;
 		end
-		else if( w_clk_enable && (ff_data_seq == 5'd1) ) begin
+		else if( ff_data_seq == 5'd1 ) begin
 			ff_data_active	<= 1'b0;
 		end
 		else begin
@@ -242,7 +218,7 @@ module megasd (
 		if( reset == 1'b1 ) begin
 			ff_recv_data <= 8'hFF;
 		end
-		else if( w_clk_enable && (ff_data_seq[0] == 1'b0) ) begin
+		else if( ff_data_seq[0] == 1'b0 ) begin
 			ff_recv_data[7:1]	<= ff_recv_data[6:0];
 
 			if( w_epc_mode == 1'b0 ) begin
@@ -269,7 +245,7 @@ module megasd (
 		end
 	end
 
-	assign mmcdbi	= (ff_read_busy) ? { ff_data_active, 7'd0 } : ff_mmcdbi;
+	assign mmcdbi	= (ff_read_busy) ? { 7'd0, ff_power_on_reset } : ff_mmcdbi;
 	assign debug	= ff_mmcdbi;
 
 	always @( posedge reset or posedge clk21m ) begin
@@ -286,7 +262,7 @@ module megasd (
 				ff_send_data <= 8'hFF;
 			end
 		end
-		else if( w_clk_enable && (ff_data_seq[0] == 1'b0) ) begin
+		else if( ff_data_seq[0] == 1'b0 ) begin
 			ff_send_data[7:1]	<= ff_send_data[6:0];
 			ff_send_data[0]	<= 1'b1;
 		end
@@ -300,7 +276,7 @@ module megasd (
 		else if( ff_data_seq == 5'd0 ) begin
 			//	hold
 		end
-		else if( w_clk_enable && (ff_data_seq[0] == 1'b0) ) begin
+		else if( ff_data_seq[0] == 1'b0 ) begin
 			if( ff_data_seq[4:2] == 3'd0 ) begin
 				mmc_di		<= 1'bZ;
 				epc_di		<= 1'b1;

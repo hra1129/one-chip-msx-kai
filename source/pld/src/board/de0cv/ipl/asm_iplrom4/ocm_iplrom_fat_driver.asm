@@ -1,5 +1,5 @@
 ; ==============================================================================
-;	IPL-ROM for OCM-PLD v3.4 or later
+;	IPL-ROM for OCM-PLD v3.9.1 or later
 ;	SD-Card Driver
 ; ------------------------------------------------------------------------------
 ; Copyright (c) 2021 Takayuki Hara
@@ -59,9 +59,6 @@ dir_entry_size					:= dir_next_entry
 
 			scope		load_from_sdcard
 load_from_sdcard::
-			ld			a, 0x40
-			ld			[eseram8k_bank0], a				; BANK 40h
-
 sd_first_process:
 			;	Read Sector#0 (MBR)
 			ld			bc, 0x100			;	B = 1 (1 sector)
@@ -71,20 +68,37 @@ sd_first_process:
 			call		sd_read_sector
 			ret			c					;	go to srom_read when SD card read is error.
 
-			call		search_active_partition_on_mbr
-			ret			c					;	go to srom_read when partition is not found.
+search_active_partition_on_mbr::
+			ld			b, 4															; number of partition entry
+			ld			hl, buffer + mbr_1st_partition + mbr_partition_lba_begin_sector	; offset in sector
+test_partition_loop:
+			ld			e, [hl]
+			inc			hl
+			ld			d, [hl]
+			inc			hl
+			ld			c, [hl]
+			ld			a, c
+			or			a, d
+			or			a, e
+			jr			nz, found_partition	; if CDE != 0 then found partition
 
-			push		de
-			push		bc
+			; failed, and test next partition.
+			ld			e, 16 - 2			; DE = 16 - 2
+			add			hl, de
+			djnz		test_partition_loop
+
+			; Not found a partition.
+			scf								; CY = 1, error
+			ret								;	go to srom_read when partition is not found.
+found_partition:
 			ld			b, 1
 			ld			hl, buffer
 			call		sd_read_sector
-			pop			bc
-			pop			de
 
 sd_card_is_fat:
 			; HL = reserved sectors
 			ld			hl, [buffer + pbr_reserved_sectors]
+			dec			hl					; è„ÇÃ sd_read_sector Ç≈ CDE Ç™ 1 ëùÇ¶ÇΩï™ÇÉLÉÉÉìÉZÉã
 
 			; Seek out the next sector of the FAT.
 			ld			a, [buffer + pbr_num_of_fat]
@@ -110,9 +124,6 @@ search_bios_name::
 			ld			hl, [buffer + pbr_sectors_per_fat]
 			ld			[ remain_fat_sectors ], hl
 
-			; save data area sector address
-			push		bc
-			push		de
 			; -- change root entries to sectors : HL = (pbr_root_entries + 15) / 16
 			ld			hl, [buffer + pbr_root_entries]
 			ld			a, l
@@ -120,23 +131,21 @@ search_bios_name::
 entries_to_sectors:
 			srl			h
 			rr			l
-			djnz		entries_to_sectors
+			djnz		entries_to_sectors			; B becomes 0.
 			and			a, 0x0F
 			jr			z, skip_inc
 			inc			hl
 skip_inc:
 			ld			a, c
 			add			hl, de
-			adc			a, 0
+			adc			a, b						; B = 0
 
 			ld			[data_area + 0], hl			; AHL = sector number of data area top
 			ld			[data_area + 2], a
-			pop			de
-			pop			bc
 
 get_next_sector:
 			; get root entries
-			ld			b, 1
+			inc			b							; B = 1
 			ld			hl, fat_buffer
 			call		sd_read_sector				; read FAT entry
 
@@ -200,11 +209,11 @@ no_match_exit::
 			ret			nz						; error
 
 			; get sector address of the entry
-			ld			de, -dir_attribute + dir_fst_clus_lo
+			ld			e, -dir_attribute + dir_fst_clus_lo		;	DE = -dir_attribute + dir_fst_clus_lo (D=0)
 			add			hl, de
 			ld			e, [hl]
 			inc			hl
-			ld			d, [hl]					; DE = dir_fst_clus_lo [cluster]
+			ld			d, [hl]									; DE = dir_fst_clus_lo [cluster]
 			dec			de
 			dec			de
 
@@ -215,26 +224,23 @@ no_match_exit::
 			xor			a, a
 			ld			h, a
 			ld			l, a
+			ld			c, a
 loop:
 			add			hl, de
-			adc			a, 0
+			adc			a, c
 			djnz		loop
+			ld			c, a
 
 			ld			de, [data_area + 0]
 			add			hl, de
-			ld			c, a
 			ld			a, [data_area + 2]
 			adc			a, c
-
 			ld			c, a
 			ex			de, hl					; CDE = sector number
 			endscope
 
 			scope		load_sdbios
 load_sdbios::
-			ld			hl, sd_read_sector
-			ld			[read_sector_cbr], hl
-
 			ld			hl, message_sd_boot
 			jp			load_bios
 			endscope
