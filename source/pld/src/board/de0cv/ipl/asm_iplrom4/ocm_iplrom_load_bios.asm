@@ -304,9 +304,18 @@ start_system::
 			cp		a, 0xF3							; = DI ?
 			jp		nz, bios_read_error				;  error
 
+			; Activate 1chipMSX device
+			ld		a, exp_io_1chipmsx_id
+			out		[ exp_io_vendor_id_port ], a	; I/O address 0x40 is 1chipMSX device in expanded I/O.
+
 			ld		a, [ 0x8000 + 0x002D ]
+			out		[0x4C], a						; auto-set the VDP ID
 			or		a, a
 			call	nz, set_msx2_palette
+
+			; Activate OCM‰ü device
+			ld		a, exp_io_ocmkai_ctrl_id
+			out		[ exp_io_vendor_id_port ], a
 
 			ld		a, DOS_BANK >> 8				; Default MemoryID for MegaSDHC
 			out		[exp_io_ocmkai_ctrl_data], a

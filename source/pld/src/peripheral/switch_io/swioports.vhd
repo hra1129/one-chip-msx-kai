@@ -3,7 +3,7 @@
 --   Switched I/O ports ($40-$4F)
 --   Revision 10
 --
--- Copyright (c) 2011-2021 KdL
+-- Copyright (c) 2011-2022 KdL
 -- All rights reserved.
 --
 -- Redistribution and use of this source code or any derivative works, are
@@ -59,7 +59,7 @@ entity switched_io_ports is
         tMegaSD         : inout std_logic;                                  -- Turbo on MegaSD access   :   3.58MHz to 5.37MHz autoselection
         tPanaRedir      : inout std_logic;                                  -- tPana Redirection switch
         VdpSpeedMode    : inout std_logic;                                  -- VDP Speed Mode           :   0=Normal, 1=Fast
-        V9938_n         : inout std_logic;                                  -- V9938 Status             :   0=V9938, 1=V9958
+        V9938_n         : inout std_logic;                                  -- VDP Core Model           :   0=V9938, 1=TH9958
         Mapper_req      : inout std_logic;                                  -- Mapper req               :   Warm or Cold Reset are necessary to complete the request
         Mapper_ack      : out   std_logic;                                  -- Current Mapper state
         MegaSD_req      : inout std_logic;                                  -- MegaSD req               :   Warm or Cold Reset are necessary to complete the request
@@ -73,7 +73,7 @@ entity switched_io_ports is
         LastRst_sta     : inout std_logic;                                  -- Last reset state         :   0=Cold Reset, 1=Warm Reset (MSX2+) / 1=Cold Reset, 0=Warm Reset (MSXtR)
         RstReq_sta      : inout std_logic;                                  -- Reset request state      :   0=No, 1=Yes
         Blink_ena       : inout std_logic;                                  -- MegaSD blink led enabler
-        pseudoStereo    : inout std_logic;                                  -- RCA-LEFT(red) = External Audio Card / RCA-RIGHT(white) = Internal Sounds
+        pseudoStereo    : inout std_logic;                                  -- RCA-LEFT(red)=External Audio Card / RCA-RIGHT(white)=Internal Sounds
         extclk3m        : inout std_logic;                                  -- External Clock 3.58MHz   :   0=No, 1=Yes
         ntsc_pal_type   : inout std_logic;                                  -- NTSC/PAL Type            :   0=Forced, 1=Auto
         forced_v_mode   : inout std_logic;                                  -- Forced Video Mode        :   0=60Hz, 1=50Hz
@@ -118,12 +118,12 @@ architecture RTL of switched_io_ports is
     signal  swio_ack    : std_logic;
     signal  prev_scan   : std_logic_vector(  1 downto 0 ) := "11";
 
-    -- Machine Type ID (0-15)                                               -- 0 = 1chipMSX, 1 = Zemmix Neo, 2 = SM-X, 3 = SX-2, ..., 15 = Unknown
-    constant MachineID  : std_logic_vector(  3 downto 0 ) :=     "0101";    -- 5 = DE0CV
+    -- Machine Type ID (0-15)                                               -- 0=1chipMSX, 1=Zemmix Neo / SX-1, 2=SM-X, 3=SX-2, 4=SM-X Mini, 5=DE0CV, ..., 15=Unknown
+    constant MachineID  : std_logic_vector(  3 downto 0 ) :=     "0011";    -- 3
 
     -- OCM-PLD version number (x \ 10).(y mod 10).(z[0~3])                  -- OCM-PLD version 0.0(.0) ~ 25.5(.3)
     constant ocm_pld_xy : std_logic_vector(  7 downto 0 ) := "00100111";    -- 39
-    constant ocm_pld_z  : std_logic_vector(  1 downto 0 ) :=       "00";    -- 0
+    constant ocm_pld_z  : std_logic_vector(  1 downto 0 ) :=       "01";    -- 1
 
     -- Switched I/O Ports revision number (0-31)                            -- Switched I/O ports Revision 0 ~ 31
     constant swioRevNr  : std_logic_vector(  4 downto 0 ) :=    "01010";    -- 10
@@ -317,7 +317,7 @@ begin
                                 GreenLvEna  <=  '1';
                                 LevCtrl <= "111";
                             end if;
-                            if( Fkeys(6) = '0' and Fkeys(4) /= vFkeys(4) )then                     -- PGDOWN       is  Master Volume Down
+                            if( Fkeys(6) = '0' and Fkeys(4) /= vFkeys(4) )then  -- PGDOWN       is  Master Volume Down
                                 if( MstrVol /= "111" )then
                                     LevCtrl <= not (MstrVol + 1);
                                     MstrVol <= MstrVol + 1;
@@ -325,7 +325,7 @@ begin
                                     LevCtrl <= "000";
                                 end if;
                             end if;
-                            if( Fkeys(6) = '0' and Fkeys(5) /= vFkeys(5) )then                     -- PGUP         is  Master Volume Up
+                            if( Fkeys(6) = '0' and Fkeys(5) /= vFkeys(5) )then  -- PGUP         is  Master Volume Up
                                 if( MstrVol /= "000" )then
                                     LevCtrl <= not (MstrVol - 1);
                                     MstrVol <= MstrVol - 1;
@@ -382,7 +382,7 @@ begin
                                 end if;
                             end if;
                             if( ff_Scro /= Scro )then                           -- SCRLK        is  Internal OPL3 toggle
-                                swioCmt     <=  not swioCmt;
+                                swioCmt     <= not swioCmt;
                             end if;
                         end if;
                     else                                                        -- SHIFT key    is  On (held down)
@@ -391,7 +391,7 @@ begin
                                 GreenLvEna  <=  '1';
                                 LevCtrl <= "111";
                             end if;
-                            if( Fkeys(4) /= vFkeys(4) )then                     -- SHIFT+PGDOWN is  Master Volume from max to middle, min or mute
+                            if( Fkeys(6) = '0' and Fkeys(4) /= vFkeys(4) )then  -- SHIFT+PGDOWN is  Master Volume from max to middle, min or mute
                                 if( MstrVol < "011" )then
                                     LevCtrl <= "100";
                                     MstrVol <= "011";
@@ -403,7 +403,7 @@ begin
                                     MstrVol <= "111";
                                 end if;
                             end if;
-                            if( Fkeys(5) /= vFkeys(5) )then                     -- SHIFT+PGUP   is  Master Volume from mute to min, middle or max
+                            if( Fkeys(6) = '0' and Fkeys(5) /= vFkeys(5) )then  -- SHIFT+PGUP   is  Master Volume from mute to min, middle or max
                                 if( MstrVol > "110" )then
                                     LevCtrl <= "001";
                                     MstrVol <= "110";
@@ -961,6 +961,14 @@ begin
                     if( req = '1' and wrt = '1' and (adr(3 downto 0) = "0110")  and (io40_n = "00101011") )then
                         OpllVol             <=  not dbo(2 downto 0);
                         SccVol              <=  not dbo(6 downto 4);
+                    end if;
+                    -- in assignment: 'Port $4C ID212 [VDP ID]' [Reserved to IPL-ROM]' (write only) (0-1=MSX1 or MSX2 BIOS, 2-255=any other BIOS)
+                    if( req = '1' and wrt = '1' and (adr(3 downto 0) = "1100")  and (io40_n = "00101011") )then
+                        if( dbo(7 downto 1) = "0000000" )then
+                            VDP_ID          :=  "00000";                        -- Set VDP ID = 0 (V9938)
+                        else
+                            VDP_ID          :=  "00010";                        -- Set VDP ID = 2 (V9958) (default)
+                        end if;
                     end if;
                     -- in assignment: 'Port $4D ID212 [VRAM Slot IDs]' (read/write_n)
                     if( req = '1' and wrt = '1' and (adr(3 downto 0) = "1101")  and (io40_n = "00101011") )then

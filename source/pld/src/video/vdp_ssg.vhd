@@ -59,636 +59,391 @@
 --  30th,March,2008
 --  JP: VDP.VHD から分離 by t.hara
 --
---  5th,June,2021
---  JP: V_BLANKING_END 出力ポートを追加 by t.hara
---
---  27th,June,2021
---  JP: 全面的に中身を作り直し by t.hara
---
 
 LIBRARY IEEE;
-	USE IEEE.STD_LOGIC_1164.ALL;
-	USE IEEE.STD_LOGIC_UNSIGNED.ALL;
-	USE IEEE.STD_LOGIC_ARITH.ALL;
-	USE WORK.VDP_PACKAGE.ALL;
+    USE IEEE.STD_LOGIC_1164.ALL;
+    USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+    USE IEEE.STD_LOGIC_ARITH.ALL;
+    USE WORK.VDP_PACKAGE.ALL;
 
-entity VDP_SSG is
-	port(
-		RESET					: in	std_logic;
-		CLK21M					: in	std_logic;
+ENTITY VDP_SSG IS
+    PORT(
+        RESET                   : IN    STD_LOGIC;
+        CLK21M                  : IN    STD_LOGIC;
 
-		H_CNT					: out	std_logic_vector( 10 downto 0 );
-		V_CNT					: out	std_logic_vector( 10 downto 0 );
-		DOTSTATE				: out	std_logic_vector(  1 downto 0 );
-		EIGHTDOTSTATE			: out	std_logic_vector(  2 downto 0 );
-		PREDOTCOUNTER_X			: out	std_logic_vector(  8 downto 0 );
-		PREDOTCOUNTER_Y			: out	std_logic_vector(  8 downto 0 );
-		PREDOTCOUNTER_YP		: out	std_logic_vector(  8 downto 0 );
-		PREWINDOW_Y				: out	std_logic;
-		PREWINDOW_Y_SP			: out	std_logic;
-		FIELD					: out	std_logic;
-		WINDOW_X				: out	std_logic;
-		PVIDEODHCLK				: out	std_logic;
-		PVIDEODLCLK				: out	std_logic;
-		IVIDEOVS_N				: out	std_logic;
+        H_CNT                   : OUT   STD_LOGIC_VECTOR( 10 DOWNTO 0 );
+        V_CNT                   : OUT   STD_LOGIC_VECTOR( 10 DOWNTO 0 );
+        DOTSTATE                : OUT   STD_LOGIC_VECTOR(  1 DOWNTO 0 );
+        EIGHTDOTSTATE           : OUT   STD_LOGIC_VECTOR(  2 DOWNTO 0 );
+        PREDOTCOUNTER_X         : OUT   STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+        PREDOTCOUNTER_Y         : OUT   STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+        PREDOTCOUNTER_YP        : OUT   STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+        PREWINDOW_Y             : OUT   STD_LOGIC;
+        PREWINDOW_Y_SP          : OUT   STD_LOGIC;
+        FIELD                   : OUT   STD_LOGIC;
+        WINDOW_X                : OUT   STD_LOGIC;
+        PVIDEODHCLK             : OUT   STD_LOGIC;
+        PVIDEODLCLK             : OUT   STD_LOGIC;
+        IVIDEOVS_N              : OUT   STD_LOGIC;
 
-		HD						: out	std_logic;
-		VD						: out	std_logic;
-		HSYNC					: out	std_logic;
---		ENAHSYNC				: out	std_logic;
-		SYNC_AT_NEXT_LINE		: out	std_logic;
-		H_BLANK_START			: out	std_logic;
-		H_BLANK_END				: out	std_logic;
-		V_BLANKING_START		: out	std_logic;
-		V_BLANKING_END			: out	std_logic;
-		VSYNC_INTR_TIMING		: out	std_logic;
+        HD                      : OUT   STD_LOGIC;
+        VD                      : OUT   STD_LOGIC;
+        HSYNC                   : OUT   STD_LOGIC;
+        ENAHSYNC                : OUT   STD_LOGIC;
+        V_BLANKING_START        : OUT   STD_LOGIC;
 
-		TEXT_MODE				: in	std_logic;
-		REG_R9_PAL_MODE			: in	std_logic;
-		REG_R9_INTERLACE_MODE	: in	std_logic;
-		REG_R9_Y_DOTS			: in	std_logic;
-		REG_R18_ADJ				: in	std_logic_vector(  7 downto 0 );
-		REG_R23_VSTART_LINE		: in	std_logic_vector(  7 downto 0 );
-		REG_R25_MSK				: in	std_logic;
-		REG_R27_H_SCROLL		: in	std_logic_vector(  2 downto 0 );
-		REG_R25_YJK				: in	std_logic;
-		CENTERYJK_R25_N			: in	std_logic
-	);
-end VDP_SSG;
+        VDPR9PALMODE            : IN    STD_LOGIC;
+        REG_R9_INTERLACE_MODE   : IN    STD_LOGIC;
+        REG_R9_Y_DOTS           : IN    STD_LOGIC;
+        REG_R18_ADJ             : IN    STD_LOGIC_VECTOR(  7 DOWNTO 0 );
+        REG_R19_HSYNC_INT_LINE  : IN    STD_LOGIC_VECTOR(  7 DOWNTO 0 );
+        REG_R23_VSTART_LINE     : IN    STD_LOGIC_VECTOR(  7 DOWNTO 0 );
+        REG_R25_MSK             : IN    STD_LOGIC;
+        REG_R27_H_SCROLL        : IN    STD_LOGIC_VECTOR(  2 DOWNTO 0 );
+        REG_R25_YJK             : IN    STD_LOGIC;
+        CENTERYJK_R25_N         : IN    STD_LOGIC
+    );
+END VDP_SSG;
 
-architecture rtl of VDP_SSG is
+ARCHITECTURE RTL OF VDP_SSG IS
 
-	-- flip flop
-	signal ff_h_cnt					: std_logic_vector( 10 downto 0 );
-	signal ff_dotstate				: std_logic_vector(  1 downto 0 );
-	signal ff_video_dh_clk			: std_logic;
-	signal ff_video_dl_clk			: std_logic;
-	signal ff_left_border			: std_logic_vector( 10 downto 0 );
-	signal ff_right_border			: std_logic_vector( 10 downto 0 );
-	signal ff_h_blank				: std_logic;
+    COMPONENT VDP_HVCOUNTER
+        PORT(
+            RESET               : IN    STD_LOGIC;
+            CLK21M              : IN    STD_LOGIC;
 
-	signal ff_v_cnt_in_field		: std_logic_vector(	 9 downto 0 );
-	signal ff_v_cnt_in_frame		: std_logic_vector( 10 downto 0 );
-	signal ff_v_blank				: std_logic;
+            H_CNT               : OUT   STD_LOGIC_VECTOR( 10 DOWNTO 0 );
+            V_CNT_IN_FIELD      : OUT   STD_LOGIC_VECTOR(  9 DOWNTO 0 );
+            V_CNT_IN_FRAME      : OUT   STD_LOGIC_VECTOR( 10 DOWNTO 0 );
+            FIELD               : OUT   STD_LOGIC;
+            H_BLANK             : OUT   STD_LOGIC;
+            V_BLANK             : OUT   STD_LOGIC;
 
-	signal ff_field					: std_logic;
+            PAL_MODE            : IN    STD_LOGIC;
+            INTERLACE_MODE      : IN    STD_LOGIC;
+            Y212_MODE           : IN    STD_LOGIC
+        );
+    END COMPONENT;
 
-	signal ff_pal_mode				: std_logic;
-	signal ff_interlace_mode		: std_logic;
+    -- FLIP FLOP
+    SIGNAL FF_DOTSTATE          : STD_LOGIC_VECTOR(  1 DOWNTO 0 );
+    SIGNAL FF_EIGHTDOTSTATE     : STD_LOGIC_VECTOR(  2 DOWNTO 0 );
+    SIGNAL FF_PRE_X_CNT         : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    SIGNAL FF_X_CNT             : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    SIGNAL FF_PRE_Y_CNT         : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    SIGNAL FF_MONITOR_LINE      : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    SIGNAL FF_VIDEO_DH_CLK      : STD_LOGIC;
+    SIGNAL FF_VIDEO_DL_CLK      : STD_LOGIC;
+    SIGNAL FF_PRE_X_CNT_START1  : STD_LOGIC_VECTOR(  5 DOWNTO 0 );
+    SIGNAL FF_RIGHT_MASK        : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    SIGNAL FF_WINDOW_X          : STD_LOGIC;
 
-	-- wire
-	signal w_sync_at_line			: std_logic;
+    -- WIRE
+    SIGNAL W_H_CNT                  : STD_LOGIC_VECTOR( 10 DOWNTO 0 );
+    SIGNAL W_V_CNT_IN_FRAME         : STD_LOGIC_VECTOR( 10 DOWNTO 0 );
+    SIGNAL W_V_CNT_IN_FIELD         : STD_LOGIC_VECTOR(  9 DOWNTO 0 );
+    SIGNAL W_FIELD                  : STD_LOGIC;
+    SIGNAL W_H_BLANK                : STD_LOGIC;
+    SIGNAL W_V_BLANK                : STD_LOGIC;
+    SIGNAL W_PRE_X_CNT_START0       : STD_LOGIC_VECTOR(  4 DOWNTO 0 );
+    SIGNAL W_PRE_X_CNT_START2       : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    SIGNAL W_HSYNC                  : STD_LOGIC;
+    SIGNAL W_LEFT_MASK              : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    SIGNAL W_Y_ADJ                  : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    SIGNAL W_LINE_MODE              : STD_LOGIC_VECTOR(  1 DOWNTO 0 );
+    SIGNAL W_V_BLANKING_START       : STD_LOGIC;
+    SIGNAL W_V_BLANKING_END         : STD_LOGIC;
+    SIGNAL W_V_SYNC_INTR_START_LINE : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+BEGIN
+    -----------------------------------------------------------------------------
+    --  PORT ASSIGNMENT
+    -----------------------------------------------------------------------------
+    H_CNT               <= W_H_CNT;
+    V_CNT               <= W_V_CNT_IN_FRAME;
+    DOTSTATE            <= FF_DOTSTATE;
+    EIGHTDOTSTATE       <= FF_EIGHTDOTSTATE;
+    FIELD               <= W_FIELD;
+    WINDOW_X            <= FF_WINDOW_X;
+    PVIDEODHCLK         <= FF_VIDEO_DH_CLK;
+    PVIDEODLCLK         <= FF_VIDEO_DL_CLK;
+    PREDOTCOUNTER_X     <= FF_PRE_X_CNT;
+    PREDOTCOUNTER_Y     <= FF_PRE_Y_CNT;
+    PREDOTCOUNTER_YP    <= FF_MONITOR_LINE;
+    HD                  <= W_H_BLANK;
+    VD                  <= W_V_BLANK;
+    HSYNC               <= '1' WHEN( W_H_CNT(1 DOWNTO 0) = "10" AND FF_PRE_X_CNT = "111111111" )ELSE '0';
+    V_BLANKING_START    <= W_V_BLANKING_START;
 
-	signal w_h_cnt_half				: std_logic;
-	signal w_h_cnt_end				: std_logic;
-	signal w_h_blank_start			: std_logic;
-	signal w_h_blank_end			: std_logic;
-	signal w_horizontal_adjust		: std_logic_vector( 10 downto 0 );
+    -----------------------------------------------------------------------------
+    --  SUB COMPONENTS
+    -----------------------------------------------------------------------------
+    U_HVCOUNTER: VDP_HVCOUNTER
+    PORT MAP (
+        RESET               => RESET                ,
+        CLK21M              => CLK21M               ,
 
-	signal w_v_blank_start			: std_logic;
-	signal w_v_blank_end			: std_logic;
-	signal w_vertical_adjust		: std_logic_vector(  8 downto 0 );
+        H_CNT               => W_H_CNT              ,
+        V_CNT_IN_FIELD      => W_V_CNT_IN_FIELD     ,
+        V_CNT_IN_FRAME      => W_V_CNT_IN_FRAME     ,
+        FIELD               => W_FIELD              ,
+        H_BLANK             => W_H_BLANK            ,
+        V_BLANK             => W_V_BLANK            ,
 
-	signal w_field_end_cnt			: std_logic_vector(	 9 downto 0 );
-	signal w_field_end				: std_logic;
-	signal w_display_mode			: std_logic_vector(  1 downto 0 );
-	signal w_line_mode				: std_logic_vector(  1 downto 0 );
-	signal w_v_sync_intr_start_line	: std_logic_vector(	 8 downto 0 );
-	signal w_v_sync_intr_end_line	: std_logic_vector(	 8 downto 0 );
-	signal w_predotcounterypstart	: std_logic_vector(	 8 downto 0 );
+        PAL_MODE            => VDPR9PALMODE         ,
+        INTERLACE_MODE      => REG_R9_INTERLACE_MODE,
+        Y212_MODE           => REG_R9_Y_DOTS
+    );
 
-	signal ff_eightdotstate		: std_logic_vector(  2 downto 0 );
-	signal ff_pre_x_cnt			: std_logic_vector(  8 downto 0 );
-	signal ff_x_cnt				: std_logic_vector(  8 downto 0 );
-	signal ff_pre_y_cnt			: std_logic_vector(  8 downto 0 );
-	signal ff_monitor_line		: std_logic_vector(  8 downto 0 );
-	signal ff_pre_x_cnt_start1	: std_logic_vector(  5 downto 0 );
-	signal ff_right_mask		: std_logic_vector(  8 downto 0 );
-	signal ff_window_x			: std_logic;
+    -----------------------------------------------------------------------------
+    --  DOT STATE
+    -----------------------------------------------------------------------------
+    PROCESS( RESET, CLK21M )
+    BEGIN
+        IF( RESET = '1' )THEN
+            FF_DOTSTATE     <= "00";
+            FF_VIDEO_DH_CLK <= '0';
+            FF_VIDEO_DL_CLK <= '0';
+        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
+            IF( W_H_CNT = CLOCKS_PER_LINE-1 )THEN
+                FF_DOTSTATE     <= "00";
+                FF_VIDEO_DH_CLK <= '1';
+                FF_VIDEO_DL_CLK <= '1';
+            ELSE
+                CASE FF_DOTSTATE IS
+                WHEN "00" =>
+                    FF_DOTSTATE     <= "01";
+                    FF_VIDEO_DH_CLK <= '0';
+                    FF_VIDEO_DL_CLK <= '1';
+                WHEN "01" =>
+                    FF_DOTSTATE     <= "11";
+                    FF_VIDEO_DH_CLK <= '1';
+                    FF_VIDEO_DL_CLK <= '0';
+                WHEN "11" =>
+                    FF_DOTSTATE     <= "10";
+                    FF_VIDEO_DH_CLK <= '0';
+                    FF_VIDEO_DL_CLK <= '0';
+                WHEN "10" =>
+                    FF_DOTSTATE     <= "00";
+                    FF_VIDEO_DH_CLK <= '1';
+                    FF_VIDEO_DL_CLK <= '1';
+                WHEN OTHERS =>
+                    NULL;
+                END CASE;
+            END IF;
+        END IF;
+    END PROCESS;
 
-	-- wire
-	signal w_pre_x_cnt_start0		: std_logic_vector(  4 downto 0 );
-	signal w_pre_x_cnt_start2		: std_logic_vector(  8 downto 0 );
-	signal w_hsync					: std_logic;
-	signal w_left_mask				: std_logic_vector(  8 downto 0 );
-	signal w_predotcounter_yp_v		: std_logic_vector(	 8 downto 0 );
-	signal ff_prewindow_y			: std_logic;
-	signal ff_field_end				: std_logic;
-begin
-	-----------------------------------------------------------------------------
-	--	port assignment
-	-----------------------------------------------------------------------------
-	H_CNT				<= ff_h_cnt;
-	DOTSTATE			<= ff_dotstate;
-	PVIDEODHCLK			<= ff_video_dh_clk;
-	PVIDEODLCLK			<= ff_video_dl_clk;
-	H_BLANK_START		<= w_h_blank_start;
-	H_BLANK_END			<= w_h_blank_end;
-	VSYNC_INTR_TIMING	<= w_h_blank_end;
-	HD					<= ff_h_blank;
+    -----------------------------------------------------------------------------
+    --  8DOT STATE
+    -----------------------------------------------------------------------------
+    PROCESS( RESET, CLK21M )
+    BEGIN
+        IF( RESET = '1' )THEN
+            FF_EIGHTDOTSTATE <= "000";
+        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
+            IF( W_H_CNT(1 DOWNTO 0) = "11" )THEN
+                IF( FF_PRE_X_CNT = 0 )THEN
+                    FF_EIGHTDOTSTATE <= "000";
+                ELSE
+                    FF_EIGHTDOTSTATE <= FF_EIGHTDOTSTATE + 1;
+                END IF;
+            END IF;
+        END IF;
+    END PROCESS;
 
-	V_CNT				<= ff_v_cnt_in_frame;
-	V_BLANKING_START	<= w_v_blank_start;
-	V_BLANKING_END		<= w_v_blank_end;
-	VD					<= ff_v_blank;
+    -----------------------------------------------------------------------------
+    --  GENERATE DOTCOUNTER
+    -----------------------------------------------------------------------------
 
-	PREWINDOW_Y			<= ff_prewindow_y;
-	FIELD				<= ff_field;
+    W_PRE_X_CNT_START0  <=  REG_R18_ADJ(3) & REG_R18_ADJ(3 DOWNTO 0) + "11000";                 --  (-8...7) - 8 = (-16...-1)
 
-	EIGHTDOTSTATE		<= ff_eightdotstate;
-	WINDOW_X			<= ff_window_x;
-	PREDOTCOUNTER_X		<= ff_pre_x_cnt;
-	PREDOTCOUNTER_Y		<= ff_pre_y_cnt;
-	PREDOTCOUNTER_YP	<= ff_monitor_line;
-	HSYNC				<= '1' when( ff_h_cnt(1 downto 0) = "10" and ff_pre_x_cnt = "111111111" )else '0';
-	SYNC_AT_NEXT_LINE	<= w_h_cnt_end;
+    PROCESS( RESET, CLK21M )
+    BEGIN
+        IF( RESET = '1' )THEN
+            FF_PRE_X_CNT_START1 <= (OTHERS => '0');
+        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
+            FF_PRE_X_CNT_START1 <= (W_PRE_X_CNT_START0(4) & W_PRE_X_CNT_START0) - ("000" & REG_R27_H_SCROLL);   -- (-23...-1)
+        END IF;
+    END PROCESS;
 
-	-----------------------------------------------------------------------------
-	--	base timing signal
-	-----------------------------------------------------------------------------
-	process( RESET, CLK21M ) begin
-		if( RESET = '1' ) then
-			ff_h_cnt <= (others => '0');
-		elsif( CLK21M'event and CLK21M = '1' ) then
-			if( w_h_cnt_end = '1' ) then
-				ff_h_cnt <= ( others => '0' );
-			else
-				ff_h_cnt <= ff_h_cnt + 1;
-			end if;
-		end if;
-	end process;
+    W_PRE_X_CNT_START2( 8 DOWNTO 6 ) <= (OTHERS => FF_PRE_X_CNT_START1(5));
+    W_PRE_X_CNT_START2( 5 DOWNTO 0 ) <= FF_PRE_X_CNT_START1;
 
-	w_h_cnt_half	<=	'1' when( ff_h_cnt = ((CLOCKS_PER_LINE / 2)-1) ) else '0';
-	w_h_cnt_end		<=	'1' when( ff_h_cnt = ( CLOCKS_PER_LINE     -1) ) else '0';
-	w_h_blank_start	<=	'1' when( ff_h_cnt = ff_right_border           ) else '0';
-	w_h_blank_end	<=	'1' when( ff_h_cnt = ff_left_border            ) else '0';
-	w_sync_at_line	<=	w_h_blank_end;
+    PROCESS( RESET, CLK21M )
+    BEGIN
+        IF( RESET = '1' )THEN
+            FF_PRE_X_CNT <= (OTHERS =>'0');
+        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
+            IF( (W_H_CNT = ("00" & (OFFSET_X + LED_TV_X_NTSC - ((REG_R25_MSK AND (NOT CENTERYJK_R25_N)) & "00") + 4) & "10") AND REG_R25_YJK = '1' AND CENTERYJK_R25_N = '1' AND VDPR9PALMODE = '0') OR
+                (W_H_CNT = ("00" & (OFFSET_X + LED_TV_X_NTSC - ((REG_R25_MSK AND (NOT CENTERYJK_R25_N)) & "00")    ) & "10") AND (REG_R25_YJK = '0' OR CENTERYJK_R25_N = '0') AND VDPR9PALMODE = '0') OR
+                (W_H_CNT = ("00" & (OFFSET_X + LED_TV_X_PAL - ((REG_R25_MSK AND (NOT CENTERYJK_R25_N)) & "00") + 4) & "10") AND REG_R25_YJK = '1' AND CENTERYJK_R25_N = '1' AND VDPR9PALMODE = '1') OR
+                (W_H_CNT = ("00" & (OFFSET_X + LED_TV_X_PAL - ((REG_R25_MSK AND (NOT CENTERYJK_R25_N)) & "00")    ) & "10") AND (REG_R25_YJK = '0' OR CENTERYJK_R25_N = '0') AND VDPR9PALMODE = '1') )THEN
+                FF_PRE_X_CNT <= W_PRE_X_CNT_START2;
+            ELSIF( W_H_CNT(1 DOWNTO 0) = "10" )THEN
+                FF_PRE_X_CNT <= FF_PRE_X_CNT + 1;
+            END IF;
+        END IF;
+    END PROCESS;
 
-	-----------------------------------------------------------------------------
-	--	dot state
-	-----------------------------------------------------------------------------
-	process( RESET, CLK21M ) begin
-		if( RESET = '1' )then
-			ff_dotstate		<= "00";
-			ff_video_dh_clk <= '0';
-			ff_video_dl_clk <= '0';
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( w_h_cnt_end = '1' )then
-				ff_dotstate		<= "00";
-				ff_video_dh_clk <= '1';
-				ff_video_dl_clk <= '1';
-			else
-				case ff_dotstate is
-				when "00" =>
-					ff_dotstate		<= "01";
-					ff_video_dh_clk <= '0';
-					ff_video_dl_clk <= '1';
-				when "01" =>
-					ff_dotstate		<= "11";
-					ff_video_dh_clk <= '1';
-					ff_video_dl_clk <= '0';
-				when "11" =>
-					ff_dotstate		<= "10";
-					ff_video_dh_clk <= '0';
-					ff_video_dl_clk <= '0';
-				when "10" =>
-					ff_dotstate		<= "00";
-					ff_video_dh_clk <= '1';
-					ff_video_dl_clk <= '1';
-				when others =>
-					null;
-				end case;
-			end if;
-		end if;
-	end process;
+    PROCESS( RESET, CLK21M )
+    BEGIN
+        IF( RESET = '1' )THEN
+            FF_X_CNT <= (OTHERS =>'0');
+        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
+            IF( (W_H_CNT = ("00" & (OFFSET_X + LED_TV_X_NTSC - ((REG_R25_MSK AND (NOT CENTERYJK_R25_N)) & "00") + 4) & "10") AND REG_R25_YJK = '1' AND CENTERYJK_R25_N = '1' AND VDPR9PALMODE = '0') OR
+                (W_H_CNT = ("00" & (OFFSET_X + LED_TV_X_NTSC - ((REG_R25_MSK AND (NOT CENTERYJK_R25_N)) & "00")    ) & "10") AND (REG_R25_YJK = '0' OR CENTERYJK_R25_N = '0') AND VDPR9PALMODE = '0') OR
+                (W_H_CNT = ("00" & (OFFSET_X + LED_TV_X_PAL - ((REG_R25_MSK AND (NOT CENTERYJK_R25_N)) & "00") + 4) & "10") AND REG_R25_YJK = '1' AND CENTERYJK_R25_N = '1' AND VDPR9PALMODE = '1') OR
+                (W_H_CNT = ("00" & (OFFSET_X + LED_TV_X_PAL - ((REG_R25_MSK AND (NOT CENTERYJK_R25_N)) & "00")    ) & "10") AND (REG_R25_YJK = '0' OR CENTERYJK_R25_N = '0') AND VDPR9PALMODE = '1') )THEN
+                -- HOLD
+            ELSIF( W_H_CNT(1 DOWNTO 0) = "10") THEN
+                IF( FF_PRE_X_CNT = "111111111" )THEN
+                    -- JP: FF_PRE_X_CNT が -1から0にカウントアップする時にFF_X_CNTを-8にする
+                    FF_X_CNT <= "111111000";        -- -8
+                ELSE
+                    FF_X_CNT <= FF_X_CNT + 1;
+                END IF;
+            END IF;
+        END IF;
+    END PROCESS;
 
-	-----------------------------------------------------------------------------
-	--	HD
-	-----------------------------------------------------------------------------
-	--   144 + ((reg_r18_adj(3 downto 0) xor 7) - 7 + reg_r25_yjk) * 4
-	-- = (reg_r25_yjk ? 132 : 116) + (reg_r18_adj(3 downto 0) xor 7) * 4
-	w_horizontal_adjust	<= "00000" & reg_r18_adj(3) & (not reg_r18_adj( 2 downto 0 )) & "00";
+    -----------------------------------------------------------------------------
+    -- GENERATE V-SYNC PULSE
+    -----------------------------------------------------------------------------
+    PROCESS( RESET, CLK21M )
+    BEGIN
+        IF( RESET = '1' )THEN
+            IVIDEOVS_N <= '1';
+        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
+            IF( W_V_CNT_IN_FIELD = 6 )THEN
+                -- SSTATE = SSTATE_B
+                IVIDEOVS_N <= '0';
+            ELSIF( W_V_CNT_IN_FIELD = 12 )THEN
+                -- SSTATE = SSTATE_A
+                IVIDEOVS_N <= '1';
+            END IF;
+        END IF;
+    END PROCESS;
 
-	process( RESET, CLK21M ) begin
-		if( RESET = '1' )then
-			ff_left_border	<= w_horizontal_adjust;
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( w_sync_at_line = '1' ) then
-				if( reg_r25_yjk = '1' ) then
-					ff_left_border	<= conv_std_logic_vector( 132, 11 ) + w_horizontal_adjust;
-				else
-					ff_left_border	<= conv_std_logic_vector( 116, 11 ) + w_horizontal_adjust;
-				end if;
-			end if;
-		end if;
-	end process;
+    -----------------------------------------------------------------------------
+    --  DISPLAY WINDOW
+    -----------------------------------------------------------------------------
 
-	process( RESET, CLK21M )
-	begin
-		if( RESET = '1' )then
-			ff_right_border	<= conv_std_logic_vector( 230 + 1024, 11 );
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( w_sync_at_line = '1' ) then
-				if( text_mode = '1' ) then
-					if( reg_r25_yjk = '1' ) then
-						ff_right_border	<= conv_std_logic_vector( 246 + 996, 11 ) + w_horizontal_adjust;
-					else
-						ff_right_border	<= conv_std_logic_vector( 230 + 996, 11 ) + w_horizontal_adjust;
-					end if;
-				else
-					if( reg_r25_yjk = '1' ) then
-						ff_right_border	<= conv_std_logic_vector( 246 + 1024, 11 ) + w_horizontal_adjust;
-					else
-						ff_right_border	<= conv_std_logic_vector( 230 + 1024, 11 ) + w_horizontal_adjust;
-					end if;
-				end if;
-			end if;
-		end if;
-	end process;
+    -- LEFT MASK (R25 MSK)
+    -- H_SCROLL = 0 --> 8
+    -- H_SCROLL = 1 --> 7
+    -- H_SCROLL = 2 --> 6
+    -- H_SCROLL = 3 --> 5
+    -- H_SCROLL = 4 --> 4
+    -- H_SCROLL = 5 --> 3
+    -- H_SCROLL = 6 --> 2
+    -- H_SCROLL = 7 --> 1
+    W_LEFT_MASK     <=  (OTHERS => '0') WHEN( REG_R25_MSK = '0' )ELSE
+                        "00000" & ("0" & (NOT REG_R27_H_SCROLL) + 1);
 
-	process( RESET, CLK21M ) begin
-		if( RESET = '1' ) then
-			ff_h_blank <= '0';
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( w_h_blank_start = '1' )then
-				ff_h_blank <= '1';
-			elsif( w_h_blank_end = '1' )then
-				ff_h_blank <= '0';
-			end if;
-		end if;
-	end process;
+    PROCESS( CLK21M )
+    BEGIN
+        IF( CLK21M'EVENT AND CLK21M = '1' )THEN
+            -- MAIN WINDOW
+            IF( W_H_CNT( 1 DOWNTO 0) = "01" AND FF_X_CNT = W_LEFT_MASK )THEN
+                -- WHEN DOTCOUNTER_X = 0
+                FF_RIGHT_MASK <= "100000000" - ("000000" & REG_R27_H_SCROLL);
+            END IF;
+        END IF;
+    END PROCESS;
 
-	--------------------------------------------------------------------------
-	--	FIELD ID
-	--------------------------------------------------------------------------
-	process( RESET, CLK21M )
-	begin
-		if( RESET = '1' )then
-			ff_field <= '0';
-		elsif( CLK21M'event and CLK21M = '1' )then
-			-- generate ff_field signal
-			if( (w_h_cnt_half or w_h_cnt_end) = '1' )then
-				if( w_field_end = '1' )then
-					ff_field <= not ff_field;
-				end if;
-			end if;
-		end if;
-	end process;
+    PROCESS( RESET, CLK21M )
+    BEGIN
+        IF( RESET = '1' )THEN
+            FF_WINDOW_X <= '0';
+        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
+            -- MAIN WINDOW
+            IF( W_H_CNT( 1 DOWNTO 0) = "01" AND FF_X_CNT = W_LEFT_MASK ) THEN
+                -- WHEN DOTCOUNTER_X = 0
+                FF_WINDOW_X <= '1';
+            ELSIF( W_H_CNT( 1 DOWNTO 0) = "01" AND FF_X_CNT = FF_RIGHT_MASK ) THEN
+                -- WHEN DOTCOUNTER_X = 256
+                FF_WINDOW_X <= '0';
+            END IF;
+        END IF;
+    END PROCESS;
 
-	w_display_mode	<=	ff_interlace_mode & ff_pal_mode;
+    -----------------------------------------------------------------------------
+    -- Y
+    -----------------------------------------------------------------------------
+    W_HSYNC <=  '1'     WHEN( W_H_CNT(1 DOWNTO 0) = "10" AND FF_PRE_X_CNT = "111111111" )ELSE
+                '0';
 
-	with( w_display_mode )select w_field_end_cnt <=
-		conv_std_logic_vector( FIELD_END_NON_INTERLACE_NTSC	, 10 )	when "00",
-		conv_std_logic_vector( FIELD_END_NON_INTERLACE_PAL	, 10 )	when "01",
-		conv_std_logic_vector( FIELD_END_INTERLACE_NTSC		, 10 )	when "10",
-		conv_std_logic_vector( FIELD_END_INTERLACE_PAL		, 10 )	when "11",
-		(others=>'X')						when others;
+    W_Y_ADJ <=  (REG_R18_ADJ(7) & REG_R18_ADJ(7) & REG_R18_ADJ(7) &
+                 REG_R18_ADJ(7) & REG_R18_ADJ(7) & REG_R18_ADJ(7 DOWNTO 4));
 
-	w_field_end <=	'1' when( ff_v_cnt_in_field = w_field_end_cnt )else '0';
+    PROCESS( CLK21M, RESET )
+        VARIABLE PREDOTCOUNTER_YP_V     : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+        VARIABLE PREDOTCOUNTERYPSTART   : STD_LOGIC_VECTOR(  8 DOWNTO 0 );
+    BEGIN
+        IF (RESET = '1') THEN
+            FF_PRE_Y_CNT        <= (OTHERS =>'0');
+            FF_MONITOR_LINE     <= (OTHERS =>'0');
+            PREWINDOW_Y         <= '0';
+        ELSIF( CLK21M'EVENT AND CLK21M = '1' )THEN
 
-	process( RESET, CLK21M ) begin
-		if( RESET = '1' ) then
-			ff_v_cnt_in_field	<= (others => '0');
-		elsif( CLK21M'event and CLK21M = '1' ) then
-			if( (w_h_cnt_half or w_h_cnt_end) = '1' ) then
-				if( w_field_end = '1' ) then
-					ff_v_cnt_in_field <= (others => '0');
-				else
-					ff_v_cnt_in_field <= ff_v_cnt_in_field + 1;
-				end if;
-			end if;
-		end if;
-	end process;
+            IF( W_HSYNC = '1' )THEN
+                -- JP: PREWINDOW_Xが 1になるタイミングと同じタイミングでY座標の計算
+                IF(  W_V_BLANKING_END = '1' )THEN
+                    IF(    REG_R9_Y_DOTS = '0' AND VDPR9PALMODE = '0' )THEN
+                        PREDOTCOUNTERYPSTART := "111100110";                    -- TOP BORDER LINES = -26
+                    ELSIF( REG_R9_Y_DOTS = '1' AND VDPR9PALMODE = '0' )THEN
+                        PREDOTCOUNTERYPSTART := "111110000";                    -- TOP BORDER LINES = -16
+                    ELSIF( REG_R9_Y_DOTS = '0' AND VDPR9PALMODE = '1' )THEN
+                        PREDOTCOUNTERYPSTART := "111001011";                    -- TOP BORDER LINES = -53
+                    ELSIF( REG_R9_Y_DOTS = '1' AND VDPR9PALMODE = '1' )THEN
+                        PREDOTCOUNTERYPSTART := "111010101";                    -- TOP BORDER LINES = -43
+                    END IF;
+                    FF_MONITOR_LINE <= PREDOTCOUNTERYPSTART + W_Y_ADJ;
+                    PREWINDOW_Y_SP  <= '1';
+                ELSE
+                    IF( PREDOTCOUNTER_YP_V = 255 )THEN
+                        PREDOTCOUNTER_YP_V := FF_MONITOR_LINE;
+                    ELSE
+                        PREDOTCOUNTER_YP_V := FF_MONITOR_LINE + 1;
+                    END IF;
+                    IF( PREDOTCOUNTER_YP_V = 0 ) THEN
+                        ENAHSYNC        <= '1';
+                        PREWINDOW_Y     <= '1';
+                    ELSIF( (REG_R9_Y_DOTS = '0' AND PREDOTCOUNTER_YP_V = 192) OR
+                           (REG_R9_Y_DOTS = '1' AND PREDOTCOUNTER_YP_V = 212) )THEN
+                        PREWINDOW_Y     <= '0';
+                        PREWINDOW_Y_SP  <= '0';
+                    ELSIF( (REG_R9_Y_DOTS = '0' AND VDPR9PALMODE = '0' AND PREDOTCOUNTER_YP_V = 235) OR
+                           (REG_R9_Y_DOTS = '1' AND VDPR9PALMODE = '0' AND PREDOTCOUNTER_YP_V = 245) OR
+                           (REG_R9_Y_DOTS = '0' AND VDPR9PALMODE = '1' AND PREDOTCOUNTER_YP_V = 259) OR
+                           (REG_R9_Y_DOTS = '1' AND VDPR9PALMODE = '1' AND PREDOTCOUNTER_YP_V = 269) )THEN
+                        ENAHSYNC        <= '0';
+                    END IF;
+                    FF_MONITOR_LINE <= PREDOTCOUNTER_YP_V;
+                END IF;
+            END IF;
 
-	--------------------------------------------------------------------------
-	--	V SYNCHRONIZE MODE CHANGE
-	--------------------------------------------------------------------------
-	process( RESET, CLK21M ) begin
-		if( RESET = '1' )then
-			ff_pal_mode			<= '0';
-			ff_interlace_mode	<= '0';
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( ((w_h_cnt_half or w_h_cnt_end) and w_field_end and ff_field) = '1' )then
-				ff_pal_mode			<= REG_R9_PAL_MODE;
-				ff_interlace_mode	<= REG_R9_INTERLACE_MODE;
-			end if;
-		end if;
-	end process;
+            FF_PRE_Y_CNT <= FF_MONITOR_LINE + ("0" & REG_R23_VSTART_LINE);
+        END IF;
+    END PROCESS;
 
-	-----------------------------------------------------------------------------
-	-- V BLANKING
-	-----------------------------------------------------------------------------
-	w_vertical_adjust	<= "00000" & reg_r18_adj(7) & (not reg_r18_adj( 6 downto 4 ));
+    -----------------------------------------------------------------------------
+    -- VSYNC INTERRUPT REQUEST
+    -----------------------------------------------------------------------------
+    W_LINE_MODE         <=  REG_R9_Y_DOTS & VDPR9PALMODE;
 
-	w_line_mode <= REG_R9_Y_DOTS & ff_pal_mode;
+    WITH W_LINE_MODE SELECT W_V_SYNC_INTR_START_LINE <=
+        CONV_STD_LOGIC_VECTOR( V_BLANKING_START_192_NTSC, 9 )   WHEN "00",
+        CONV_STD_LOGIC_VECTOR( V_BLANKING_START_212_NTSC, 9 )   WHEN "10",
+        CONV_STD_LOGIC_VECTOR( V_BLANKING_START_192_PAL, 9 )    WHEN "01",
+        CONV_STD_LOGIC_VECTOR( V_BLANKING_START_212_PAL, 9 )    WHEN "11",
+        (OTHERS => 'X')                                         WHEN OTHERS;
 
-	with w_line_mode select w_v_sync_intr_start_line <=
-		conv_std_logic_vector( v_blanking_start_192_ntsc, 9 )	when "00",
-		conv_std_logic_vector( v_blanking_start_212_ntsc, 9 )	when "10",
-		conv_std_logic_vector( v_blanking_start_192_pal, 9 )	when "01",
-		conv_std_logic_vector( v_blanking_start_212_pal, 9 )	when "11",
-		(others => 'X')											when others;
+    W_V_BLANKING_END    <=  '1' WHEN( (W_V_CNT_IN_FIELD = ("00" & (OFFSET_Y + LED_TV_Y_NTSC) & (W_FIELD AND REG_R9_INTERLACE_MODE)) AND VDPR9PALMODE = '0') OR
+                                      (W_V_CNT_IN_FIELD = ("00" & (OFFSET_Y + LED_TV_Y_PAL) & (W_FIELD AND REG_R9_INTERLACE_MODE)) AND VDPR9PALMODE = '1') )ELSE
+                            '0';
+    W_V_BLANKING_START  <=  '1' WHEN( (W_V_CNT_IN_FIELD = ((W_V_SYNC_INTR_START_LINE + LED_TV_Y_NTSC) & (W_FIELD AND REG_R9_INTERLACE_MODE)) AND VDPR9PALMODE = '0') OR
+                                      (W_V_CNT_IN_FIELD = ((W_V_SYNC_INTR_START_LINE + LED_TV_Y_PAL) & (W_FIELD AND REG_R9_INTERLACE_MODE)) AND VDPR9PALMODE = '1') )ELSE
+                            '0';
 
-	with w_line_mode select w_v_sync_intr_end_line <=
-		conv_std_logic_vector( v_blanking_end_192_ntsc, 9 )		when "00",
-		conv_std_logic_vector( v_blanking_end_212_ntsc, 9 )		when "10",
-		conv_std_logic_vector( v_blanking_end_192_pal, 9 )		when "01",
-		conv_std_logic_vector( v_blanking_end_212_pal, 9 )		when "11",
-		(others => 'X')											when others;
-
-	w_v_blank_start	<=	'1' when( ff_v_cnt_in_field = ((w_v_sync_intr_start_line + w_vertical_adjust) & (ff_field and ff_interlace_mode)) ) else '0';
-	w_v_blank_end	<=	'1' when( ff_v_cnt_in_field = ((w_v_sync_intr_end_line   + w_vertical_adjust) & (ff_field and ff_interlace_mode)) ) else '0';
-
-	process( reset, clk21m )
-	begin
-		if( reset = '1' )then
-			ff_v_blank <= '0';
-		elsif( clk21m'event and clk21m = '1' )then
-			if( w_sync_at_line = '1' )then
-				if( w_v_blank_end = '1' )then
-					ff_v_blank <= '0';
-				elsif( w_v_blank_start = '1' )then
-					ff_v_blank <= '1';
-				end if;
-			end if;
-		end if;
-	end process;
-
-	--------------------------------------------------------------------------
-	--	VERTICAL COUNTER IN FRAME
-	--------------------------------------------------------------------------
-	process( RESET, CLK21M ) begin
-		if( RESET = '1' )then
-			ff_v_cnt_in_frame	<= (others => '0');
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( (w_h_cnt_half or w_h_cnt_end) = '1' )then
-				if( w_field_end = '1' and ff_field = '1' )then
-					ff_v_cnt_in_frame	<= (others => '0');
-				else
-					ff_v_cnt_in_frame	<= ff_v_cnt_in_frame + 1;
-				end if;
-			end if;
-		end if;
-	end process;
-
-	-----------------------------------------------------------------------------
-	--	8dot state
-	-----------------------------------------------------------------------------
-	process( reset, clk21m )
-	begin
-		if( reset = '1' )then
-			ff_eightdotstate <= "000";
-		elsif( clk21m'event and clk21m = '1' )then
-			if( ff_h_cnt(1 downto 0) = "11" )then
-				if( ff_pre_x_cnt = 0 )then
-					ff_eightdotstate <= "000";
-				else
-					ff_eightdotstate <= ff_eightdotstate + 1;
-				end if;
-			end if;
-		end if;
-	end process;
-
-	-----------------------------------------------------------------------------
-	--	generate dotcounter
-	-----------------------------------------------------------------------------
-	-- w_pre_x_cnt_start0	<=	reg_r18_adj(3) & reg_r18_adj(3 downto 0) + "11000";					--	(-8...7) - 8 = (-16...-1)
-	w_pre_x_cnt_start0	<=	"1" & (not reg_r18_adj(3)) & reg_r18_adj(2 downto 0);					--	(-8...7) - 8 = (-16...-1)
-
-	-- 1000		=> 0000		=>	10000
-	-- 1001		=> 0001		=>	10001
-	-- 1010		=> 0010		=>	10010
-	-- 1011		=> 0011		=>	10011
-	-- 1100		=> 0100		=>	10100
-	-- 1101		=> 0101		=>	10101
-	-- 1110		=> 0110		=>	10110
-	-- 1111		=> 0111		=>	10111
-	-- 0000		=> 1000		=>	11000
-	-- 0001		=> 1001		=>	11001
-	-- 0010		=> 1010		=>	11010
-	-- 0011		=> 1011		=>	11011
-	-- 0100		=> 1100		=>	11100
-	-- 0101		=> 1101		=>	11101
-	-- 0110		=> 1110		=>	11110
-	-- 0111		=> 1111		=>	11111
-
-	process( reset, clk21m )
-	begin
-		if( reset = '1' )then
-			ff_pre_x_cnt_start1 <= (others => '0');
-		elsif( clk21m'event and clk21m = '1' )then
-			ff_pre_x_cnt_start1 <= (w_pre_x_cnt_start0(4) & w_pre_x_cnt_start0) - ("000" & reg_r27_h_scroll);	-- (-23...-1)
-		end if;
-	end process;
-
-	w_pre_x_cnt_start2( 8 downto 6 ) <= (others => ff_pre_x_cnt_start1(5));
-	w_pre_x_cnt_start2( 5 downto 0 ) <= ff_pre_x_cnt_start1;
-
-	process( reset, clk21m )
-	begin
-		if( reset = '1' )then
-			ff_pre_x_cnt <= (others =>'0');
-		elsif( clk21m'event and clk21m = '1' )then
-			if( (ff_h_cnt = ("00" & (offset_x + led_tv_x_ntsc - ((reg_r25_msk and (not centeryjk_r25_n)) & "00") + 4) & "10") and reg_r25_yjk  = '1' and centeryjk_r25_n = '1'  and reg_r9_pal_mode = '0') or
-				(ff_h_cnt = ("00" & (offset_x + led_tv_x_ntsc - ((reg_r25_msk and (not centeryjk_r25_n)) & "00")    ) & "10") and (reg_r25_yjk = '0' or centeryjk_r25_n  = '0') and reg_r9_pal_mode = '0') or
-				(ff_h_cnt = ("00" & (offset_x + led_tv_x_pal  - ((reg_r25_msk and (not centeryjk_r25_n)) & "00") + 4) & "10") and reg_r25_yjk  = '1' and centeryjk_r25_n = '1'  and reg_r9_pal_mode = '1') or
-				(ff_h_cnt = ("00" & (offset_x + led_tv_x_pal  - ((reg_r25_msk and (not centeryjk_r25_n)) & "00")    ) & "10") and (reg_r25_yjk = '0' or centeryjk_r25_n  = '0') and reg_r9_pal_mode = '1') )then
-				ff_pre_x_cnt <= w_pre_x_cnt_start2;
-			elsif( ff_h_cnt(1 downto 0) = "10" )then
-				ff_pre_x_cnt <= ff_pre_x_cnt + 1;
-			end if;
-		end if;
-	end process;
-
-	process( reset, clk21m )
-	begin
-		if( reset = '1' )then
-			ff_x_cnt <= (others =>'0');
-		elsif( clk21m'event and clk21m = '1' )then
-			if( (ff_h_cnt = ("00" & (offset_x + led_tv_x_ntsc - ((reg_r25_msk and (not centeryjk_r25_n)) & "00") + 4) & "10") and reg_r25_yjk  = '1' and centeryjk_r25_n = '1'  and reg_r9_pal_mode = '0') or
-				(ff_h_cnt = ("00" & (offset_x + led_tv_x_ntsc - ((reg_r25_msk and (not centeryjk_r25_n)) & "00")    ) & "10") and (reg_r25_yjk = '0' or centeryjk_r25_n  = '0') and reg_r9_pal_mode = '0') or
-				(ff_h_cnt = ("00" & (offset_x + led_tv_x_pal  - ((reg_r25_msk and (not centeryjk_r25_n)) & "00") + 4) & "10") and reg_r25_yjk  = '1' and centeryjk_r25_n = '1'  and reg_r9_pal_mode = '1') or
-				(ff_h_cnt = ("00" & (offset_x + led_tv_x_pal  - ((reg_r25_msk and (not centeryjk_r25_n)) & "00")    ) & "10") and (reg_r25_yjk = '0' or centeryjk_r25_n  = '0') and reg_r9_pal_mode = '1') )then
-				-- hold
-			elsif( ff_h_cnt(1 downto 0) = "10") then
-				if( ff_pre_x_cnt = "111111111" )then
-					-- jp: ff_pre_x_cnt が -1から0にカウントアップする時にff_x_cntを-8にする
-					ff_x_cnt <= conv_std_logic_vector( -8, 9 );
-				else
-					ff_x_cnt <= ff_x_cnt + 1;
-				end if;
-			end if;
-		end if;
-	end process;
-
-	-----------------------------------------------------------------------------
-	-- generate v-sync pulse
-	-----------------------------------------------------------------------------
-	process( reset, clk21m )
-	begin
-		if( reset = '1' )then
-			ivideovs_n <= '1';
-		elsif( clk21m'event and clk21m = '1' )then
-			if( ff_v_cnt_in_field = 6 )then
-				-- sstate = sstate_b
-				ivideovs_n <= '0';
-			elsif( ff_v_cnt_in_field = 12 )then
-				-- sstate = sstate_a
-				ivideovs_n <= '1';
-			end if;
-		end if;
-	end process;
-
-	-----------------------------------------------------------------------------
-	--	display window
-	-----------------------------------------------------------------------------
-
-	-- left mask (r25 msk)
-	-- h_scroll = 0 --> 8
-	-- h_scroll = 1 --> 7
-	-- h_scroll = 2 --> 6
-	-- h_scroll = 3 --> 5
-	-- h_scroll = 4 --> 4
-	-- h_scroll = 5 --> 3
-	-- h_scroll = 6 --> 2
-	-- h_scroll = 7 --> 1
-	w_left_mask		<=	(others => '0') when( reg_r25_msk = '0' )else
-						"00000" & ("0" & (not reg_r27_h_scroll) + 1);
-
-	process( clk21m )
-	begin
-		if( clk21m'event and clk21m = '1' )then
-			-- main window
-			if( ff_h_cnt( 1 downto 0) = "01" and ff_x_cnt = w_left_mask )then
-				-- when dotcounter_x = 0
-				ff_right_mask <= "100000000" - ("000000" & reg_r27_h_scroll);
-			end if;
-		end if;
-	end process;
-
-	process( reset, clk21m )
-	begin
-		if( reset = '1' )then
-			ff_window_x <= '0';
-		elsif( clk21m'event and clk21m = '1' )then
-			-- main window
-			if( ff_h_cnt( 1 downto 0) = "01" and ff_x_cnt = w_left_mask ) then
-				-- when dotcounter_x = 0
-				ff_window_x <= '1';
-			elsif( ff_h_cnt( 1 downto 0) = "01" and ff_x_cnt = ff_right_mask ) then
-				-- when dotcounter_x = 256
-				ff_window_x <= '0';
-			end if;
-		end if;
-	end process;
-
-	-----------------------------------------------------------------------------
-	-- y
-	-----------------------------------------------------------------------------
-	w_hsync <=	'1'		when( ff_h_cnt(1 downto 0) = "10" and ff_pre_x_cnt = "111111111" )else
-				'0';
-
-	process( CLK21M, RESET ) begin
-		if (RESET = '1') then
-			ff_pre_y_cnt		<= (others =>'0');
-		elsif( CLK21M'event and CLK21M = '1' )then
-			ff_pre_y_cnt( 7 downto 0 )	<= ff_monitor_line( 7 downto 0 ) + reg_r23_vstart_line;
-			ff_pre_y_cnt( 8 )			<= ff_monitor_line( 8 );
-		end if;
-	end process;
-
-	with( w_line_mode ) select w_predotcounterypstart <=
-		conv_std_logic_vector( monitor_line_192_ntsc, 9 )	when "00",
-		conv_std_logic_vector( monitor_line_212_ntsc, 9 )	when "10",
-		conv_std_logic_vector( monitor_line_192_pal, 9 )	when "01",
-		conv_std_logic_vector( monitor_line_212_pal, 9 )	when "11",
-		(others => 'X')										when others;
-
-	w_predotcounter_yp_v <= ff_monitor_line + 1;
-
-	process( CLK21M, RESET ) begin
-		if (RESET = '1') then
-			ff_field_end <= '0';
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( (w_h_cnt_half or w_h_cnt_end) = '1' )then
-				ff_field_end <= ff_field_end or w_field_end;
-			elsif( w_hsync = '1' )then
-				ff_field_end <= '0';
-			end if;
-		end if;
-	end process;
-
-	process( CLK21M, RESET ) begin
-		if (RESET = '1') then
-			ff_monitor_line		<= (others =>'0');
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( w_hsync = '1' )then
-				if( ff_field_end = '1' )then
-					ff_monitor_line <= w_predotcounterypstart - w_vertical_adjust;
-				elsif( ff_prewindow_y = '0' and ff_monitor_line = 0 )then
-					-- hold
-				else
-					ff_monitor_line <= ff_monitor_line + 1;
-				end if;
-			end if;
-		end if;
-	end process;
-
-	process( CLK21M, RESET ) begin
-		if (RESET = '1') then
-			ff_prewindow_y			<= '0';
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( w_hsync = '1' )then
-				-- jp: prewindow_xが 1になるタイミングと同じタイミングでy座標の計算
-				if( ff_monitor_line = 0 ) then
-					ff_prewindow_y		<= '1';
-				elsif( (reg_r9_y_dots = '0' and ff_monitor_line = 191) or
-					   (reg_r9_y_dots = '1' and ff_monitor_line = 211) )then
-					ff_prewindow_y		<= '0';
-				end if;
-			end if;
-		end if;
-	end process;
-
-	process( CLK21M, RESET ) begin
-		if (RESET = '1') then
-			prewindow_y_sp		<= '0';			-- 2021/june/20th added by t.hara
-		elsif( CLK21M'event and CLK21M = '1' )then
-			if( w_hsync = '1' )then
-				-- jp: prewindow_xが 1になるタイミングと同じタイミングでy座標の計算
-				if(	 w_v_blank_end = '1' )then
-					prewindow_y_sp	<= '1';
-				else
-					if( ff_monitor_line = 0 ) then
-						-- hold
-					elsif( (reg_r9_y_dots = '0' and ff_monitor_line = 191) or
-						   (reg_r9_y_dots = '1' and ff_monitor_line = 211) )then
-						prewindow_y_sp	<= '0';
-					end if;
-				end if;
-			end if;
-		end if;
-	end process;
-
---	process( CLK21M, RESET ) begin
---		if (RESET = '1') then
---			enahsync			<= '0';			-- 2021/june/20th added by t.hara
---		elsif( CLK21M'event and CLK21M = '1' )then
---			if( w_hsync = '1' )then
---				-- jp: prewindow_xが 1になるタイミングと同じタイミングでy座標の計算
---				if(	 w_v_blank_end = '1' )then
---					-- hold
---				else
---					if( ff_monitor_line = 0 ) then
---						enahsync		<= '1';
---					elsif( (reg_r9_y_dots = '0' and reg_r9_pal_mode = '0' and ff_monitor_line = 234) or
---						   (reg_r9_y_dots = '1' and reg_r9_pal_mode = '0' and ff_monitor_line = 244) or
---						   (reg_r9_y_dots = '0' and reg_r9_pal_mode = '1' and ff_monitor_line = 258) or
---						   (reg_r9_y_dots = '1' and reg_r9_pal_mode = '1' and ff_monitor_line = 268) )then
---						enahsync		<= '0';
---					end if;
---				end if;
---			end if;
---		end if;
---	end process;
-end rtl;
+END RTL;

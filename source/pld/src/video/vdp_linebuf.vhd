@@ -67,7 +67,7 @@
 --   - Insert the license text.
 --   - Add the document part below.
 --
--- 21st,March,2008 modified by t.hara
+-- 21th,March,2008 modified by t.hara
 --   JP: リファクタリング, 桁揃えなど些細な修正。
 --
 -------------------------------------------------------------------------------

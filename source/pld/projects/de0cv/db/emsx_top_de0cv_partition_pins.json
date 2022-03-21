@@ -4,14 +4,6 @@
 			"name" : "Top",
 			"pins" : [
 				{
-					"name" : "pDac_S",
-					"strict" : false
-				},
-				{
-					"name" : "pLed[9]",
-					"strict" : false
-				},
-				{
 					"name" : "p7SegLed0[0]",
 					"strict" : false
 				},
@@ -76,18 +68,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "pStrA",
-					"strict" : false
-				},
-				{
-					"name" : "pStrB",
-					"strict" : false
-				},
-				{
-					"name" : "pSd_Cm",
-					"strict" : false
-				},
-				{
 					"name" : "pLed[8]",
 					"strict" : false
 				},
@@ -104,7 +84,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "pVideoHS_n",
+					"name" : "pStrA",
+					"strict" : false
+				},
+				{
+					"name" : "pStrB",
 					"strict" : false
 				},
 				{
@@ -204,6 +188,10 @@
 					"strict" : false
 				},
 				{
+					"name" : "pSd_Cm",
+					"strict" : false
+				},
+				{
 					"name" : "pLed[0]",
 					"strict" : false
 				},
@@ -236,6 +224,10 @@
 					"strict" : false
 				},
 				{
+					"name" : "pLed[9]",
+					"strict" : false
+				},
+				{
 					"name" : "p7SegLed5[0]",
 					"strict" : false
 				},
@@ -244,11 +236,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "pVideoVS_n",
+					"name" : "pVideoHS_n",
 					"strict" : false
 				},
 				{
-					"name" : "pMidiTxD",
+					"name" : "pVideoVS_n",
 					"strict" : false
 				},
 				{
@@ -257,6 +249,14 @@
 				},
 				{
 					"name" : "pCMT_out",
+					"strict" : false
+				},
+				{
+					"name" : "pMidiTxD",
+					"strict" : false
+				},
+				{
+					"name" : "pDac_S",
 					"strict" : false
 				},
 				{
@@ -368,19 +368,19 @@
 					"strict" : false
 				},
 				{
-					"name" : "pJoyA[4]",
+					"name" : "pSltRd_n",
 					"strict" : false
 				},
 				{
-					"name" : "pJoyA[5]",
+					"name" : "pSltMerq_n",
 					"strict" : false
 				},
 				{
-					"name" : "pJoyB[4]",
+					"name" : "pPs2Clk",
 					"strict" : false
 				},
 				{
-					"name" : "pJoyB[5]",
+					"name" : "pPs2Dat",
 					"strict" : false
 				},
 				{
@@ -452,19 +452,27 @@
 					"strict" : false
 				},
 				{
+					"name" : "pJoyA[4]",
+					"strict" : false
+				},
+				{
+					"name" : "pJoyA[5]",
+					"strict" : false
+				},
+				{
+					"name" : "pJoyB[4]",
+					"strict" : false
+				},
+				{
+					"name" : "pJoyB[5]",
+					"strict" : false
+				},
+				{
 					"name" : "pSltSltsl_n",
 					"strict" : false
 				},
 				{
 					"name" : "pSltSlts2_n",
-					"strict" : false
-				},
-				{
-					"name" : "pSltIorq_n",
-					"strict" : false
-				},
-				{
-					"name" : "pSltRd_n",
 					"strict" : false
 				},
 				{
@@ -485,18 +493,6 @@
 				},
 				{
 					"name" : "pSltM1_n",
-					"strict" : false
-				},
-				{
-					"name" : "pSltMerq_n",
-					"strict" : false
-				},
-				{
-					"name" : "pPs2Clk",
-					"strict" : false
-				},
-				{
-					"name" : "pPs2Dat",
 					"strict" : false
 				},
 				{
@@ -577,6 +573,10 @@
 				},
 				{
 					"name" : "pDac_VB[3]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltIorq_n",
 					"strict" : false
 				},
 				{
