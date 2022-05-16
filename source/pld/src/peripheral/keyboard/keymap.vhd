@@ -96,6 +96,14 @@ constant rom101 : rom_101 := (
 --       +-----+-----+-----+-----+-----+-----+-----+-----+
 --  ---- |     |     |     |     |[Can]|     |[Exe]|     |  B    Can: Torikeshi(Cancel), Exe: Jikkou(Execute)
 --       +-----+-----+-----+-----+-----+-----+-----+-----+
+--  ---- |     |     |     |     |     |     |     |     |  C
+--       +-----+-----+-----+-----+-----+-----+-----+-----+
+--  ---- |     |     |     |     |     |     |     |     |  D
+--       +-----+-----+-----+-----+-----+-----+-----+-----+
+--  ---- |     |     |     |     |     |     |     |     |  E
+--       +-----+-----+-----+-----+-----+-----+-----+-----+
+--  ---- | N/A |     |PgUp |PgDn | F9  | F10 | F11 | F12 |  F
+--       +-----+-----+-----+-----+-----+-----+-----+-----+
 -- bit     7 F   6 E   5 D   4 C   3 B   2 A   1 9   0 8
 
 -- Special keys for English 101/104 Keyboard
@@ -109,9 +117,9 @@ constant rom101 : rom_101 := (
 -- ALT L ($11)     : [GRAPH]   ($26)
 
 -- 101 keyboard (set 2) / Shift = OFF
-
-        X"FF", X"7F", X"7F", X"17", X"76", X"56", X"66", X"7F", -- 00
-        X"7F", X"7F", X"67", X"26", X"07", X"37", X"D1", X"7F", -- 08
+--      PS/2 Scan Code XX
+        X"FF", X"3F", X"7F", X"17", X"76", X"56", X"66", X"0F", -- 00
+        X"7F", X"2F", X"67", X"26", X"07", X"37", X"D1", X"7F", -- 08
         X"7F", X"26", X"06", X"46", X"16", X"64", X"10", X"7F", -- 10
         X"7F", X"7F", X"75", X"05", X"62", X"45", X"20", X"7F", -- 18
         X"7F", X"03", X"55", X"13", X"23", X"40", X"30", X"7F", -- 20
@@ -126,7 +134,7 @@ constant rom101 : rom_101 := (
         X"7F", X"49", X"41", X"79", X"2A", X"7F", X"7F", X"7F", -- 68
 --      X"39", X"7A", X"59", X"0A", X"1A", X"3A", X"27", X"6A", -- 70
         X"39", X"7A", X"59", X"0A", X"1A", X"3A", X"27", X"7F", -- 70  Modifyed by t.hara in May/1st/2020
-        X"7F", X"19", X"69", X"5A", X"09", X"4A", X"7F", X"7F", -- 78
+        X"1F", X"19", X"69", X"5A", X"09", X"4A", X"7F", X"7F", -- 78
         X"7F", X"7F", X"7F", X"46", X"7F", X"7F", X"7F", X"7F", -- 80
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 88
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 90
@@ -144,12 +152,13 @@ constant rom101 : rom_101 := (
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- F0
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- F8
 
+--      PS/2 Scan Code E0 XX
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 00
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 08
         X"7F", X"26", X"7F", X"7F", X"16", X"7F", X"7F", X"7F", -- 10
-        X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"08", -- 18  (LWIN = $1F = SPACE)
-        X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"08", -- 20  (RWIN = $27 = SPACE)
-        X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"46", -- 28  (MENU = $2F = KANA)
+        X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"08", -- 18  (LWIN = 0xE0, 0x1F => SPACE)
+        X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"08", -- 20  (RWIN = 0xE0, 0x27 => SPACE)
+        X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"46", -- 28  (APP  = 0xE0, 0x2F => KANA)
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 30
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 38
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 40
@@ -159,7 +168,7 @@ constant rom101 : rom_101 := (
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 60
         X"7F", X"47", X"7F", X"48", X"18", X"7F", X"7F", X"7F", -- 68
         X"28", X"38", X"68", X"7F", X"78", X"58", X"7F", X"7F", -- 70
-        X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 78
+        X"7F", X"7F", X"4F", X"7F", X"7F", X"5F", X"7F", X"7F", -- 78
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 80
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 88
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- 90
@@ -178,9 +187,9 @@ constant rom101 : rom_101 := (
         X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", X"7F", -- F8
 
 -- 101 keyboard (set 2) / Shift = ON
-
-        X"FF", X"FF", X"FF", X"97", X"F6", X"D6", X"E6", X"FF", -- 00
-        X"FF", X"FF", X"E7", X"A6", X"87", X"B7", X"B1", X"FF", -- 08
+--      PS/2 Scan code XX with Shift
+        X"FF", X"3F", X"FF", X"97", X"F6", X"D6", X"E6", X"0F", -- 00
+        X"FF", X"2F", X"E7", X"A6", X"87", X"B7", X"B1", X"FF", -- 08
         X"FF", X"A6", X"86", X"C6", X"96", X"E4", X"90", X"FF", -- 10
         X"FF", X"FF", X"F5", X"85", X"E2", X"C5", X"51", X"FF", -- 18
         X"FF", X"83", X"D5", X"93", X"A3", X"C0", X"B0", X"FF", -- 20
@@ -195,7 +204,7 @@ constant rom101 : rom_101 := (
         X"FF", X"C9", X"C1", X"F9", X"AA", X"FF", X"FF", X"FF", -- 68
 --      X"B9", X"FA", X"D9", X"8A", X"9A", X"BA", X"A7", X"EA", -- 70
         X"B9", X"FA", X"D9", X"8A", X"9A", X"BA", X"A7", X"EA", -- 70  Modified by t.hara in May/1st/2020
-        X"FF", X"99", X"E9", X"DA", X"89", X"BA", X"FF", X"FF", -- 78
+        X"1F", X"99", X"E9", X"DA", X"89", X"BA", X"FF", X"FF", -- 78
         X"FF", X"FF", X"FF", X"C6", X"FF", X"FF", X"FF", X"FF", -- 80
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 88
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 90
@@ -213,12 +222,13 @@ constant rom101 : rom_101 := (
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- F0
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- F8
 
+--      PS/2 Scan code E0 XX with Shift
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 00
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 08
         X"FF", X"A6", X"FF", X"FF", X"96", X"FF", X"FF", X"FF", -- 10
-        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"88", -- 18  (LWIN = $1F = SHIFT + SPACE)
-        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"88", -- 20  (RWIN = $27 = SHIFT + SPACE)
-        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"C6", -- 28  (MENU = $2F = SHIFT + KANA)
+        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"88", -- 18  (LWIN = 0xE0, 0x1F => SHIFT + SPACE)
+        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"88", -- 20  (RWIN = 0xE0, 0x27 => SHIFT + SPACE)
+        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"C6", -- 28  (APP  = 0xE0, 0x2F => SHIFT + KANA)
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 30
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 38
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 40
@@ -262,10 +272,10 @@ constant rom106 : rom_106 := (
 -- ALT L ($11)       : [GRAPH]    ($26)
 
 -- Keymap for 106 keyboard (set 2)
-
-        X"FF", X"FF", X"FF", X"17", X"76", X"56", X"66", X"FF", -- 00
+--      PS/2 Scan Code XX
+        X"FF", X"3F", X"FF", X"17", X"76", X"56", X"66", X"0F", -- 00
 --      X"FF", X"FF", X"67", X"26", X"07", X"37", X"67", X"FF", -- 08
-        X"FF", X"FF", X"67", X"47", X"07", X"37", X"27", X"FF", -- 08  Modified by t.hara in May/2nd/2020 : [F6] --> [STOP], [Zen/Han] --> [ESC]
+        X"FF", X"2F", X"67", X"47", X"07", X"37", X"27", X"FF", -- 08  Modified by t.hara in May/2nd/2020 : [F6] --> [STOP], [Zen/Han] --> [ESC]
         X"FF", X"26", X"06", X"46", X"16", X"64", X"10", X"FF", -- 10
         X"FF", X"FF", X"75", X"05", X"62", X"45", X"20", X"FF", -- 18
         X"FF", X"03", X"55", X"13", X"23", X"40", X"30", X"FF", -- 20
@@ -280,7 +290,7 @@ constant rom106 : rom_106 := (
         X"FF", X"49", X"41", X"79", X"2A", X"FF", X"FF", X"FF", -- 68
 --      X"39", X"7A", X"59", X"0A", X"1A", X"3A", X"27", X"6A", -- 70
         X"39", X"7A", X"59", X"0A", X"1A", X"3A", X"27", X"FF", -- 70  Modified by t.hara in May/1st/2020 : [NumLk] --> none
-        X"FF", X"19", X"69", X"5A", X"09", X"4A", X"FF", X"FF", -- 78
+        X"1F", X"19", X"69", X"5A", X"09", X"4A", X"FF", X"FF", -- 78
 --      X"FF", X"FF", X"FF", X"46", X"FF", X"FF", X"FF", X"FF", -- 80
         X"FF", X"FF", X"FF", X"18", X"FF", X"FF", X"FF", X"FF", -- 80  Modified by t.hara in May/2nd/2020 : [F7] --> [CLS/HOME]
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 88
@@ -299,14 +309,15 @@ constant rom106 : rom_106 := (
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- F0
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- F8
 
+--      PS/2 Scan Code E0 XX
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 00
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 08
         X"FF", X"26", X"FF", X"FF", X"16", X"FF", X"FF", X"FF", -- 10
---      X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"08", -- 18  (LWIN = $1F = SPACE)
-        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"46", -- 18  Modified by t.hara in May/2nd/2020 [LWIN] --> [KANA]
-        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"08", -- 20  (RWIN = $27 = SPACE)
---      X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"46", -- 28  (MENU = $2F = KANA)
-        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"28", -- 28  Modified by t.hara in May/2nd/2020 [MENU] --> [INS]
+--      X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"08", -- 18  (LWIN = 0x1F => SPACE)
+        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"46", -- 18  (LWIN = 0x1F => KANA ) Modified by t.hara in May/2nd/2020
+        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"08", -- 20  (RWIN = 0x27 => SPACE)
+--      X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"46", -- 28  (APP  = 0x2F => KANA )
+        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"28", -- 28  (APP  = 0x2F => INS  ) Modified by t.hara in May/2nd/2020
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 30
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 38
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 40
@@ -316,7 +327,7 @@ constant rom106 : rom_106 := (
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 60
         X"FF", X"47", X"FF", X"48", X"18", X"FF", X"FF", X"FF", -- 68
         X"28", X"38", X"68", X"FF", X"78", X"58", X"FF", X"FF", -- 70
-        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 78
+        X"FF", X"FF", X"4F", X"FF", X"FF", X"5F", X"FF", X"FF", -- 78
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 80
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 88
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 90
@@ -335,17 +346,17 @@ constant rom106 : rom_106 := (
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF"  -- F8
 );
 
-  signal dbi1,dbi2 : std_logic_vector(7 downto 0);
-
+  signal ff_dbi : std_logic_vector(7 downto 0);
 begin
+  process (clk) begin
+    if (clk'event and clk = '1') then
+      if( adr(10) = '0' ) then
+        ff_dbi <= rom101( conv_integer( adr(9 downto 0) ) );
+      else
+        ff_dbi <= rom106( conv_integer( adr(8 downto 0) ) );
+      end if;
+    end if;
+  end process;
 
-process (clk) begin
-  if (clk'event and clk = '1') then
-    dbi1 <= rom101(conv_integer(adr(9 downto 0)));
-    dbi2 <= rom106(conv_integer(adr(8 downto 0)));
-  end if;
-end process;
-
-dbi <= dbi1 when adr(10) = '0' else dbi2;
-
+  dbi <= ff_dbi;
 end RTL;

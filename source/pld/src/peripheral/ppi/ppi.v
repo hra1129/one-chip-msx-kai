@@ -65,7 +65,8 @@ module ppi (
 	output			Scro,
 	output			Reso,
 	output	[ 7:0]	Fkeys,
-	input			autofire
+	input			autofire,
+	output	[15:0]	debug_sig
 );
 	reg		[ 7:0]	ff_ppi_port_a;
 	reg		[ 7:0]	ff_ppi_port_c;
@@ -191,11 +192,12 @@ module ppi (
 		.Paus			( Paus			),
 		.Scro			( Scro			),
 		.Reso			( Reso			),
-		.FKeys			( Fkeys			),
+		.Fkeys			( Fkeys			),
 		.pPs2Clk		( pPs2Clk		),
 		.pPs2Dat		( pPs2Dat		),
 		.PpiPortC		( ff_ppi_port_c	),
 		.pKeyX			( w_key_x		),
-		.CmtScro		( CmtScro		)
+		.CmtScro		( CmtScro		),
+		.debug_sig		( debug_sig		)
 	);
 endmodule

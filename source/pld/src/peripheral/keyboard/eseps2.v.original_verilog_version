@@ -1,0 +1,939 @@
+//
+// eseps2.v
+//   PS/2 keyboard interface for ESE-MSX
+//   Revision 1.10
+//
+// Copyright (c) 2006 Kazuhiro Tsujikawa (ESE Artists' factory)
+// All rights reserved.
+//
+// Redistribution and use of this source code or any derivative works, are
+// permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+// 3. Redistributions may not be sold, nor may they be used in a commercial
+//    product or activity without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+// ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//------------------------------------------------------------------------------
+// Update note
+//------------------------------------------------------------------------------
+// Apl 21 2022 - Convert to VerilogHDL by t.hara. [Revision 1.10]
+//               And the structure has been extensively revised and the signal 
+//               names have been corrected. [!] NOT TESTED.
+//------------------------------------------------------------------------------
+// Update note by KdL
+//------------------------------------------------------------------------------
+// Oct 25 2010 - Updated the led of CMT to make it work with the I/O ports.
+// Jun 04 2010 - Fixed a bug where the shift key is not broken after a pause.
+// Mar 15 2008 - Added the CMT switch.
+// Aug 05 2013 - Typing any key during an hard reset the keyboard could continue
+//               that command after the reboot: press again the key to break it.
+//------------------------------------------------------------------------------
+// Update note
+//------------------------------------------------------------------------------
+// Oct 05 2006 - Removed 101/106 toggle switch.
+// Sep 23 2006 - Fixed a problem where some key events are lost after 101/106
+//               keyboard type switching.
+// Sep 22 2006 - Added external default keyboard layout input.
+// May 21 2005 - Modified to support Quartus2we5.
+// Jan 24 2004 - Fixed a locking key problem if 101/106 keyboard type is
+//               switched during pressing keys.
+//             - Fixed a problem where a comma key is pressed after a
+//               pause key.
+// Jan 23 2004 - Added a 101 keyboard table.
+// Jan 16 2017 - Improved compatibility for some PS/2 keyboards. (by プー)
+// May 01 2020 - The Kana indicator was changed from NumLk LED to ScrLk LED. (by t.hara)
+//                 Some compact keyboards without numeric keypad use NumLk LED ON/OFF 
+//                 to switch the right side of the full keypad to numeric keypad mode. 
+//                 When using the NumLk LED as a kana LED, the right side of the keyboard 
+//                 changed to the numeric keypad when it was in kana mode, and it did not 
+//                 work as expected.
+//             - Add the description of NumLk status maintenance. (by t.hara)
+// Jul 22 2020 - Change the inout/buffer port to in/out port.(by t.hara)
+// Aug  6 2021 - Added control-key status in Fkeys(6). by t.hara
+//------------------------------------------------------------------------------
+//
+
+module eseps2 (
+	input			clk21m,
+	input			reset,
+	input			clkena,
+
+	input			Kmap,
+
+	input			Caps,
+	input			Kana,
+	output			Paus,
+	output			Scro,
+	output			Reso,
+
+	// | b7  | b6   | b5   | b4   | b3  | b2  | b1  | b0  |
+	// | SHI | CTRL | PgUp | PgDn | F9  | F10 | F11 | F12 |
+	output	[7:0]	Fkeys,
+
+	inout			pPs2Clk,
+	inout			pPs2Dat,
+
+	input	[7:0]	PpiPortC,
+	output	[7:0]	pKeyX,
+
+	input			CmtScro
+);
+	localparam		PS2_IDLE	= 2'd0;
+	localparam		PS2_RXD		= 2'd1;
+	localparam		PS2_TXD		= 2'd2;
+	localparam		PS2_STOP	= 2'd3;
+
+	localparam		MTX_IDLE	= 3'd0;
+	localparam		MTX_SETTLE	= 3'd1;
+	localparam		MTX_CLEAN	= 3'd2;
+	localparam		MTX_READ	= 3'd3;
+	localparam		MTX_WRITE	= 3'd4;
+	localparam		MTX_END		= 3'd5;
+	localparam		MTX_RESET	= 3'd6;
+
+	reg				ff_key_we;
+	reg		[7:0]	ff_key_row;
+	reg		[7:0]	ff_key_col_i;
+	wire	[7:0]	w_key_col_o;
+	wire	[7:0]	w_key_col_mask;
+	reg		[10:0]	ff_mtx_index;
+	wire	[7:0]	w_mtx_ptr;
+	reg				ff_pause;
+	reg				ff_reso;
+	reg				ff_scro;
+	reg		[7:0]	ff_fkeys;
+	reg				ff_ps2clk_active;
+	reg		[1:0]	ff_ps2clk;
+	reg		[15:0]	ff_timer;
+	reg				ff_ps2_data_out;
+	reg		[1:0]	ff_ps2_state;
+	reg		[3:0]	ff_ps2_count;
+	reg				ff_ps2_change;
+	reg		[8:0]	ff_ps2_led;
+	reg				ff_mtx_state;
+	reg				ff_fa_flag;
+	reg				ff_ps2_break;
+	reg				ff_ps2_e0;
+	reg				ff_ps2_e1;
+	reg		[7:0]	ff_ps2_data;
+	reg		[2:0]	ff_ps2_skip;
+	reg				ff_ps2_caps_lock;
+	reg				ff_ps2_kana_lock;
+	reg				ff_ps2_scro_lock;				// used for CMT switching
+	reg				ff_ps2_num_lock;				// NumLk status				Added by t.hara in May/1st/2020
+	reg				ff_real_shift;					// real shift status
+	reg				ff_virtual_shift;				// virtual shift status
+	reg				ff_real_ctrl;					// real control status
+	reg				ff_num_lock;					// 							Added by t.hara in May/1st/2020
+	reg		[7:0]	ff_pKeyX;
+	reg		[8:0]	ff_KeyId;
+	reg		[3:0]	ff_mtx_counter;
+
+	// ------------------------------------------------------------------------
+	//	PS2 Clock Detector
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2clk		<= 2'b11;
+		end
+		else if( clkena ) begin
+			ff_ps2clk		<= { ff_ps2clk[0], pPs2Clk };
+		end
+		else begin
+			//	hold
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2clk_active	<= 1'b1;
+		end
+		else if( clkena ) begin
+			if(      ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin
+				ff_ps2clk_active <= 1'b0;
+			end
+			else if( ff_ps2clk_active == 1'b0 && ff_ps2clk == 2'b11 ) begin
+				ff_ps2clk_active <= 1'b1;
+			end
+			else begin
+				//	hold
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	Timer
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_timer <= 16'hFFFF;
+		end
+		else if( clkena ) begin
+			if(      ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin
+				// countdown timeout (143us = 279ns x 512clk, exceed 100us)
+				ff_timer <= 16'h01FF;
+			end
+			else if( ff_ps2clk_active == 1'b0 && ff_ps2clk == 2'b11 ) begin
+				// countdown timeout (143us = 279ns x 512clk, exceed 100us)
+				ff_timer <= 16'h01FF;
+			end
+			else if( ff_timer == 16'h0000 ) begin
+				if( ff_ps2_state == PS2_IDLE && ff_ps2clk_active == 1'b1 ) begin
+					if( ff_fa_flag == 1'b1 && ff_ps2_led == 9'b111101101 ) begin
+						// countdown timeout (18.3ms = 279ns x 65536clk, exceed 1ms)
+						ff_timer <= 16'hFFFF;
+					end
+					else if( Caps != ff_ps2_caps_lock || ff_num_lock != ff_ps2_num_lock || Kana != ff_ps2_kana_lock ) begin			 // Modified by t.hara in May/1st/2020
+					// else if( Caps != ff_ps2_caps_lock || Kana != ff_ps2_kana_lock || CmtScro != ff_ps2_scro_lock ) begin
+						// countdown timeout (18.3ms = 279ns x 65536clk, exceed 1ms)
+						ff_timer <= 16'hFFFF;
+					end
+				end
+			end
+			else begin
+				ff_timer <= ff_timer - 16'd1;
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	PS2 Data
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_data_out <= 1'bZ;
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_IDLE ) begin
+					ff_ps2_data_out <= 1'bZ;
+				end
+				else if( ff_ps2_state == PS2_TXD ) begin
+					if( ff_ps2_count < 4'd9 ) begin
+						if( ff_ps2_led[0] == 1'b1 ) begin
+							ff_ps2_data_out <= 1'bZ;
+						end
+						else begin
+							ff_ps2_data_out <= 1'b0;
+						end
+					end
+					else if( ff_ps2_count == 4'd9 ) begin
+						ff_ps2_data_out <= 1'bZ;
+					end
+				end
+			end
+			else if( ff_timer == 16'd0 ) begin
+				if( ff_ps2_state == PS2_IDLE && ff_ps2clk_active == 1'b1 ) begin
+					if( ff_fa_flag == 1'b1 && ff_ps2_led == 9'b111101101 ) begin
+						ff_ps2_data_out <= 1'b0;
+					end
+					else if( Caps != ff_ps2_caps_lock || ff_num_lock != ff_ps2_num_lock || Kana != ff_ps2_kana_lock ) begin			 // Modified by t.hara in May/1st/2020
+					// else if( Caps != ff_ps2_caps_lock || Kana != ff_ps2_kana_lock || CmtScro != ff_ps2_scro_lock ) begin
+						ff_ps2_data_out <= 1'b0;
+					end
+					else begin
+						ff_ps2_data_out <= 1'bZ;
+					end
+				end
+				else begin
+					ff_ps2_data_out <= 1'bZ;
+				end
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	PS2 State
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_state <= PS2_IDLE;
+		end
+		else if( clkena ) begin
+			// "PS/2 interface > Scan table" conversion
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_IDLE ) begin
+					ff_ps2_state <= PS2_RXD;
+				end
+				else if( ff_ps2_state == PS2_TXD ) begin
+					if( ff_ps2_count == 4'd10 ) begin
+						ff_ps2_state <= PS2_IDLE;
+					end
+				end
+				else if( ff_ps2_state == PS2_RXD ) begin
+					if( ff_ps2_count == 4'd8 ) begin
+						ff_ps2_state <= PS2_STOP;
+					end
+				end
+				else if( ff_ps2_state == PS2_STOP ) begin
+					ff_ps2_state <= PS2_IDLE;
+				end
+			end
+			else if( ff_ps2clk_active == 1'b0 && ff_ps2clk == 2'b11 ) begin
+				//	hold
+			end
+			else if( ff_timer == 16'd0 ) begin
+				if( ff_ps2clk_active == 1'b1 ) begin
+					if( ff_fa_flag == 1'b1 && ff_ps2_led == 9'b111101101 ) begin
+						ff_ps2_state <= PS2_TXD;
+					end
+					else if( Caps != ff_ps2_caps_lock || ff_num_lock != ff_ps2_num_lock || Kana != ff_ps2_kana_lock ) begin			 // Modified by t.hara in May/1st/2020
+					// else if( Caps != ff_ps2_caps_lock || Kana != ff_ps2_kana_lock || CmtScro != ff_ps2_scro_lock ) begin
+						ff_ps2_state <= PS2_TXD;
+					end
+					else begin
+						ff_ps2_state <= PS2_IDLE;
+					end
+				end
+				else begin
+					ff_ps2_state <= PS2_IDLE;
+				end
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_count <= 4'd0;
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_IDLE ) begin
+					ff_ps2_count <= 4'd0;
+				end
+				else if( ff_ps2_state == PS2_TXD ) begin
+					ff_ps2_count <= ff_ps2_count + 4'd1;
+				end
+				else if( ff_ps2_state == PS2_RXD ) begin
+					ff_ps2_count <= ff_ps2_count + 4'd1;
+				end
+			end
+			else if( ff_ps2clk_active == 1'b0 && ff_ps2clk == 2'b11 ) begin			// clk active
+				//	hold
+			end
+			else if( ff_timer == 16'd0 ) begin		// timeout
+				if( ff_ps2_state == PS2_IDLE && ff_ps2clk_active == 1'b1 ) begin
+					if( ff_fa_flag == 1'b1 && ff_ps2_led == 9'b111101101 ) begin
+						ff_ps2_count <= 4'd0;
+					end
+					else if( Caps != ff_ps2_caps_lock || ff_num_lock != ff_ps2_num_lock || Kana != ff_ps2_kana_lock ) begin			 // Modified by t.hara in May/1st/2020
+					// else if( Caps != ff_ps2_caps_lock || Kana != ff_ps2_kana_lock || CmtScro != ff_ps2_scro_lock ) begin
+						ff_ps2_count <= 4'd0;
+					end
+				end
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	Function key change detection
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_change <= 1'b0;
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_STOP ) begin
+					if(      ff_ps2_data == 8'h7C && ff_ps2_e0 == 1'b1 && ff_ps2_e1 == 1'b0 ) begin		// printscreen make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h7D && ff_ps2_e0 == 1'b1 && ff_ps2_e1 == 1'b0 ) begin		// PgUp make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h7A && ff_ps2_e0 == 1'b1 && ff_ps2_e1 == 1'b0 ) begin		// PgDn make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h01 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin		// F9 make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h09 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin		// F10 make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h78 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin		// F11 make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h07 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin		// F12 make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h7E && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin		// scroll-lock make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( (ff_ps2_data == 8'h12 || ff_ps2_data == 8'h59) && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin		// shift make
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h77 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin		// NumLk make			Added by t.hara in May/1st/2020
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'h14 && ff_ps2_e1 == 1'b0 ) begin							// control make, Added by t.hara, 2021/Aug/6th
+						ff_ps2_change <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'hF0 ) begin	// break code
+						//	hold
+					end
+					else if( ff_ps2_data == 8'hE0 ) begin	// extnd code E0
+						//	hold
+					end
+					else if( ff_ps2_data == 8'hE1 ) begin	// extnd code E1 (ignore)
+						//	hold
+					end
+					else if( ff_ps2_data == 8'hFA ) begin	// Ack of EDh command
+						//	hold
+					end
+					else begin
+						ff_ps2_change <= 1'b1;
+					end
+				end
+			end
+			else if( ff_mtx_state == MTX_END ) begin
+				ff_ps2_change <= 1'b0;
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	LEDs
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_led	<= 9'b111111111;
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_TXD ) begin
+					if( ff_ps2_count < 4'd9 ) begin
+						ff_ps2_led <= { ff_ps2_led[0], ff_ps2_led[8:1] };
+					end
+				end
+			end
+			else if( ff_ps2clk_active == 1'b0 && ff_ps2clk == 2'b11 ) begin			// clk active
+				//	hold
+			end
+			else if( ff_timer == 16'd0 ) begin		// timeout
+				if( ff_ps2_state == PS2_IDLE && ff_ps2clk_active == 1'b1 ) begin
+					if( ff_fa_flag == 1'b1 && ff_ps2_led == 9'b111101101 ) begin
+						// ff_ps2_led <= { Caps ^ Kana ^ ff_pause ^ 1'b1, "00000", ~Caps, ~Kana, ff_pause };
+						// ff_ps2_led <= { Caps ^ Kana ^ CmtScro  ^ 1'b1, "00000", ~Caps, ~Kana, CmtScro  };
+						ff_ps2_led <= { Caps ^ ff_num_lock ^ Kana, "00000", ~Caps, ~ff_num_lock, ~Kana };	 					// Modified by t.hara in May/1st/2020
+					end
+					else if( Caps != ff_ps2_caps_lock || ff_num_lock != ff_ps2_num_lock || Kana != ff_ps2_kana_lock ) begin						 // Modified by t.hara in May/1st/2020
+					// else if( Caps != ff_ps2_caps_lock || Kana != ff_ps2_kana_lock || CmtScro != ff_ps2_scro_lock ) begin
+						ff_ps2_led <= 9'b111101101;		// Command EDh
+					end
+				end
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	MTX State
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_mtx_state <= MTX_IDLE;
+		end
+		else if( clkena ) begin
+			case( ff_mtx_state )
+			MTX_IDLE:
+				begin
+					if( ff_ps2_change ) begin
+						if( Kmap ) begin
+							ff_mtx_state <= MTX_SETTLE;
+						end
+						else begin
+							ff_mtx_state <= MTX_READ;
+						end
+					end
+				end
+			MTX_SETTLE:
+				ff_mtx_state <= MTX_CLEAN;
+			MTX_CLEAN:
+				ff_mtx_state <= MTX_READ;
+			MTX_READ:
+				ff_mtx_state <= MTX_WRITE;
+			MTX_WRITE:
+				ff_mtx_state <= MTX_END;
+			MTX_END:
+				ff_mtx_state <= MTX_IDLE;
+			MTX_RESET:
+				begin
+					if( ff_mtx_counter == 4'b1011 ) begin
+						ff_mtx_state <= MTX_IDLE;
+					end
+				end
+			default:
+				ff_mtx_state <= MTX_IDLE;
+			endcase
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	FA Flag
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_fa_flag <= 1'b0;
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_STOP ) begin
+					if( ff_ps2_data == 8'hFA ) begin			// Ack of "EDh" command
+						ff_fa_flag <= 1'b1;
+					end
+				end
+			end
+			else if( ff_ps2clk_active == 1'b0 && ff_ps2clk == 2'b11 ) begin			// clk active
+				//	hold
+			end
+			else if( ff_timer == 16'd0 ) begin		// timeout
+				if( ff_ps2_state == PS2_IDLE && ff_ps2clk_active == 1'b1 ) begin
+					if( ff_fa_flag == 1'b1 && ff_ps2_led == 9'b111101101 ) begin
+						//	hold
+					end
+					else if( Caps != ff_ps2_caps_lock || ff_num_lock != ff_ps2_num_lock || Kana != ff_ps2_kana_lock ) begin			 // Modified by t.hara in May/1st/2020
+					// else if( Caps != ff_ps2_caps_lock || Kana != ff_ps2_kana_lock || CmtScro != ff_ps2_scro_lock ) begin
+						ff_fa_flag <= 1'b0;
+					end
+				end
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	Flags
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_break <= 1'b0;
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_STOP ) begin
+					if( ff_ps2_data == 8'hF0 ) begin										// break code
+						ff_ps2_break <= 1'b1;
+					end
+				end
+			end
+			else if( ff_mtx_state == MTX_END ) begin
+				ff_ps2_break <= 1'b0;
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_fkeys <= 8'd0;
+		end
+		else if( clkena ) begin
+			if( ff_ps2_state == PS2_STOP ) begin
+				if( ff_ps2_data == 8'h7D && ff_ps2_e0 == 1'b1 && ff_ps2_e1 == 1'b0 ) begin // PgUp make
+					if( ff_ps2_break == 1'b0 ) begin
+						ff_fkeys[5] <= ~ff_fkeys[5];
+					end
+				end
+				else if( ff_ps2_data == 8'h7A && ff_ps2_e0 == 1'b1 && ff_ps2_e1 == 1'b0 ) begin // PgDn make
+					if( ff_ps2_break == 1'b0 ) begin
+						ff_fkeys[4] <= ~ff_fkeys[4];
+					end
+				end
+				else if( ff_ps2_data == 8'h01 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin // F9 make
+					if( ff_ps2_break == 1'b0 ) begin
+						ff_fkeys[3] <= ~ff_fkeys[3];
+					end
+				end
+				else if( ff_ps2_data == 8'h09 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin // F10 make
+					if( ff_ps2_break == 1'b0 ) begin
+						ff_fkeys[2] <= ~ff_fkeys[2];
+					end
+				end
+				else if( ff_ps2_data == 8'h78 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin // F11 make
+					if( ff_ps2_break == 1'b0 ) begin
+						ff_fkeys[1] <= ~ff_fkeys[1];
+					end
+				end
+				else if( ff_ps2_data == 8'h07 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin	// F12 make
+					if( ff_ps2_break == 1'b0 ) begin
+						ff_fkeys[0] <= ~ff_fkeys[0];									//	old toggle OnScreenDisplay enable
+					end
+				end
+				else if( (ff_ps2_data == 8'h12 || ff_ps2_data == 8'h59) && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin	// shift make
+					ff_fkeys[7] <= ~ff_ps2_break;
+				end
+				else if( ff_ps2_data == 8'h14 && ff_ps2_e1 == 1'b0 ) begin						// control make, Added by t.hara, 2021/Aug/6th
+					ff_fkeys[6] <= ~ff_ps2_break;
+				end
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_e0 <= 1'b0;
+			ff_ps2_e1 <= 1'b0;
+		end
+		else if( clkena ) begin
+			if( ff_ps2_state == PS2_STOP ) begin
+				if( ff_ps2_data == 8'h14 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b1 ) begin // pause/break make
+					if( ff_ps2_break == 1'b0 ) begin
+						ff_ps2_e0 <= 1'b0;
+						ff_ps2_e1 <= 1'b0;
+					end
+					else if( ff_ps2_data == 8'hE0 ) begin	// extnd code E0
+						ff_ps2_e0 <= 1'b1;
+					end
+					else if( ff_ps2_data == 8'hE1 ) begin	// extnd code E1 (ignore)
+						ff_ps2_e1 <= 1'b1;
+					end
+				end
+			end
+			else if( ff_mtx_state == MTX_END ) begin
+				ff_ps2_e0 <= 1'b0;
+				ff_ps2_e1 <= 1'b0;
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	PS2 Clock Detector
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_data <= 8'hFF;
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_TXD ) begin
+					if( ff_ps2_count < 4'd9 ) begin
+						ff_ps2_data <= { 1'b1, ff_ps2_data[7:1] };
+					end
+				end
+				else if( ff_ps2_state == PS2_RXD ) begin
+					if( ff_ps2_count < 4'd8 ) begin
+						ff_ps2_data <= { pPs2Dat, ff_ps2_data[7:1] };
+					end
+				end
+				else if( ff_ps2_state == PS2_STOP ) begin
+					if( ff_ps2_data == 8'h14 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b1 ) begin // pause/break make
+						ff_ps2_data <= 8'h12;							// shift + pause bug fixed
+					end
+				end
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	State skip
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_skip <= 3'd0;
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_STOP ) begin
+					if( ff_ps2_data == 8'hAA && ff_fa_flag == 1'b0 ) begin		 // BAT code (basic assurance test)
+						//	hold
+					end
+					else if( ff_ps2_skip != "000" ) begin	// Skip some sequences
+						ff_ps2_skip <= ff_ps2_skip - 3'd1;
+					end
+					else if( ff_ps2_data == 8'h14 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b1 ) begin // pause/break make
+						if( ff_ps2_break == 1'b0 ) begin
+							ff_ps2_skip <= 3'd6;			// Skip the next 6 sequences
+						end
+					end
+				end
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	Lock key state
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_ps2_caps_lock	<= 1'b1;
+			ff_ps2_kana_lock	<= 1'b1;
+			ff_ps2_scro_lock	<= 1'b1;
+			ff_ps2_num_lock		<= 1'b0;						 // Added by t.hara in May/1st/2020
+
+			ff_pause			<= 1'b0;
+			ff_reso				<= 1'b0;
+			ff_scro				<= 1'b0;
+			ff_real_shift		<= 1'b0;
+			ff_real_ctrl		<= 1'b0;
+			ff_num_lock			<= 1'b1;						 // Added by t.hara in May/1st/2020
+		end
+		else if( clkena ) begin
+			if( ff_ps2clk_active == 1'b1 && ff_ps2clk == 2'b00 ) begin				// clk inactive
+				if( ff_ps2_state == PS2_TXD ) begin
+					if( ff_ps2_count == 4'd10 ) begin
+						ff_ps2_caps_lock	<= Caps;
+						ff_ps2_kana_lock	<= Kana;
+						ff_ps2_scro_lock	<= CmtScro;
+						ff_ps2_num_lock		<= ff_num_lock;				 // Added by t.hara in May/1st/2020
+					end
+				end
+				else if( ff_ps2_state == PS2_STOP ) begin
+					if( ff_ps2_data == 8'hAA && ff_fa_flag == 1'b0 ) begin		 // BAT code (basic assurance test)
+						ff_ps2_caps_lock	<= ~Caps;
+						ff_ps2_kana_lock	<= ~Kana;
+						ff_ps2_scro_lock	<= ~CmtScro;
+						ff_ps2_num_lock		<= ~ff_num_lock;			// Added by t.hara in May/1st/2020
+					end
+					else if( (ff_ps2_data == 8'h12 || ff_ps2_data == 8'h59) && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin // shift make
+						ff_real_shift	<= ~ff_ps2_break;
+					end
+					else if( ff_ps2_data == 8'h14 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b1 ) begin // pause/break make
+						if( ff_ps2_break == 1'b0 ) begin
+							ff_pause <= ~ff_pause;						// CPU pause
+						end
+					end
+					else if( ff_ps2_data == 8'h14 && ff_ps2_e1 == 1'b0 ) begin // control make, Added by t.hara, 2021/Aug/6th
+						ff_real_ctrl	<= ~ff_ps2_break;
+					end
+					else if( ff_ps2_data == 8'h7C && ff_ps2_e0 == 1'b1 && ff_ps2_e1 == 1'b0 ) begin // printscreen make
+						if( ff_ps2_break == 1'b0 ) begin
+							ff_reso <= ~ff_reso;						// toggle display mode
+						end
+					end
+					else if( ff_ps2_data == 8'h7E && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin // scroll-lock make
+						if( ff_ps2_break == 1'b0 ) begin
+							ff_scro <= ~ff_scro;						// toggle scroll lock (currently used for CMT switch)
+						end
+					end
+					else if( ff_ps2_data == 8'h77 && ff_ps2_e0 == 1'b0 && ff_ps2_e1 == 1'b0 ) begin	// NumLk make		Added by t.hara in May/1st/2020
+						if( ff_ps2_break == 1'b0 ) begin
+							ff_num_lock <= ~ff_num_lock;
+						end
+					end
+				end
+			end
+		end
+	end
+
+	// ------------------------------------------------------------------------
+	//	KeyX
+	// ------------------------------------------------------------------------
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_pKeyX	<= 8'hFF;
+		end
+		else if( clkena ) begin
+			if( ff_mtx_state == MTX_IDLE ) begin
+				if( ff_ps2_change == 1'b1 ) begin
+					ff_pKeyX	<= 8'hFF;
+				end
+				else begin
+					if( PpiPortC[3:0] == 4'b0110 ) begin
+						if( (Kmap == 1'b0 && w_key_col_o[0] == 1'b1) || (Kmap == 1'b1 && ff_virtual_shift == 1'b1) ) begin
+							ff_pKeyX	<= { ~w_key_col_o[7:1], 1'b0 };
+						end
+						else begin
+							ff_pKeyX	<= { ~w_key_col_o[7:1], 1'b1 };
+						end
+					end
+					else begin
+						if( w_key_col_o[0] == 1'b1 ) begin
+							ff_pKeyX	<= { ~w_key_col_o[7:1], 1'b0 };
+						end
+						else begin
+							ff_pKeyX	<= { ~w_key_col_o[7:1], 1'b1 };
+						end
+					end
+				end
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_KeyId <= 9'd0;
+		end
+		else if( clkena ) begin
+			if( ff_mtx_state == MTX_IDLE ) begin
+				if( ff_ps2_change ) begin
+					ff_KeyId <= { ff_ps2_e0, ff_ps2_data };
+				end
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_mtx_index <= 11'd0;
+		end
+		else if( clkena ) begin
+			if( ff_mtx_state == MTX_IDLE ) begin
+				if( ff_ps2_change ) begin
+					if( Kmap == 1'b1 ) begin
+						if( Kmap == 1'b1 ) begin
+							ff_mtx_index <= { 1'b0, ~ff_real_shift, ff_KeyId };
+						end
+						else begin
+							ff_mtx_index <= { 2'b10, ff_KeyId };
+						end
+					end
+				end
+			end
+			if( ff_mtx_state == MTX_CLEAN ) begin
+				ff_mtx_index <= { 1'b0, ff_real_shift, ff_KeyId };
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_key_we <= 1'b0;
+		end
+		else if( clkena ) begin
+			if( ff_mtx_state == MTX_SETTLE ) begin
+				ff_key_we <= 1'b0;
+			end
+			else if( ff_mtx_state == MTX_SETTLE ) begin
+				ff_key_we <= 1'b1;
+			end
+			else if( ff_mtx_state == MTX_READ ) begin
+				ff_key_we <= 1'b0;
+			end
+			else if( ff_mtx_state == MTX_WRITE ) begin
+				ff_key_we <= 1'b1;
+			end
+			else if( ff_mtx_state == MTX_END ) begin
+				ff_key_we <= 1'b0;
+			end
+			else if( ff_mtx_state == MTX_RESET ) begin
+				if( ff_mtx_counter == 4'b1011 ) begin
+					ff_key_we <= 1'b1;
+				end
+				else begin
+					ff_key_we <= 1'b0;
+				end
+			end
+			else begin
+				//	hold
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_key_row <= 8'b0;
+		end
+		else if( clkena ) begin
+			if( ff_mtx_state == MTX_IDLE ) begin
+				if( !ff_ps2_change ) begin
+					ff_key_row <= { 4'b0000, PpiPortC[3:0] };
+				end
+			end
+			else if( ff_mtx_state == MTX_SETTLE ) begin
+				ff_key_row <= { 4'b0000, w_mtx_ptr[3:0] };
+			end
+			else if( ff_mtx_state == MTX_READ ) begin
+				ff_key_row <= { 4'b0000, w_mtx_ptr[3:0] };
+			end
+			else if( ff_mtx_state == MTX_END ) begin
+				ff_key_row <= { 4'b0000, PpiPortC[3:0] };
+			end
+			else if( ff_mtx_state == MTX_RESET ) begin
+				if( ff_mtx_counter == 4'b1011 ) begin
+					ff_key_row <= { 4'b0000, PpiPortC[3:0] };
+				end
+				else begin
+					ff_key_row <= { 4'b0000, ff_mtx_counter };
+				end
+			end
+		end
+	end
+
+	assign w_key_col_mask = w_mtx_ptr[6:4] == 3'd0 ? 8'b11111110 :
+							w_mtx_ptr[6:4] == 3'd1 ? 8'b11111101 :
+							w_mtx_ptr[6:4] == 3'd2 ? 8'b11111011 :
+							w_mtx_ptr[6:4] == 3'd3 ? 8'b11110111 :
+							w_mtx_ptr[6:4] == 3'd4 ? 8'b11101111 :
+							w_mtx_ptr[6:4] == 3'd5 ? 8'b11011111 :
+							w_mtx_ptr[6:4] == 3'd6 ? 8'b10111111 :
+							                         8'b01111111;
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_key_col_i <= 8'd0;
+		end
+		else if( clkena ) begin
+			if( ff_mtx_state == MTX_CLEAN ) begin
+				ff_key_col_i <= w_key_col_o & w_key_col_mask;
+			end
+			else if( ff_mtx_state == MTX_WRITE ) begin
+				ff_key_col_i <= w_key_col_o & (w_key_col_mask | { 8 { ~ff_ps2_break } });
+			end
+			else if( ff_mtx_state == MTX_RESET ) begin
+				ff_key_col_i <= 8'd0;
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_mtx_counter <= 4'd0;
+		end
+		else if( clkena ) begin
+			if( ff_mtx_state == MTX_RESET ) begin
+				ff_mtx_counter <= ff_mtx_counter + 4'd1;
+			end
+		end
+	end
+
+	always @( posedge reset or posedge clk21m ) begin
+		if( reset ) begin
+			ff_virtual_shift <= 1'b0;
+		end
+		else if( clkena ) begin
+			if( ff_mtx_state == MTX_READ ) begin
+				if( ff_ps2_break ) begin
+					ff_virtual_shift <= ff_real_shift;
+				end
+				else begin
+					ff_virtual_shift <= w_mtx_ptr[7];
+				end
+			end
+		end
+	end
+
+	assign pKeyX	= ff_pKeyX;
+	assign pPs2Clk	= 1'bZ;
+	assign pPs2Dat	= ff_ps2_data_out;
+	assign Paus		= ff_pause;
+	assign Reso		= ff_reso;
+	assign Scro		= ff_scro;
+	assign Fkeys	= ff_fkeys;
+
+	ram u_ram (
+	.adr	( ff_key_row	),
+	.clk	( clk21m		),
+	.we		( ff_key_we		),
+	.dbo	( ff_key_col_i	),
+	.dbi	( w_key_col_o	)
+	);
+
+	keymap u_keymap (
+	.adr	( ff_mtx_index	),
+	.clk	( clk21m		),
+	.dbi	( w_mtx_ptr		)
+	);
+endmodule

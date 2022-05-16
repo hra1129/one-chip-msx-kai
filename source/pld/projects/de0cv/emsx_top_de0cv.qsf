@@ -979,7 +979,8 @@ set_global_assignment -name VHDL_FILE ../../src/sound/lpf/lpf.vhd
 set_global_assignment -name VHDL_FILE ../../src/sound/filter/esefir5.vhd
 set_global_assignment -name VHDL_FILE ../../src/sound/filter/tapram.vhd
 set_global_assignment -name VHDL_FILE ../../src/sound/dac/esepwm.vhd
-set_global_assignment -name VHDL_FILE ../../src/peripheral/keyboard/eseps2.vhd
+set_global_assignment -name VERILOG_FILE ../../src/peripheral/keyboard/matrix_ram.v
+set_global_assignment -name VERILOG_FILE ../../src/peripheral/keyboard/eseps2.v
 set_global_assignment -name VHDL_FILE ../../src/peripheral/kanji/kanji.vhd
 set_global_assignment -name VHDL_FILE ../../src/peripheral/keyboard/keymap.vhd
 set_global_assignment -name VERILOG_FILE ../../src/peripheral/mapper/mapper.v
