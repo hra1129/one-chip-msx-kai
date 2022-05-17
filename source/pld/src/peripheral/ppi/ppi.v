@@ -65,8 +65,8 @@ module ppi (
 	output			Scro,
 	output			Reso,
 	output	[ 7:0]	Fkeys,
-	input			autofire,
-	output	[15:0]	debug_sig
+	input			autofire
+//	output	[15:0]	debug_sig
 );
 	reg		[ 7:0]	ff_ppi_port_a;
 	reg		[ 7:0]	ff_ppi_port_c;
@@ -182,7 +182,10 @@ module ppi (
 	assign CmtOut		= ff_ppi_port_c[5];
 	assign KeyClick		= ff_ppi_port_c[7];
 
-	eseps2 u_keyboard_controller (
+	eseps2 #(
+		.numlk_is_kana	( 1'b0			),
+		.numlk_initial	( 1'b0			)
+	) u_keyboard_controller (
 		.clk21m			( clk21m		),
 		.reset			( reset			),
 		.clkena			( clkena		),
@@ -197,7 +200,7 @@ module ppi (
 		.pPs2Dat		( pPs2Dat		),
 		.PpiPortC		( ff_ppi_port_c	),
 		.pKeyX			( w_key_x		),
-		.CmtScro		( CmtScro		),
-		.debug_sig		( debug_sig		)
+		.CmtScro		( CmtScro		)
+//		.debug_sig		( debug_sig		)
 	);
 endmodule

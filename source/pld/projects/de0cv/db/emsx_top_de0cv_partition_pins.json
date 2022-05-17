@@ -4,11 +4,15 @@
 			"name" : "Top",
 			"pins" : [
 				{
-					"name" : "pStrA",
+					"name" : "pSd_Cm",
 					"strict" : false
 				},
 				{
-					"name" : "pStrB",
+					"name" : "pVideoHS_n",
+					"strict" : false
+				},
+				{
+					"name" : "pDac_S",
 					"strict" : false
 				},
 				{
@@ -108,10 +112,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "pSd_Cm",
-					"strict" : false
-				},
-				{
 					"name" : "pLed[0]",
 					"strict" : false
 				},
@@ -144,10 +144,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "pLed[9]",
-					"strict" : false
-				},
-				{
 					"name" : "p7SegLed5[0]",
 					"strict" : false
 				},
@@ -156,15 +152,27 @@
 					"strict" : false
 				},
 				{
-					"name" : "pVideoHS_n",
-					"strict" : false
-				},
-				{
 					"name" : "pVideoVS_n",
 					"strict" : false
 				},
 				{
-					"name" : "pDac_S",
+					"name" : "pLed[9]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed5[2]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed5[6]",
+					"strict" : false
+				},
+				{
+					"name" : "pStrA",
+					"strict" : false
+				},
+				{
+					"name" : "pStrB",
 					"strict" : false
 				},
 				{
@@ -200,14 +208,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "p7SegLed1[1]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed1[2]",
-					"strict" : false
-				},
-				{
 					"name" : "p7SegLed1[3]",
 					"strict" : false
 				},
@@ -220,35 +220,7 @@
 					"strict" : false
 				},
 				{
-					"name" : "p7SegLed1[6]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[0]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[3]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[4]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[5]",
-					"strict" : false
-				},
-				{
 					"name" : "p7SegLed3[0]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed3[1]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed3[2]",
 					"strict" : false
 				},
 				{
@@ -264,15 +236,27 @@
 					"strict" : false
 				},
 				{
-					"name" : "p7SegLed3[6]",
+					"name" : "p7SegLed2[0]",
 					"strict" : false
 				},
 				{
-					"name" : "p7SegLed5[2]",
+					"name" : "p7SegLed2[2]",
 					"strict" : false
 				},
 				{
-					"name" : "p7SegLed5[6]",
+					"name" : "p7SegLed2[3]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed2[4]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed2[5]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed2[6]",
 					"strict" : false
 				},
 				{
@@ -304,7 +288,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "pSltWr_n",
+					"name" : "pSltSltsl_n",
+					"strict" : false
+				},
+				{
+					"name" : "pSltSlts2_n",
 					"strict" : false
 				},
 				{
@@ -337,62 +325,6 @@
 				},
 				{
 					"name" : "pSltAdr[7]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[8]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[9]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[10]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[11]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[12]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[13]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[14]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltAdr[15]",
-					"strict" : false
-				},
-				{
-					"name" : "pJoyA[4]",
-					"strict" : false
-				},
-				{
-					"name" : "pJoyA[5]",
-					"strict" : false
-				},
-				{
-					"name" : "pJoyB[4]",
-					"strict" : false
-				},
-				{
-					"name" : "pJoyB[5]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltSltsl_n",
-					"strict" : false
-				},
-				{
-					"name" : "pSltSlts2_n",
 					"strict" : false
 				},
 				{
@@ -504,6 +436,66 @@
 					"strict" : false
 				},
 				{
+					"name" : "pSltDat[0]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[1]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[2]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[3]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[4]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[5]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[6]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[7]",
+					"strict" : false
+				},
+				{
+					"name" : "pJoyA[4]",
+					"strict" : false
+				},
+				{
+					"name" : "pJoyA[5]",
+					"strict" : false
+				},
+				{
+					"name" : "pJoyB[4]",
+					"strict" : false
+				},
+				{
+					"name" : "pJoyB[5]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltMerq_n",
+					"strict" : false
+				},
+				{
+					"name" : "pPs2Dat",
+					"strict" : false
+				},
+				{
+					"name" : "pSd_Dt[0]",
+					"strict" : false
+				},
+				{
 					"name" : "pSltRfsh_n",
 					"strict" : false
 				},
@@ -572,55 +564,47 @@
 					"strict" : false
 				},
 				{
-					"name" : "pSltDat[0]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[1]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[2]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[3]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[4]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[5]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[6]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[7]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltMerq_n",
-					"strict" : false
-				},
-				{
-					"name" : "pPs2Dat",
-					"strict" : false
-				},
-				{
-					"name" : "pSd_Dt[0]",
-					"strict" : false
-				},
-				{
 					"name" : "pSltIorq_n",
 					"strict" : false
 				},
 				{
 					"name" : "pSltRd_n",
+					"strict" : false
+				},
+				{
+					"name" : "pSltWr_n",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[8]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[9]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[10]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[11]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[12]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[13]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[14]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltAdr[15]",
 					"strict" : false
 				},
 				{
@@ -648,11 +632,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "pDip[5]",
+					"name" : "pDip[4]",
 					"strict" : false
 				},
 				{
-					"name" : "pDip[4]",
+					"name" : "pDip[5]",
 					"strict" : false
 				},
 				{

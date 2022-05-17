@@ -36,7 +36,10 @@
 // Apl-24-2022 2.00 - Newly redesigned by t.hara
 //------------------------------------------------------------------------------
 
-module eseps2 (
+module eseps2 #(
+	parameter		numlk_is_kana	= 1'b1,		//	NumLk LED mode      1'b0: NumLk, 1'b1: Kana
+	parameter		numlk_initial	= 1'b1		//	NumLk initial value 1'b0: OFF  , 1'b1: ON
+) (
 	input			clk21m,
 	input			reset,
 	input			clkena,
@@ -59,9 +62,9 @@ module eseps2 (
 	input	[7:0]	PpiPortC,
 	output	[7:0]	pKeyX,
 
-	input			CmtScro,
+	input			CmtScro
 
-	output	[15:0]	debug_sig
+//	output	[15:0]	debug_sig
 );
 	reg		[3:0]	ff_div;
 	wire			w_clkena;
@@ -464,7 +467,7 @@ module eseps2 (
 		if( reset ) begin
 			ff_shift_key		<= 1'b0;
 			ff_control_key		<= 1'b0;
-			ff_numlk_key		<= 1'b0;
+			ff_numlk_key		<= ~numlk_initial;
 			ff_pause_toggle_key	<= 1'b0;
 			ff_reso_toggle_key	<= 1'b0;
 			ff_scrlk_toggle_key	<= 1'b0;
@@ -555,7 +558,12 @@ module eseps2 (
 					ff_ps2_snd_dat <= 8'hED;
 				end
 				else if( ff_ps2_state == PS2_ST_SND_OPT ) begin
-					ff_ps2_snd_dat <= { 5'd0, ~Caps, ~ff_numlk_key, ~Kana };
+					if( numlk_is_kana == 1'b1 ) begin
+						ff_ps2_snd_dat <= { 5'd0, ~Caps, ~Kana, CmtScro };
+					end
+					else begin
+						ff_ps2_snd_dat <= { 5'd0, ~Caps, ~ff_numlk_key, ~Kana };
+					end
 				end
 				else begin
 					//	hold
@@ -634,7 +642,7 @@ module eseps2 (
 			ff_led_caps_lock	<= Caps;
 			ff_led_kana_lock	<= Kana;
 			ff_led_scroll_lock	<= CmtScro;
-			ff_led_num_lock		<= 1'b0;
+			ff_led_num_lock		<= ~numlk_initial;
 		end
 		else if( w_clkena ) begin
 			if( ff_ps2_state == PS2_ST_SND_OPT && ff_ps2_sub_state == PS2_SUB_SND_ACK ) begin
@@ -783,6 +791,5 @@ module eseps2 (
 	.dbi	( w_keymap_dat		)
 	);
 
-//	assign debug_sig	= { ff_led_caps_lock, ff_led_kana_lock, ff_led_scroll_lock, ff_led_num_lock,3'd0, w_ps2_led_change, 3'd0, ff_ps2_state };
-	assign debug_sig	= { Caps, Kana, CmtScro, ff_numlk_key,3'd0, ff_ps2_sub_state, ff_ps2_state };
+//	assign debug_sig	= { Caps, Kana, CmtScro, ff_numlk_key,3'd0, ff_ps2_sub_state, ff_ps2_state };
 endmodule

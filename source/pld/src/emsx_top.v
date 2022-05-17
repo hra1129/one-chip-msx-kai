@@ -840,8 +840,8 @@ module emsx_top(
 		.Scro					( Scro					),
 		.Reso					( Reso					),
 		.Fkeys					( FKeys					),
-		.autofire				( af_mask				),
-		.debug_sig				( w_debug_sig			)
+		.autofire				( af_mask				)
+//		.debug_sig				( w_debug_sig			)
 	);
 
 	assign exp_slot_req		= req & ~iSltMerq_n;
@@ -1715,8 +1715,8 @@ module emsx_top(
 		.reset						( reset						),
 		.processor_mode				( 1'b0						),		//	R800
 		.z80_pc						( 16'd0						),
-		//.r800_pc					( { { 3'd0, vFKeys[6] }, { 2'd0, vFKeys[5], vFKeys[4] }, { 3'd0, af_mask }, af_speed }	),
-		.r800_pc					( w_debug_sig				),
+		.r800_pc					( { { 3'd0, vFKeys[6] }, { 2'd0, vFKeys[5], vFKeys[4] }, { 3'd0, af_mask }, af_speed }	),
+		//.r800_pc					( w_debug_sig				),
 		.p_7seg_address_0			( p_7seg_address_0			),
 		.p_7seg_address_1			( p_7seg_address_1			),
 		.p_7seg_address_2			( p_7seg_address_2			),
