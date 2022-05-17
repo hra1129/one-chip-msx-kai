@@ -138,6 +138,7 @@ module eseps2 #(
 		end
 	end
 
+	//	3.579545MHz / 16 = 223.7215625KHz : 1clock = 4.4698usec
 	assign w_clkena	= (ff_div == 4'd15) ? clkena : 1'b0;
 
 	always @( posedge clk21m ) begin
@@ -396,8 +397,8 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	//	Timer
 	// ------------------------------------------------------------------------
-	localparam		TIMER_143USEC = 16'd32;
-	localparam		TIMER_292MSEC = 16'd65535;
+	localparam		TIMER_143USEC = 16'd32;			//	4.4698usec * 32clock    = 143usec
+	localparam		TIMER_292MSEC = 16'd65535;		//	4.4698usec * 65535clock = 292.928msec
 
 	assign w_timeout	= (ff_timer == 16'h0000) ? 1'b1 : 1'b0;
 
@@ -406,7 +407,10 @@ module eseps2 #(
 			ff_timer <= TIMER_143USEC;
 		end
 		else if( w_clkena ) begin
-			if( w_timeout && ff_ps2_state == PS2_ST_RESET ) begin
+			if( ff_ps2_state == PS2_ST_IDLE ) begin
+				ff_timer <= TIMER_292MSEC;
+			end
+			else if( w_timeout && ff_ps2_state == PS2_ST_RESET ) begin
 				ff_timer <= TIMER_292MSEC;
 			end
 			else if( w_timeout && ff_ps2_sub_state == PS2_SUB_SND_REQUEST ) begin
@@ -777,12 +781,20 @@ module eseps2 #(
 	end
 	assign pKeyX = ff_key_x;
 
-	matrix_ram u_matrix_ram (
-	.adr	( ff_matupd_rows	),
-	.clk	( clk21m			),
-	.we		( ff_matupd_we		),
-	.wrdata	( ff_matupd_keys	),
-	.rddata	( w_matrix			)
+//	matrix_ram u_matrix_ram (
+//	.adr	( ff_matupd_rows	),
+//	.clk	( clk21m			),
+//	.we		( ff_matupd_we		),
+//	.wrdata	( ff_matupd_keys	),
+//	.rddata	( w_matrix			)
+//	);
+
+	ram u_matrix_ram (
+	.adr	( { 4'd0, ff_matupd_rows }	),
+	.clk	( clk21m					),
+	.we		( ff_matupd_we				),
+	.dbo	( ff_matupd_keys			),
+	.dbi	( w_matrix					)
 	);
 
 	keymap u_keymap (

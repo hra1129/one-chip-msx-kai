@@ -18,34 +18,18 @@ STATE.STLINECHKLOOP 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1
 STATE.STSRCHCHKLOOP 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 STATE.STEXECEND 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 
-State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|UART:U1|tx_current_state_s
-Name tx_current_state_s.STATE_TX_FINISH tx_current_state_s.STATE_TX_STOP tx_current_state_s.STATE_TX_DATA tx_current_state_s.STATE_TX_START tx_current_state_s.STATE_TX_IDLE 
-tx_current_state_s.STATE_TX_IDLE 0 0 0 0 0 
-tx_current_state_s.STATE_TX_START 0 0 0 1 1 
-tx_current_state_s.STATE_TX_DATA 0 0 1 0 1 
-tx_current_state_s.STATE_TX_STOP 0 1 0 0 1 
-tx_current_state_s.STATE_TX_FINISH 1 0 0 0 1 
-
-State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|UART:U1|rx_current_state_s
-Name rx_current_state_s.STATE_RX_FINISH rx_current_state_s.STATE_RX_STOP rx_current_state_s.STATE_RX_DATA rx_current_state_s.STATE_RX_START rx_current_state_s.STATE_RX_IDLE 
-rx_current_state_s.STATE_RX_IDLE 0 0 0 0 0 
-rx_current_state_s.STATE_RX_START 0 0 0 1 1 
-rx_current_state_s.STATE_RX_DATA 0 0 1 0 1 
-rx_current_state_s.STATE_RX_STOP 0 1 0 0 1 
-rx_current_state_s.STATE_RX_FINISH 1 0 0 0 1 
-
-State Machine - |emsx_top_de0cv|emsx_top:U92|DEBUG_ENA
-Name DEBUG_ENA.00 DEBUG_ENA.10 DEBUG_ENA.01 
-DEBUG_ENA.10 0 0 0 
-DEBUG_ENA.01 0 1 1 
-DEBUG_ENA.00 1 1 0 
-
 State Machine - |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_NTSC_PAL:U_VDP_NTSC_PAL|FF_SSTATE
 Name FF_SSTATE.SSTATE_D FF_SSTATE.SSTATE_C FF_SSTATE.SSTATE_B FF_SSTATE.SSTATE_A 
 FF_SSTATE.SSTATE_A 0 0 0 0 
 FF_SSTATE.SSTATE_B 0 0 1 1 
 FF_SSTATE.SSTATE_C 0 1 0 1 
 FF_SSTATE.SSTATE_D 1 0 0 1 
+
+State Machine - |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_SPRITE:U_SPRITE|SPSTATE
+Name SPSTATE.SPSTATE_PREPARE SPSTATE.SPSTATE_YTEST_DRAW SPSTATE.SPSTATE_IDLE 
+SPSTATE.SPSTATE_IDLE 0 0 0 
+SPSTATE.SPSTATE_YTEST_DRAW 0 1 1 
+SPSTATE.SPSTATE_PREPARE 1 0 1 
 
 State Machine - |emsx_top_de0cv|emsx_top:U92|ff_logo_timeout
 Name ff_logo_timeout.00 ff_logo_timeout.10 ff_logo_timeout.01 
@@ -69,11 +53,27 @@ ff_ps2_state.PS2_ST_RCV_ACK3 0 0 1 0 0 0 0 0 0 0 0 0 1
 ff_ps2_state.PS2_ST_IDLE 0 1 0 0 0 0 0 0 0 0 0 0 1 
 ff_ps2_state.PS2_ST_RCV_SCAN 1 0 0 0 0 0 0 0 0 0 0 0 1 
 
-State Machine - |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_SPRITE:U_SPRITE|SPSTATE
-Name SPSTATE.SPSTATE_PREPARE SPSTATE.SPSTATE_YTEST_DRAW SPSTATE.SPSTATE_IDLE 
-SPSTATE.SPSTATE_IDLE 0 0 0 
-SPSTATE.SPSTATE_YTEST_DRAW 0 1 1 
-SPSTATE.SPSTATE_PREPARE 1 0 1 
+State Machine - |emsx_top_de0cv|emsx_top:U92|DEBUG_ENA
+Name DEBUG_ENA.00 DEBUG_ENA.10 DEBUG_ENA.01 
+DEBUG_ENA.10 0 0 0 
+DEBUG_ENA.01 0 1 1 
+DEBUG_ENA.00 1 1 0 
+
+State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|UART:U1|tx_current_state_s
+Name tx_current_state_s.STATE_TX_FINISH tx_current_state_s.STATE_TX_STOP tx_current_state_s.STATE_TX_DATA tx_current_state_s.STATE_TX_START tx_current_state_s.STATE_TX_IDLE 
+tx_current_state_s.STATE_TX_IDLE 0 0 0 0 0 
+tx_current_state_s.STATE_TX_START 0 0 0 1 1 
+tx_current_state_s.STATE_TX_DATA 0 0 1 0 1 
+tx_current_state_s.STATE_TX_STOP 0 1 0 0 1 
+tx_current_state_s.STATE_TX_FINISH 1 0 0 0 1 
+
+State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|UART:U1|rx_current_state_s
+Name rx_current_state_s.STATE_RX_FINISH rx_current_state_s.STATE_RX_STOP rx_current_state_s.STATE_RX_DATA rx_current_state_s.STATE_RX_START rx_current_state_s.STATE_RX_IDLE 
+rx_current_state_s.STATE_RX_IDLE 0 0 0 0 0 
+rx_current_state_s.STATE_RX_START 0 0 0 1 1 
+rx_current_state_s.STATE_RX_DATA 0 0 1 0 1 
+rx_current_state_s.STATE_RX_STOP 0 1 0 0 1 
+rx_current_state_s.STATE_RX_FINISH 1 0 0 0 1 
 
 State Machine - |emsx_top_de0cv|emsx_top:U92|wifi:u_wifi|my_cmd_state
 Name my_cmd_state.STATE_CMD_FINISH my_cmd_state.STATE_CMD_DATA my_cmd_state.STATE_CMD_IDLE 
