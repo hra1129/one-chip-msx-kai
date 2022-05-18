@@ -66,7 +66,7 @@ module eseps2 #(
 
 //	output	[15:0]	debug_sig
 );
-	reg		[3:0]	ff_div;
+	reg		[4:0]	ff_div;
 	wire			w_clkena;
 	reg		[15:0]	ff_timer;
 	wire			w_timeout;
@@ -131,7 +131,7 @@ module eseps2 #(
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
-			ff_div <= 4'd0;
+			ff_div <= 5'd0;
 		end
 		else if( clkena ) begin
 			ff_div <= ff_div + 4'd1;
@@ -139,7 +139,7 @@ module eseps2 #(
 	end
 
 	//	3.579545MHz / 16 = 223.7215625KHz : 1clock = 4.4698usec
-	assign w_clkena	= (ff_div == 4'd15) ? clkena : 1'b0;
+	assign w_clkena	= (ff_div == 5'd31) ? clkena : 1'b0;
 
 	always @( posedge clk21m ) begin
 		if( w_clkena ) begin
@@ -397,8 +397,8 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	//	Timer
 	// ------------------------------------------------------------------------
-	localparam		TIMER_143USEC = 16'd32;			//	4.4698usec * 32clock    = 143usec
-	localparam		TIMER_292MSEC = 16'd65535;		//	4.4698usec * 65535clock = 292.928msec
+	localparam		TIMER_143USEC = 16'd16;			//	4.4698usec * 32clock    = 143usec
+	localparam		TIMER_292MSEC = 16'd32767;		//	4.4698usec * 65535clock = 292.928msec
 
 	assign w_timeout	= (ff_timer == 16'h0000) ? 1'b1 : 1'b0;
 
@@ -407,10 +407,7 @@ module eseps2 #(
 			ff_timer <= TIMER_143USEC;
 		end
 		else if( w_clkena ) begin
-			if( ff_ps2_state == PS2_ST_IDLE ) begin
-				ff_timer <= TIMER_292MSEC;
-			end
-			else if( w_timeout && ff_ps2_state == PS2_ST_RESET ) begin
+			if( w_timeout && ff_ps2_state == PS2_ST_RESET ) begin
 				ff_timer <= TIMER_292MSEC;
 			end
 			else if( w_timeout && ff_ps2_sub_state == PS2_SUB_SND_REQUEST ) begin
@@ -586,16 +583,16 @@ module eseps2 #(
 			ff_ps2_rcv_dat <= 8'h00;
 		end
 		else if( w_clkena ) begin
-			if( w_ps2_device_phase ) begin
+			if( w_ps2_fall_edge ) begin
 				case( ff_ps2_sub_state )
-				PS2_SUB_RCV_D0:	ff_ps2_rcv_dat[0] <= pPs2Dat;
-				PS2_SUB_RCV_D1:	ff_ps2_rcv_dat[1] <= pPs2Dat;
-				PS2_SUB_RCV_D2:	ff_ps2_rcv_dat[2] <= pPs2Dat;
-				PS2_SUB_RCV_D3:	ff_ps2_rcv_dat[3] <= pPs2Dat;
-				PS2_SUB_RCV_D4:	ff_ps2_rcv_dat[4] <= pPs2Dat;
-				PS2_SUB_RCV_D5:	ff_ps2_rcv_dat[5] <= pPs2Dat;
-				PS2_SUB_RCV_D6:	ff_ps2_rcv_dat[6] <= pPs2Dat;
-				PS2_SUB_RCV_D7:	ff_ps2_rcv_dat[7] <= pPs2Dat;
+				PS2_SUB_RCV_START:	ff_ps2_rcv_dat[0] <= pPs2Dat;
+				PS2_SUB_RCV_D0:		ff_ps2_rcv_dat[1] <= pPs2Dat;
+				PS2_SUB_RCV_D1:		ff_ps2_rcv_dat[2] <= pPs2Dat;
+				PS2_SUB_RCV_D2:		ff_ps2_rcv_dat[3] <= pPs2Dat;
+				PS2_SUB_RCV_D3:		ff_ps2_rcv_dat[4] <= pPs2Dat;
+				PS2_SUB_RCV_D4:		ff_ps2_rcv_dat[5] <= pPs2Dat;
+				PS2_SUB_RCV_D5:		ff_ps2_rcv_dat[6] <= pPs2Dat;
+				PS2_SUB_RCV_D6:		ff_ps2_rcv_dat[7] <= pPs2Dat;
 				default:
 					begin
 						//	hold

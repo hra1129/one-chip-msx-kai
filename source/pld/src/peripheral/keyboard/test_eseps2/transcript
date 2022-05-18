@@ -1,0 +1,4 @@
+# OpenFile C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/keyboard/test_eseps2/vsim.wlf
+do C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/peripheral/keyboard/test_eseps2/wave.do
+# ** Error: (vish-4014) No objects found matching '/tb/u_eseps2/debug_sig'.
+# Executing ONERROR command at macro C:\Users\hra\Documents\github\one-chip-msx-kai\source\pld\src\peripheral\keyboard\test_eseps2\wave.do line 20
