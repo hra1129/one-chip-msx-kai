@@ -152,6 +152,10 @@ module tb;
 		ff_test_state = 12;
 		
 		#40us
+		ff_org_pPs2Clk <= 1'b1;
+		ff_dut_pPs2Clk <= 1'b1;
+
+		#1us
 		ff_org_pPs2Clk <= 1'bZ;
 		ff_dut_pPs2Clk <= 1'bZ;
 		ff_org_pPs2Dat <= 1'bZ;

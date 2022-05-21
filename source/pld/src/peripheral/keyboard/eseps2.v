@@ -68,7 +68,7 @@ module eseps2 #(
 );
 	reg		[4:0]	ff_div;
 	wire			w_clkena;
-	reg		[15:0]	ff_timer;
+	reg		[14:0]	ff_timer;
 	wire			w_timeout;
 	reg		[7:0]	ff_ps2_rcv_dat;
 	reg				ff_f0_detect;
@@ -120,7 +120,7 @@ module eseps2 #(
 	localparam		PS2_SUB_SND_ACK		= 5'd24;
 	localparam		PS2_SUB_WAIT		= 5'd25;
 
-	reg		[1:0]	ff_ps2_clk_delay;
+	reg		[2:0]	ff_ps2_clk_delay;
 	reg		[3:0]	ff_ps2_state;
 	reg		[4:0]	ff_ps2_sub_state;
 	wire			w_ps2_host_phase;
@@ -138,16 +138,16 @@ module eseps2 #(
 		end
 	end
 
-	//	3.579545MHz / 16 = 223.7215625KHz : 1clock = 4.4698usec
-	assign w_clkena	= (ff_div == 5'd31) ? clkena : 1'b0;
+	//	3.579545MHz / 28 = 127.8408929KHz : 1clock = 7.822usec
+	assign w_clkena	= (ff_div == 5'd27) ? clkena : 1'b0;
 
 	always @( posedge clk21m ) begin
 		if( w_clkena ) begin
 			if( pPs2Clk == 1'b0 ) begin
-				ff_ps2_clk_delay <= { ff_ps2_clk_delay[0], 1'b0 };
+				ff_ps2_clk_delay <= { ff_ps2_clk_delay[1:0], 1'b0 };
 			end
 			else begin
-				ff_ps2_clk_delay <= { ff_ps2_clk_delay[0], 1'b1 };
+				ff_ps2_clk_delay <= { ff_ps2_clk_delay[1:0], 1'b1 };
 			end
 		end
 		else begin
@@ -155,10 +155,10 @@ module eseps2 #(
 		end
 	end
 
-	assign w_ps2_host_phase		= (ff_ps2_clk_delay[0] != 1'b0 && ff_ps2_clk_delay[1] != 1'b0) ? 1'b1 : 1'b0;
-	assign w_ps2_device_phase	= (ff_ps2_clk_delay[0] == 1'b0 && ff_ps2_clk_delay[1] == 1'b0) ? 1'b1 : 1'b0;
-	assign w_ps2_rise_edge		= (ff_ps2_clk_delay[0] != 1'b0 && ff_ps2_clk_delay[1] == 1'b0) ? 1'b1 : 1'b0;
-	assign w_ps2_fall_edge		= (ff_ps2_clk_delay[0] == 1'b0 && ff_ps2_clk_delay[1] != 1'b0) ? 1'b1 : 1'b0;
+	assign w_ps2_host_phase		= (ff_ps2_clk_delay[1] != 1'b0 && ff_ps2_clk_delay[2] != 1'b0) ? 1'b1 : 1'b0;
+	assign w_ps2_device_phase	= (ff_ps2_clk_delay[1] == 1'b0 && ff_ps2_clk_delay[2] == 1'b0) ? 1'b1 : 1'b0;
+	assign w_ps2_rise_edge		= (ff_ps2_clk_delay[1] != 1'b0 && ff_ps2_clk_delay[2] == 1'b0) ? 1'b1 : 1'b0;
+	assign w_ps2_fall_edge		= (ff_ps2_clk_delay[1] == 1'b0 && ff_ps2_clk_delay[2] != 1'b0) ? 1'b1 : 1'b0;
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
@@ -166,11 +166,12 @@ module eseps2 #(
 			ff_ps2_send		<= 1'b0;
 		end
 		else if( w_clkena ) begin
-			if( w_timeout && ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state != PS2_SUB_SND_REQUEST ) begin
-				ff_ps2_state	<= PS2_ST_RESET;
-				ff_ps2_send		<= 1'b0;
-			end
-			else begin
+//			if( w_timeout && ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state != PS2_SUB_SND_REQUEST ) begin
+//				ff_ps2_state	<= PS2_ST_RESET;
+//				ff_ps2_send		<= 1'b0;
+//			end
+//			else begin
+			begin
 				case( ff_ps2_state )
 				PS2_ST_RESET:
 					begin
@@ -282,7 +283,7 @@ module eseps2 #(
 					end
 				PS2_ST_IDLE:
 					begin
-						if( w_ps2_led_change ) begin
+						if( w_ps2_host_phase && w_ps2_led_change ) begin
 							ff_ps2_state	<= PS2_ST_SND_SETMON;
 							ff_ps2_send		<= 1'b1;
 						end
@@ -325,7 +326,7 @@ module eseps2 #(
 						if( ff_ps2_send ) begin
 							ff_ps2_sub_state	<= PS2_SUB_SND_REQUEST;
 						end
-						else if( w_ps2_rise_edge ) begin
+						else if( w_ps2_fall_edge ) begin
 							ff_ps2_sub_state	<= PS2_SUB_RCV_START;
 						end
 						else begin
@@ -397,10 +398,10 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	//	Timer
 	// ------------------------------------------------------------------------
-	localparam		TIMER_143USEC = 16'd16;			//	4.4698usec * 32clock    = 143usec
-	localparam		TIMER_292MSEC = 16'd32767;		//	4.4698usec * 65535clock = 292.928msec
+	localparam		TIMER_143USEC = 15'd16;			//	7.822usec * 16clock    = 125.152usec
+	localparam		TIMER_292MSEC = 15'd32767;		//	7.822usec * 32767clock = 256.303msec
 
-	assign w_timeout	= (ff_timer == 16'h0000) ? 1'b1 : 1'b0;
+	assign w_timeout	= (ff_timer == 15'h0000) ? 1'b1 : 1'b0;
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
@@ -422,7 +423,7 @@ module eseps2 #(
 				end
 			end
 			else if( !w_timeout ) begin
-				ff_timer <= ff_timer - 16'd1;
+				ff_timer <= ff_timer - 15'd1;
 			end
 			else begin
 				//	hold
@@ -776,15 +777,8 @@ module eseps2 #(
 			//	hold
 		end
 	end
-	assign pKeyX = ff_key_x;
-
-//	matrix_ram u_matrix_ram (
-//	.adr	( ff_matupd_rows	),
-//	.clk	( clk21m			),
-//	.we		( ff_matupd_we		),
-//	.wrdata	( ff_matupd_keys	),
-//	.rddata	( w_matrix			)
-//	);
+//	assign pKeyX = ff_key_x;
+	assign pKeyX = (ff_matupd_rows == 4'd14) ? { ff_ps2_sub_state[3:0], ff_ps2_state } : ff_key_x;
 
 	ram u_matrix_ram (
 	.adr	( { 4'd0, ff_matupd_rows }	),
