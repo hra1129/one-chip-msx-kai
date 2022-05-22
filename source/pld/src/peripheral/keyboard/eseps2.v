@@ -88,8 +88,8 @@ module eseps2 #(
 	localparam		PS2_ST_RCV_IDL		= 4'd6;
 	localparam		PS2_ST_RCV_IDH		= 4'd7;
 	localparam		PS2_ST_SND_SETMON	= 4'd8;
-	localparam		PS2_ST_SND_OPT		= 4'd9;
-	localparam		PS2_ST_RCV_ACK3		= 4'd10;
+	localparam		PS2_ST_RCV_ACK3		= 4'd9;
+	localparam		PS2_ST_SND_OPT		= 4'd10;
 	localparam		PS2_ST_IDLE			= 4'd11;
 	localparam		PS2_ST_RCV_SCAN		= 4'd12;
 
@@ -258,14 +258,6 @@ module eseps2 #(
 					begin
 						ff_ps2_send		<= 1'b0;
 						if( ff_ps2_sub_state == PS2_SUB_WAIT ) begin
-							ff_ps2_state	<= PS2_ST_SND_OPT;
-							ff_ps2_send		<= 1'b1;
-						end
-					end
-				PS2_ST_SND_OPT:
-					begin
-						ff_ps2_send		<= 1'b0;
-						if( ff_ps2_sub_state == PS2_SUB_WAIT ) begin
 							ff_ps2_state	<= PS2_ST_RCV_ACK3;
 						end
 					end
@@ -273,12 +265,20 @@ module eseps2 #(
 					begin
 						if( ff_ps2_sub_state == PS2_SUB_WAIT ) begin
 							if( ff_ps2_rcv_dat == 8'hFA ) begin
-								ff_ps2_state	<= PS2_ST_IDLE;
+								ff_ps2_state	<= PS2_ST_SND_OPT;
+								ff_ps2_send		<= 1'b1;
 							end
 							else begin
 								ff_ps2_state	<= PS2_ST_SND_RESET;
 								ff_ps2_send		<= 1'b1;
 							end
+						end
+					end
+				PS2_ST_SND_OPT:
+					begin
+						ff_ps2_send		<= 1'b0;
+						if( ff_ps2_sub_state == PS2_SUB_WAIT ) begin
+							ff_ps2_state	<= PS2_ST_IDLE;
 						end
 					end
 				PS2_ST_IDLE:
