@@ -1,5 +1,5 @@
 Analysis & Synthesis report for emsx_top_de0cv
-Sun May 22 06:42:54 2022
+Sun May 22 21:28:23 2022
 Quartus Prime Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
 
 
@@ -185,13 +185,13 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                  ;
 +---------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Sun May 22 06:42:53 2022       ;
+; Analysis & Synthesis Status     ; Successful - Sun May 22 21:28:23 2022       ;
 ; Quartus Prime Version           ; 21.1.0 Build 842 10/21/2021 SJ Lite Edition ;
 ; Revision Name                   ; emsx_top_de0cv                              ;
 ; Top-level Entity Name           ; emsx_top_de0cv                              ;
 ; Family                          ; Cyclone V                                   ;
 ; Logic utilization (in ALMs)     ; N/A                                         ;
-; Total registers                 ; 5210                                        ;
+; Total registers                 ; 5211                                        ;
 ; Total pins                      ; 195                                         ;
 ; Total virtual pins              ; 0                                           ;
 ; Total block memory bits         ; 50,848                                      ;
@@ -300,14 +300,14 @@ https://fpgasoftware.intel.com/eula.
 ; Number detected on machine ; 8           ;
 ; Maximum allowed            ; 4           ;
 ;                            ;             ;
-; Average used               ; 2.31        ;
+; Average used               ; 2.30        ;
 ; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;  54.0%      ;
-;     Processor 3            ;  51.4%      ;
-;     Processor 4            ;  25.4%      ;
+;     Processor 2            ;  51.0%      ;
+;     Processor 3            ;  51.0%      ;
+;     Processor 4            ;  27.5%      ;
 +----------------------------+-------------+
 
 
@@ -448,16 +448,16 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------+------------------------------------------------------------------------------------+
 ; Resource                                    ; Usage                                                                              ;
 +---------------------------------------------+------------------------------------------------------------------------------------+
-; Estimate of Logic utilization (ALMs needed) ; 7631                                                                               ;
+; Estimate of Logic utilization (ALMs needed) ; 7634                                                                               ;
 ;                                             ;                                                                                    ;
-; Combinational ALUT usage for logic          ; 12890                                                                              ;
-;     -- 7 input functions                    ; 201                                                                                ;
-;     -- 6 input functions                    ; 1828                                                                               ;
-;     -- 5 input functions                    ; 3736                                                                               ;
-;     -- 4 input functions                    ; 1989                                                                               ;
-;     -- <=3 input functions                  ; 5136                                                                               ;
+; Combinational ALUT usage for logic          ; 12870                                                                              ;
+;     -- 7 input functions                    ; 199                                                                                ;
+;     -- 6 input functions                    ; 1856                                                                               ;
+;     -- 5 input functions                    ; 3740                                                                               ;
+;     -- 4 input functions                    ; 1975                                                                               ;
+;     -- <=3 input functions                  ; 5100                                                                               ;
 ;                                             ;                                                                                    ;
-; Dedicated logic registers                   ; 5210                                                                               ;
+; Dedicated logic registers                   ; 5211                                                                               ;
 ;                                             ;                                                                                    ;
 ; I/O pins                                    ; 195                                                                                ;
 ; Total MLAB memory bits                      ; 0                                                                                  ;
@@ -469,8 +469,8 @@ https://fpgasoftware.intel.com/eula.
 ;     -- PLLs                                 ; 3                                                                                  ;
 ;                                             ;                                                                                    ;
 ; Maximum fan-out node                        ; pll_de0cv:U90|pll_de0cv_0002:pll_de0cv_inst|altera_pll:altera_pll_i|outclk_wire[0] ;
-; Maximum fan-out                             ; 4625                                                                               ;
-; Total fan-out                               ; 75081                                                                              ;
+; Maximum fan-out                             ; 4626                                                                               ;
+; Total fan-out                               ; 75116                                                                              ;
 ; Average fan-out                             ; 3.97                                                                               ;
 +---------------------------------------------+------------------------------------------------------------------------------------+
 
@@ -480,24 +480,24 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------+--------------+
 ; Compilation Hierarchy Node                              ; Combinational ALUTs ; Dedicated Logic Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                                                     ; Entity Name           ; Library Name ;
 +---------------------------------------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------+--------------+
-; |emsx_top_de0cv                                         ; 12890 (3)           ; 5210 (3)                  ; 50848             ; 21         ; 195  ; 0            ; |emsx_top_de0cv                                                                                                                                                         ; emsx_top_de0cv        ; work         ;
-;    |emsx_top:U92|                                       ; 12887 (151)         ; 5207 (115)                ; 50848             ; 21         ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92                                                                                                                                            ; emsx_top              ; work         ;
+; |emsx_top_de0cv                                         ; 12870 (3)           ; 5211 (3)                  ; 50848             ; 21         ; 195  ; 0            ; |emsx_top_de0cv                                                                                                                                                         ; emsx_top_de0cv        ; work         ;
+;    |emsx_top:U92|                                       ; 12867 (150)         ; 5208 (115)                ; 50848             ; 21         ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92                                                                                                                                            ; emsx_top              ; work         ;
 ;       |INTERPO:u_interpo|                               ; 50 (50)             ; 45 (45)                   ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|INTERPO:u_interpo                                                                                                                          ; INTERPO               ; work         ;
 ;          |INTERPO_MUL:U_INTERPO_MUL|                    ; 0 (0)               ; 0 (0)                     ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|INTERPO:u_interpo|INTERPO_MUL:U_INTERPO_MUL                                                                                                ; INTERPO_MUL           ; work         ;
 ;       |LPF2:u_lpf2|                                     ; 66 (66)             ; 126 (126)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|LPF2:u_lpf2                                                                                                                                ; LPF2                  ; work         ;
-;       |T800a:u_r800|                                    ; 1506 (16)           ; 410 (17)                  ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800                                                                                                                               ; T800a                 ; work         ;
-;          |T800:u0|                                      ; 1490 (611)          ; 393 (265)                 ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0                                                                                                                       ; T800                  ; work         ;
-;             |T800_ALU:alu|                              ; 147 (147)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_ALU:alu                                                                                                          ; T800_ALU              ; work         ;
-;             |T800_MCode:mcode|                          ; 570 (570)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_MCode:mcode                                                                                                      ; T800_MCode            ; work         ;
+;       |T800a:u_r800|                                    ; 1501 (16)           ; 410 (17)                  ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800                                                                                                                               ; T800a                 ; work         ;
+;          |T800:u0|                                      ; 1485 (608)          ; 393 (265)                 ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0                                                                                                                       ; T800                  ; work         ;
+;             |T800_ALU:alu|                              ; 146 (146)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_ALU:alu                                                                                                          ; T800_ALU              ; work         ;
+;             |T800_MCode:mcode|                          ; 569 (569)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_MCode:mcode                                                                                                      ; T800_MCode            ; work         ;
 ;             |T800_Reg:Regs|                             ; 162 (162)           ; 128 (128)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T800a:u_r800|T800:u0|T800_Reg:Regs                                                                                                         ; T800_Reg              ; work         ;
-;       |T80a:u_z80|                                      ; 1455 (20)           ; 407 (15)                  ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80                                                                                                                                 ; T80a                  ; work         ;
-;          |T80:u0|                                       ; 1435 (606)          ; 392 (264)                 ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0                                                                                                                          ; T80                   ; work         ;
+;       |T80a:u_z80|                                      ; 1453 (20)           ; 407 (15)                  ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80                                                                                                                                 ; T80a                  ; work         ;
+;          |T80:u0|                                       ; 1433 (606)          ; 392 (264)                 ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0                                                                                                                          ; T80                   ; work         ;
 ;             |T80_ALU:alu|                               ; 145 (145)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0|T80_ALU:alu                                                                                                              ; T80_ALU               ; work         ;
-;             |T80_MCode:mcode|                           ; 522 (522)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0|T80_MCode:mcode                                                                                                          ; T80_MCode             ; work         ;
+;             |T80_MCode:mcode|                           ; 520 (520)           ; 0 (0)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0|T80_MCode:mcode                                                                                                          ; T80_MCode             ; work         ;
 ;             |T80_Reg:Regs|                              ; 162 (162)           ; 128 (128)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|T80a:u_z80|T80:u0|T80_Reg:Regs                                                                                                             ; T80_Reg               ; work         ;
-;       |VDP:u_v9958|                                     ; 2075 (323)          ; 1280 (74)                 ; 25736             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958                                                                                                                                ; VDP                   ; work         ;
+;       |VDP:u_v9958|                                     ; 2074 (323)          ; 1280 (74)                 ; 25736             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958                                                                                                                                ; VDP                   ; work         ;
 ;          |VDP_COLORDEC:U_VDP_COLORDEC|                  ; 42 (42)             ; 52 (52)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_COLORDEC:U_VDP_COLORDEC                                                                                                    ; VDP_COLORDEC          ; work         ;
-;          |VDP_COMMAND:U_VDP_COMMAND|                    ; 435 (435)           ; 180 (180)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_COMMAND:U_VDP_COMMAND                                                                                                      ; VDP_COMMAND           ; work         ;
+;          |VDP_COMMAND:U_VDP_COMMAND|                    ; 434 (434)           ; 180 (180)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_COMMAND:U_VDP_COMMAND                                                                                                      ; VDP_COMMAND           ; work         ;
 ;          |VDP_GRAPHIC123M:U_VDP_GRAPHIC123M|            ; 50 (50)             ; 61 (61)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_GRAPHIC123M:U_VDP_GRAPHIC123M                                                                                              ; VDP_GRAPHIC123M       ; work         ;
 ;          |VDP_GRAPHIC4567:U_VDP_GRAPHIC4567|            ; 163 (163)           ; 153 (153)                 ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_GRAPHIC4567:U_VDP_GRAPHIC4567                                                                                              ; VDP_GRAPHIC4567       ; work         ;
 ;             |ram:U_FIFOMEM|                             ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_GRAPHIC4567:U_VDP_GRAPHIC4567|ram:U_FIFOMEM                                                                                ; ram                   ; work         ;
@@ -549,9 +549,9 @@ https://fpgasoftware.intel.com/eula.
 ;       |VENCODE:u_video_encoder|                         ; 200 (200)           ; 70 (70)                   ; 0                 ; 4          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|VENCODE:u_video_encoder                                                                                                                    ; VENCODE               ; work         ;
 ;       |autofire:u_autofire|                             ; 14 (14)             ; 11 (11)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|autofire:u_autofire                                                                                                                        ; autofire              ; work         ;
 ;       |clock_generator:u_clock_generator|               ; 12 (12)             ; 6 (6)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|clock_generator:u_clock_generator                                                                                                          ; clock_generator       ; work         ;
-;       |emsx_sdram_controller:u_sdram_control|           ; 209 (209)           ; 89 (89)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|emsx_sdram_controller:u_sdram_control                                                                                                      ; emsx_sdram_controller ; work         ;
-;       |eseopll:u_eseopll|                               ; 1287 (44)           ; 729 (40)                  ; 4178              ; 4          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll                                                                                                                          ; eseopll               ; work         ;
-;          |opll:U1|                                      ; 1243 (3)            ; 689 (17)                  ; 4178              ; 4          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1                                                                                                                  ; opll                  ; work         ;
+;       |emsx_sdram_controller:u_sdram_control|           ; 211 (211)           ; 89 (89)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|emsx_sdram_controller:u_sdram_control                                                                                                      ; emsx_sdram_controller ; work         ;
+;       |eseopll:u_eseopll|                               ; 1286 (44)           ; 729 (40)                  ; 4178              ; 4          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll                                                                                                                          ; eseopll               ; work         ;
+;          |opll:U1|                                      ; 1242 (3)            ; 689 (17)                  ; 4178              ; 4          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1                                                                                                                  ; opll                  ; work         ;
 ;             |Operator:op|                               ; 203 (89)            ; 96 (49)                   ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|Operator:op                                                                                                      ; Operator              ; work         ;
 ;                |SineTable:u_sine_table|                 ; 114 (114)           ; 47 (47)                   ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|Operator:op|SineTable:u_sine_table                                                                               ; SineTable             ; work         ;
 ;                   |interpolate_mul:u_interpolate_mul|   ; 0 (0)               ; 0 (0)                     ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|Operator:op|SineTable:u_sine_table|interpolate_mul:u_interpolate_mul                                             ; interpolate_mul       ; work         ;
@@ -575,7 +575,7 @@ https://fpgasoftware.intel.com/eula.
 ;             |SlotCounter:s5|                            ; 11 (11)             ; 7 (7)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|SlotCounter:s5                                                                                                   ; SlotCounter           ; work         ;
 ;             |SlotCounter:s8|                            ; 15 (15)             ; 7 (7)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|SlotCounter:s8                                                                                                   ; SlotCounter           ; work         ;
 ;             |TemporalMixer:tm|                          ; 44 (44)             ; 27 (27)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|TemporalMixer:tm                                                                                                 ; TemporalMixer         ; work         ;
-;             |controller:ct|                             ; 244 (129)           ; 214 (165)                 ; 2934              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|controller:ct                                                                                                    ; controller            ; work         ;
+;             |controller:ct|                             ; 243 (128)           ; 214 (165)                 ; 2934              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|controller:ct                                                                                                    ; controller            ; work         ;
 ;                |RegisterMemory:u_register_memory|       ; 28 (28)             ; 0 (0)                     ; 198               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|controller:ct|RegisterMemory:u_register_memory                                                                   ; RegisterMemory        ; work         ;
 ;                   |altsyncram:regs_array_rtl_0|         ; 0 (0)               ; 0 (0)                     ; 198               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|controller:ct|RegisterMemory:u_register_memory|altsyncram:regs_array_rtl_0                                       ; altsyncram            ; work         ;
 ;                      |altsyncram_2tp1:auto_generated|   ; 0 (0)               ; 0 (0)                     ; 198               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|controller:ct|RegisterMemory:u_register_memory|altsyncram:regs_array_rtl_0|altsyncram_2tp1:auto_generated        ; altsyncram_2tp1       ; work         ;
@@ -598,7 +598,7 @@ https://fpgasoftware.intel.com/eula.
 ;                   |altsyncram_qvm1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 70                ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|esepwm:u_esepwm|esefir5:U1|tapram:u0|altsyncram:TapMem_rtl_0|altsyncram_qvm1:auto_generated                                                ; altsyncram_qvm1       ; work         ;
 ;       |freerun_counter:u_freerun_counter|               ; 21 (21)             ; 21 (21)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|freerun_counter:u_freerun_counter                                                                                                          ; freerun_counter       ; work         ;
 ;       |indicator:u_indicator|                           ; 36 (36)             ; 14 (14)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|indicator:u_indicator                                                                                                                      ; indicator             ; work         ;
-;       |iplrom:u_iplrom|                                 ; 2340 (2340)         ; 8 (8)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|iplrom:u_iplrom                                                                                                                            ; iplrom                ; work         ;
+;       |iplrom:u_iplrom|                                 ; 2327 (2327)         ; 8 (8)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|iplrom:u_iplrom                                                                                                                            ; iplrom                ; work         ;
 ;       |kanji:u_kanji_rom|                               ; 49 (49)             ; 45 (45)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|kanji:u_kanji_rom                                                                                                                          ; kanji                 ; work         ;
 ;       |mapper:u_mapper_ram_for_slot3_0|                 ; 50 (50)             ; 32 (32)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|mapper:u_mapper_ram_for_slot3_0                                                                                                            ; mapper                ; work         ;
 ;       |megaram:u_megaram_for_slot1|                     ; 351 (57)            ; 269 (38)                  ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1                                                                                                                ; megaram               ; work         ;
@@ -607,19 +607,19 @@ https://fpgasoftware.intel.com/eula.
 ;                |altsyncram:blkram_rtl_0|                ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|ram:wavemem|altsyncram:blkram_rtl_0                                                             ; altsyncram            ; work         ;
 ;                   |altsyncram_fka1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|ram:wavemem|altsyncram:blkram_rtl_0|altsyncram_fka1:auto_generated                              ; altsyncram_fka1       ; work         ;
 ;             |scc_wave_mul:u_mul|                        ; 0 (0)               ; 0 (0)                     ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|scc_wave_mul:u_mul                                                                              ; scc_wave_mul          ; work         ;
-;       |megaram:u_megaram_for_slot2|                     ; 373 (75)            ; 271 (40)                  ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2                                                                                                                ; megaram               ; work         ;
-;          |scc_wave:SccCh|                               ; 298 (298)           ; 231 (231)                 ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh                                                                                                 ; scc_wave              ; work         ;
+;       |megaram:u_megaram_for_slot2|                     ; 371 (74)            ; 271 (40)                  ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2                                                                                                                ; megaram               ; work         ;
+;          |scc_wave:SccCh|                               ; 297 (297)           ; 231 (231)                 ; 2048              ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh                                                                                                 ; scc_wave              ; work         ;
 ;             |ram:wavemem|                               ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|ram:wavemem                                                                                     ; ram                   ; work         ;
 ;                |altsyncram:blkram_rtl_0|                ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|ram:wavemem|altsyncram:blkram_rtl_0                                                             ; altsyncram            ; work         ;
 ;                   |altsyncram_fka1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 2048              ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|ram:wavemem|altsyncram:blkram_rtl_0|altsyncram_fka1:auto_generated                              ; altsyncram_fka1       ; work         ;
 ;             |scc_wave_mul:u_mul|                        ; 0 (0)               ; 0 (0)                     ; 0                 ; 1          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|scc_wave_mul:u_mul                                                                              ; scc_wave_mul          ; work         ;
 ;       |megarom_pana:u_megarom_pana|                     ; 132 (132)           ; 76 (76)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megarom_pana:u_megarom_pana                                                                                                                ; megarom_pana          ; work         ;
 ;       |megasd:u_megasd|                                 ; 74 (74)             ; 71 (71)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|megasd:u_megasd                                                                                                                            ; megasd                ; work         ;
-;       |ocm_bus_selector:u_ocm_bus_selector|             ; 464 (464)           ; 52 (52)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector                                                                                                        ; ocm_bus_selector      ; work         ;
+;       |ocm_bus_selector:u_ocm_bus_selector|             ; 466 (466)           ; 52 (52)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector                                                                                                        ; ocm_bus_selector      ; work         ;
 ;       |ocmkai_control_decice:u_ocmkai_control_device|   ; 47 (47)             ; 24 (24)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ocmkai_control_decice:u_ocmkai_control_device                                                                                              ; ocmkai_control_decice ; work         ;
 ;       |ocmkai_debugger:u_ocmkai_debugger|               ; 14 (14)             ; 8 (8)                     ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ocmkai_debugger:u_ocmkai_debugger                                                                                                          ; ocmkai_debugger       ; work         ;
-;       |ppi:u_ppi|                                       ; 247 (31)            ; 142 (32)                  ; 16512             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi                                                                                                                                  ; ppi                   ; work         ;
-;          |eseps2:u_keyboard_controller|                 ; 216 (210)           ; 110 (109)                 ; 16512             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller                                                                                                     ; eseps2                ; work         ;
+;       |ppi:u_ppi|                                       ; 246 (31)            ; 143 (32)                  ; 16512             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi                                                                                                                                  ; ppi                   ; work         ;
+;          |eseps2:u_keyboard_controller|                 ; 215 (209)           ; 111 (110)                 ; 16512             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller                                                                                                     ; eseps2                ; work         ;
 ;             |keymap:u_keymap|                           ; 6 (6)               ; 1 (1)                     ; 16384             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|keymap:u_keymap                                                                                     ; keymap                ; work         ;
 ;                |altsyncram:Mux0_rtl_0|                  ; 0 (0)               ; 0 (0)                     ; 16384             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|keymap:u_keymap|altsyncram:Mux0_rtl_0                                                               ; altsyncram            ; work         ;
 ;                   |altsyncram_9971:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 16384             ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|keymap:u_keymap|altsyncram:Mux0_rtl_0|altsyncram_9971:auto_generated                                ; altsyncram_9971       ; work         ;
@@ -629,7 +629,7 @@ https://fpgasoftware.intel.com/eula.
 ;       |psg:u_psg|                                       ; 423 (21)            ; 221 (23)                  ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|psg:u_psg                                                                                                                                  ; psg                   ; work         ;
 ;          |psg_wave:u_psgch|                             ; 402 (402)           ; 198 (198)                 ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|psg:u_psg|psg_wave:u_psgch                                                                                                                 ; psg_wave              ; work         ;
 ;       |reset_controller:u_reset_controller|             ; 33 (33)             ; 27 (27)                   ; 0                 ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|reset_controller:u_reset_controller                                                                                                        ; reset_controller      ; work         ;
-;       |rtc:u_real_time_clock|                           ; 135 (135)           ; 75 (75)                   ; 256               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|rtc:u_real_time_clock                                                                                                                      ; rtc                   ; work         ;
+;       |rtc:u_real_time_clock|                           ; 137 (137)           ; 75 (75)                   ; 256               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|rtc:u_real_time_clock                                                                                                                      ; rtc                   ; work         ;
 ;          |ram:u_mem|                                    ; 0 (0)               ; 0 (0)                     ; 256               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|rtc:u_real_time_clock|ram:u_mem                                                                                                            ; ram                   ; work         ;
 ;             |altsyncram:blkram_rtl_0|                   ; 0 (0)               ; 0 (0)                     ; 256               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|rtc:u_real_time_clock|ram:u_mem|altsyncram:blkram_rtl_0                                                                                    ; altsyncram            ; work         ;
 ;                |altsyncram_mia1:auto_generated|         ; 0 (0)               ; 0 (0)                     ; 256               ; 0          ; 0    ; 0            ; |emsx_top_de0cv|emsx_top:U92|rtc:u_real_time_clock|ram:u_mem|altsyncram:blkram_rtl_0|altsyncram_mia1:auto_generated                                                     ; altsyncram_mia1       ; work         ;
@@ -1412,12 +1412,12 @@ Encoding Type:  One-Hot
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 5210  ;
+; Total registers                              ; 5211  ;
 ; Number of registers using Synchronous Clear  ; 638   ;
 ; Number of registers using Synchronous Load   ; 700   ;
-; Number of registers using Asynchronous Clear ; 3378  ;
+; Number of registers using Asynchronous Clear ; 3377  ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 3847  ;
+; Number of registers using Clock Enable       ; 3848  ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
 
@@ -1435,23 +1435,23 @@ Encoding Type:  One-Hot
 ; emsx_top:U92|ff_DisplayMode[1]                                                     ; 6       ;
 ; emsx_top:U92|s1990:u_s1990|ff_cpu_change_state[0]                                  ; 31      ;
 ; emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|i8251_transmitter:u_transmitter|ff_txd ; 2       ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[4]                     ; 146     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[4]                     ; 152     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[2]                     ; 197     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[0]                     ; 206     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[1]                     ; 198     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[5]                     ; 129     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[6]                     ; 136     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[7]                     ; 152     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[7]                     ; 158     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltDat[3]                     ; 186     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[1]                     ; 452     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[0]                     ; 506     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[3]                     ; 393     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[2]                     ; 352     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[7]                     ; 222     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[5]                     ; 236     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltIorq_n                     ; 39      ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[6]                     ; 344     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[4]                     ; 299     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[1]                     ; 437     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[0]                     ; 507     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[3]                     ; 383     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[2]                     ; 353     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[7]                     ; 231     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[5]                     ; 240     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltIorq_n                     ; 38      ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[6]                     ; 360     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[4]                     ; 293     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltMerq_n                     ; 5       ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_xSltRd_n                       ; 2       ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_wait_n_s                       ; 2       ;
@@ -1460,8 +1460,8 @@ Encoding Type:  One-Hot
 ; emsx_top:U92|clock_generator:u_clock_generator|ff_clkdiv3[1]                       ; 3       ;
 ; emsx_top:U92|ocmkai_control_decice:u_ocmkai_control_device|ff_panamega_is_linear   ; 11      ;
 ; emsx_top:U92|ppi:u_ppi|ff_ExpSlot3[0]                                              ; 2       ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[14]                    ; 79      ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[15]                    ; 43      ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[14]                    ; 84      ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[15]                    ; 48      ;
 ; emsx_top:U92|ppi:u_ppi|ff_ppi_port_a[1]                                            ; 2       ;
 ; emsx_top:U92|ppi:u_ppi|ff_ppi_port_a[3]                                            ; 2       ;
 ; emsx_top:U92|ppi:u_ppi|ff_ppi_port_a[5]                                            ; 2       ;
@@ -1474,15 +1474,15 @@ Encoding Type:  One-Hot
 ; emsx_top:U92|ppi:u_ppi|ff_ExpSlot3[3]                                              ; 2       ;
 ; emsx_top:U92|ppi:u_ppi|ff_ExpSlot3[5]                                              ; 2       ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[13]                    ; 61      ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[11]                    ; 142     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[9]                     ; 120     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[8]                     ; 157     ;
-; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[10]                    ; 131     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[11]                    ; 139     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[9]                     ; 132     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[8]                     ; 166     ;
+; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[10]                    ; 147     ;
 ; emsx_top:U92|ocm_bus_selector:u_ocm_bus_selector|ff_iSltAdr[12]                    ; 27      ;
 ; emsx_top:U92|s1990:u_s1990|ff_rom_mode                                             ; 3       ;
 ; emsx_top:U92|megaram:u_megaram_for_slot1|SccBank2[1]                               ; 2       ;
 ; emsx_top:U92|megaram:u_megaram_for_slot2|SccBank2[1]                               ; 2       ;
-; emsx_top:U92|VDP:u_v9958|PRAMWE_N                                                  ; 3       ;
+; emsx_top:U92|VDP:u_v9958|PRAMWE_N                                                  ; 2       ;
 ; emsx_top:U92|VDP:u_v9958|IRAMADR[16]                                               ; 19      ;
 ; emsx_top:U92|VDP:u_v9958|IRAMADR[0]                                                ; 2       ;
 ; emsx_top:U92|mapper:u_mapper_ram_for_slot3_0|ff_mapper_bank0[0]                    ; 2       ;
@@ -1527,7 +1527,7 @@ Encoding Type:  One-Hot
 ; emsx_top:U92|ff_LogoRstCnt[3]                                                      ; 3       ;
 ; emsx_top:U92|ff_LogoRstCnt[1]                                                      ; 5       ;
 ; emsx_top:U92|ff_LogoRstCnt[4]                                                      ; 3       ;
-; Total number of inverted registers = 461*                                          ;         ;
+; Total number of inverted registers = 464*                                          ;         ;
 +------------------------------------------------------------------------------------+---------+
 * Table truncated at 100 items. To change the number of inverted registers reported, set the "Number of Inverted Registers Reported" option under Assignments->Settings->Analysis and Synthesis Settings->More Settings
 
@@ -1878,15 +1878,16 @@ Encoding Type:  One-Hot
 ; 4:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|Operator:op|w_modula[10]                                         ;
 ; 4:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|eseopll:u_eseopll|opll:U1|Operator:op|w_modula[11]                                         ;
 ; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|indicator:u_indicator|GreenLv_cnt[2]                                                       ;
-; 4:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_matupd_rows[2]                                   ;
+; 4:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_matupd_rows[3]                                   ;
 ; 5:1                ; 3 bits    ; 9 LEs         ; 6 LEs                ; 3 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_ps2_snd_dat[5]                                   ;
-; 5:1                ; 3 bits    ; 9 LEs         ; 6 LEs                ; 3 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_ps2_snd_dat[1]                                   ;
+; 5:1                ; 3 bits    ; 9 LEs         ; 6 LEs                ; 3 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_ps2_snd_dat[0]                                   ;
 ; 5:1                ; 4 bits    ; 12 LEs        ; 8 LEs                ; 4 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|reset_controller:u_reset_controller|HardRst_cnt[1]                                         ;
-; 5:1                ; 14 bits   ; 42 LEs        ; 28 LEs               ; 14 LEs                 ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_timer[1]                                         ;
+; 5:1                ; 11 bits   ; 33 LEs        ; 22 LEs               ; 11 LEs                 ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_timer[13]                                        ;
 ; 8:1                ; 3 bits    ; 15 LEs        ; 9 LEs                ; 6 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_matupd_state[4]                                  ;
-; 8:1                ; 2 bits    ; 10 LEs        ; 8 LEs                ; 2 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_matupd_state[0]                                  ;
-; 17:1               ; 5 bits    ; 55 LEs        ; 30 LEs               ; 25 LEs                 ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_ps2_sub_state[1]                                 ;
-; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ff_LogoRstCnt[0]                                                                           ;
+; 8:1                ; 2 bits    ; 10 LEs        ; 8 LEs                ; 2 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_matupd_state[1]                                  ;
+; 17:1               ; 5 bits    ; 55 LEs        ; 30 LEs               ; 25 LEs                 ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_ps2_sub_state[2]                                 ;
+; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ff_LogoRstCnt[4]                                                                           ;
+; 5:1                ; 4 bits    ; 12 LEs        ; 8 LEs                ; 4 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ppi:u_ppi|eseps2:u_keyboard_controller|ff_timer[4]                                         ;
 ; 69:1               ; 3 bits    ; 138 LEs       ; 21 LEs               ; 117 LEs                ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ocmkai_control_decice:u_ocmkai_control_device|ff_dbi[7]                                    ;
 ; 261:1              ; 4 bits    ; 696 LEs       ; 40 LEs               ; 656 LEs                ; Yes        ; |emsx_top_de0cv|emsx_top:U92|ocmkai_control_decice:u_ocmkai_control_device|ff_dbi[4]                                    ;
 ; 3:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|ff_logo_timeout                                                                            ;
@@ -5120,13 +5121,13 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
 ; arriav_asmiblock      ; 1                           ;
-; arriav_ff             ; 5210                        ;
+; arriav_ff             ; 5211                        ;
 ;     CLR               ; 741                         ;
 ;     CLR SCLR          ; 85                          ;
 ;     CLR SCLR SLD      ; 25                          ;
 ;     CLR SLD           ; 23                          ;
-;     ENA               ; 974                         ;
-;     ENA CLR           ; 1866                        ;
+;     ENA               ; 976                         ;
+;     ENA CLR           ; 1865                        ;
 ;     ENA CLR SCLR      ; 210                         ;
 ;     ENA CLR SCLR SLD  ; 20                          ;
 ;     ENA CLR SLD       ; 408                         ;
@@ -5138,7 +5139,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;     SLD               ; 28                          ;
 ;     plain             ; 383                         ;
 ; arriav_io_obuf        ; 90                          ;
-; arriav_lcell_comb     ; 12895                       ;
+; arriav_lcell_comb     ; 12875                       ;
 ;     arith             ; 1610                        ;
 ;         0 data inputs ; 12                          ;
 ;         1 data inputs ; 938                         ;
@@ -5146,16 +5147,16 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;         3 data inputs ; 32                          ;
 ;         4 data inputs ; 117                         ;
 ;         5 data inputs ; 122                         ;
-;     extend            ; 201                         ;
-;         7 data inputs ; 201                         ;
-;     normal            ; 10862                       ;
+;     extend            ; 199                         ;
+;         7 data inputs ; 199                         ;
+;     normal            ; 10844                       ;
 ;         0 data inputs ; 2                           ;
-;         1 data inputs ; 626                         ;
-;         2 data inputs ; 1305                        ;
-;         3 data inputs ; 1621                        ;
-;         4 data inputs ; 1866                        ;
-;         5 data inputs ; 3614                        ;
-;         6 data inputs ; 1828                        ;
+;         1 data inputs ; 625                         ;
+;         2 data inputs ; 1284                        ;
+;         3 data inputs ; 1607                        ;
+;         4 data inputs ; 1852                        ;
+;         5 data inputs ; 3618                        ;
+;         6 data inputs ; 1856                        ;
 ;     shared            ; 222                         ;
 ;         0 data inputs ; 19                          ;
 ;         1 data inputs ; 14                          ;
@@ -5167,8 +5168,8 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; generic_pll           ; 3                           ;
 ; stratixv_ram_block    ; 319                         ;
 ;                       ;                             ;
-; Max LUT depth         ; 12.50                       ;
-; Average LUT depth     ; 5.17                        ;
+; Max LUT depth         ; 12.40                       ;
+; Average LUT depth     ; 5.18                        ;
 +-----------------------+-----------------------------+
 
 
@@ -5177,7 +5178,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:01:02     ;
+; Top            ; 00:00:56     ;
 +----------------+--------------+
 
 
@@ -5187,7 +5188,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
-    Info: Processing started: Sun May 22 06:41:32 2022
+    Info: Processing started: Sun May 22 21:27:09 2022
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off emsx_top_de0cv -c emsx_top_de0cv
 Info (16303): Aggressive Area optimization mode selected -- logic area will be prioritized at the potential cost of reduced timing performance
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
@@ -6532,19 +6533,19 @@ Warning (21074): Design contains 5 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "pSW[2]" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/board/de0cv/emsx_top_de0cv.vhd Line: 115
     Warning (15610): No output dependent on input pin "pSW[3]" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/board/de0cv/emsx_top_de0cv.vhd Line: 115
     Warning (15610): No output dependent on input pin "pDip[8]" File: C:/Users/hra/Documents/github/one-chip-msx-kai/source/pld/src/board/de0cv/emsx_top_de0cv.vhd Line: 116
-Info (21057): Implemented 15455 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 15437 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 19 input pins
     Info (21059): Implemented 90 output pins
     Info (21060): Implemented 86 bidirectional pins
-    Info (21061): Implemented 14916 logic cells
+    Info (21061): Implemented 14898 logic cells
     Info (21064): Implemented 319 RAM segments
     Info (21065): Implemented 3 PLLs
     Info (21062): Implemented 21 DSP elements
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 252 warnings
-    Info: Peak virtual memory: 5065 megabytes
-    Info: Processing ended: Sun May 22 06:42:54 2022
-    Info: Elapsed time: 00:01:22
-    Info: Total CPU time (on all processors): 00:02:35
+    Info: Peak virtual memory: 5086 megabytes
+    Info: Processing ended: Sun May 22 21:28:23 2022
+    Info: Elapsed time: 00:01:14
+    Info: Total CPU time (on all processors): 00:02:25
 
 
 +------------------------------------------+

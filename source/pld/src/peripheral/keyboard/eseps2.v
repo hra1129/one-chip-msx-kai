@@ -66,7 +66,7 @@ module eseps2 #(
 
 //	output	[15:0]	debug_sig
 );
-	reg		[4:0]	ff_div;
+	reg		[3:0]	ff_div;
 	wire			w_clkena;
 	reg		[14:0]	ff_timer;
 	wire			w_timeout;
@@ -120,7 +120,7 @@ module eseps2 #(
 	localparam		PS2_SUB_SND_ACK		= 5'd24;
 	localparam		PS2_SUB_WAIT		= 5'd25;
 
-	reg		[2:0]	ff_ps2_clk_delay;
+	reg		[4:0]	ff_ps2_clk_delay;
 	reg		[3:0]	ff_ps2_state;
 	reg		[4:0]	ff_ps2_sub_state;
 	wire			w_ps2_host_phase;
@@ -131,23 +131,23 @@ module eseps2 #(
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
-			ff_div <= 5'd0;
+			ff_div <= 4'd0;
 		end
 		else if( clkena ) begin
 			ff_div <= ff_div + 4'd1;
 		end
 	end
 
-	//	3.579545MHz / 28 = 127.8408929KHz : 1clock = 7.822usec
-	assign w_clkena	= (ff_div == 5'd27) ? clkena : 1'b0;
+	//	3.579545MHz / 16 = 223.7215625KHz : 1clock = 4.469usec
+	assign w_clkena	= (ff_div == 4'd15) ? clkena : 1'b0;
 
 	always @( posedge clk21m ) begin
 		if( w_clkena ) begin
 			if( pPs2Clk == 1'b0 ) begin
-				ff_ps2_clk_delay <= { ff_ps2_clk_delay[1:0], 1'b0 };
+				ff_ps2_clk_delay <= { ff_ps2_clk_delay[3:0], 1'b0 };
 			end
 			else begin
-				ff_ps2_clk_delay <= { ff_ps2_clk_delay[1:0], 1'b1 };
+				ff_ps2_clk_delay <= { ff_ps2_clk_delay[3:0], 1'b1 };
 			end
 		end
 		else begin
@@ -155,10 +155,10 @@ module eseps2 #(
 		end
 	end
 
-	assign w_ps2_host_phase		= (ff_ps2_clk_delay[1] != 1'b0 && ff_ps2_clk_delay[2] != 1'b0) ? 1'b1 : 1'b0;
-	assign w_ps2_device_phase	= (ff_ps2_clk_delay[1] == 1'b0 && ff_ps2_clk_delay[2] == 1'b0) ? 1'b1 : 1'b0;
-	assign w_ps2_rise_edge		= (ff_ps2_clk_delay[1] != 1'b0 && ff_ps2_clk_delay[2] == 1'b0) ? 1'b1 : 1'b0;
-	assign w_ps2_fall_edge		= (ff_ps2_clk_delay[1] == 1'b0 && ff_ps2_clk_delay[2] != 1'b0) ? 1'b1 : 1'b0;
+	assign w_ps2_host_phase		= (ff_ps2_clk_delay[3] != 1'b0 && ff_ps2_clk_delay[4] != 1'b0) ? 1'b1 : 1'b0;
+	assign w_ps2_device_phase	= (ff_ps2_clk_delay[3] == 1'b0 && ff_ps2_clk_delay[4] == 1'b0) ? 1'b1 : 1'b0;
+	assign w_ps2_rise_edge		= (ff_ps2_clk_delay[3] != 1'b0 && ff_ps2_clk_delay[4] == 1'b0) ? 1'b1 : 1'b0;
+	assign w_ps2_fall_edge		= (ff_ps2_clk_delay[3] == 1'b0 && ff_ps2_clk_delay[4] != 1'b0) ? 1'b1 : 1'b0;
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
@@ -398,28 +398,28 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	//	Timer
 	// ------------------------------------------------------------------------
-	localparam		TIMER_143USEC = 15'd16;			//	7.822usec * 16clock    = 125.152usec
-	localparam		TIMER_292MSEC = 15'd32767;		//	7.822usec * 32767clock = 256.303msec
+	localparam		TIMER_102USEC = 15'd23;			//	4.469usec * 23clock    = 102.787usec
+	localparam		TIMER_146MSEC = 15'd32767;		//	4.469usec * 32767clock = 146.435msec
 
 	assign w_timeout	= (ff_timer == 15'h0000) ? 1'b1 : 1'b0;
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
-			ff_timer <= TIMER_143USEC;
+			ff_timer <= TIMER_102USEC;
 		end
 		else if( w_clkena ) begin
 			if( w_timeout && ff_ps2_state == PS2_ST_RESET ) begin
-				ff_timer <= TIMER_292MSEC;
+				ff_timer <= TIMER_146MSEC;
 			end
 			else if( w_timeout && ff_ps2_sub_state == PS2_SUB_SND_REQUEST ) begin
-				ff_timer <= TIMER_292MSEC;
+				ff_timer <= TIMER_146MSEC;
 			end
 			else if( ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state == PS2_SUB_IDLE ) begin
 				if( ff_ps2_send ) begin
-					ff_timer <= TIMER_143USEC;
+					ff_timer <= TIMER_102USEC;
 				end
 				else begin
-					ff_timer <= TIMER_292MSEC;
+					ff_timer <= TIMER_146MSEC;
 				end
 			end
 			else if( !w_timeout ) begin
