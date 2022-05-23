@@ -322,6 +322,10 @@ module tb;
 		$display( "-- 0x%02X", ff_data );
 
 		ff_line_no = `__LINE__;
+		$display( "Send ACK." );
+		send_byte( 8'hFA );
+
+		ff_line_no = `__LINE__;
 		$display( "Receive LED option ff_data." );
 		recv_byte( ff_data );
 
@@ -333,56 +337,56 @@ module tb;
 		$display( "Key press test:" );
 		$display( "Scan Code 0x45: Full Key '0'" );
 		send_byte( 8'h45 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b11111110 );
 		# 200us
 
 		ff_line_no = `__LINE__;
 		$display( "Scan Code 0x16: Full Key '1'" );
 		send_byte( 8'h16 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b11111100 );
 		# 200us
 
 		ff_line_no = `__LINE__;
 		$display( "Scan Code 0x1E: Full Key '2'" );
 		send_byte( 8'h1E );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b11111000 );
 		# 200us
 
 		ff_line_no = `__LINE__;
 		$display( "Scan Code 0x26: Full Key '3'" );
 		send_byte( 8'h26 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b11110000 );
 		# 200us
 
 		ff_line_no = `__LINE__;
 		$display( "Scan Code 0x25: Full Key '4'" );
 		send_byte( 8'h25 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b11100000 );
 		# 200us
 
 		ff_line_no = `__LINE__;
 		$display( "Scan Code 0x2E: Full Key '5'" );
 		send_byte( 8'h2E );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b11000000 );
 		# 200us
 
 		ff_line_no = `__LINE__;
 		$display( "Scan Code 0x36: Full Key '6'" );
 		send_byte( 8'h36 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b10000000 );
 		# 200us
 
 		ff_line_no = `__LINE__;
 		$display( "Scan Code 0x3D: Full Key '7'" );
 		send_byte( 8'h3D );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b00000000 );
 		# 200us
 
@@ -391,7 +395,7 @@ module tb;
 		$display( "Scan Code 0x45: Full Key '0'" );
 		send_byte( 8'hF0 );
 		send_byte( 8'h45 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b00000001 );
 		# 200us
 
@@ -399,7 +403,7 @@ module tb;
 		$display( "Scan Code 0x16: Full Key '1'" );
 		send_byte( 8'hF0 );
 		send_byte( 8'h16 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b00000011 );
 		# 200us
 
@@ -407,7 +411,7 @@ module tb;
 		$display( "Scan Code 0x1E: Full Key '2'" );
 		send_byte( 8'hF0 );
 		send_byte( 8'h1E );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b00000111 );
 		# 200us
 
@@ -415,7 +419,7 @@ module tb;
 		$display( "Scan Code 0x26: Full Key '3'" );
 		send_byte( 8'hF0 );
 		send_byte( 8'h26 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b00001111 );
 		# 200us
 
@@ -423,7 +427,7 @@ module tb;
 		$display( "Scan Code 0x25: Full Key '4'" );
 		send_byte( 8'hF0 );
 		send_byte( 8'h25 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b00011111 );
 		# 200us
 
@@ -431,7 +435,7 @@ module tb;
 		$display( "Scan Code 0x2E: Full Key '5'" );
 		send_byte( 8'hF0 );
 		send_byte( 8'h2E );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b00111111 );
 		# 200us
 
@@ -439,7 +443,7 @@ module tb;
 		$display( "Scan Code 0x36: Full Key '6'" );
 		send_byte( 8'hF0 );
 		send_byte( 8'h36 );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b01111111 );
 		# 200us
 
@@ -447,7 +451,7 @@ module tb;
 		$display( "Scan Code 0x3D: Full Key '7'" );
 		send_byte( 8'hF0 );
 		send_byte( 8'h3D );
-		# 20us
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		# 200us
 
@@ -463,7 +467,7 @@ module tb;
 		send_byte( 8'h77 );
 		for( i = 0; i < 16; i++ ) begin
 			PpiPortC <= i;
-			repeat(4) @( posedge clkena );
+			# 50us
 			assert( dut_pKeyX == 8'b11111111 );
 		end
 		PpiPortC <= i;
@@ -477,7 +481,7 @@ module tb;
 		send_byte( 8'h7C );
 		for( i = 0; i < 16; i++ ) begin
 			PpiPortC <= i;
-			repeat(4) @( posedge clkena );
+			# 50us
 			assert( dut_pKeyX == 8'b11111111 );
 		end
 		PpiPortC <= i;
@@ -495,17 +499,17 @@ module tb;
 		# 200us
 
 		ff_line_no = `__LINE__;
-		# 20us
+		# 50us
 		assert( dut_Fkeys[6] == 1'b0 );
 		$display( "CTRL Left key test:" );
 		send_byte( 8'h14 );
-		# 20us
+		# 50us
 		assert( dut_Fkeys[6] == 1'b1 );
 		# 200us
 
 		send_byte( 8'hF0 );
 		send_byte( 8'h14 );
-		# 20us
+		# 50us
 		assert( dut_Fkeys[6] == 1'b0 );
 		# 200us
 
@@ -513,41 +517,41 @@ module tb;
 		$display( "CTRL Right key test:" );
 		send_byte( 8'hE0 );
 		send_byte( 8'h14 );
-		# 20us
+		# 50us
 		assert( dut_Fkeys[6] == 1'b1 );
 		# 200us
 
 		send_byte( 8'hE0 );
 		send_byte( 8'hF0 );
 		send_byte( 8'h14 );
-		# 20us
+		# 50us
 		assert( dut_Fkeys[6] == 1'b0 );
 		# 200us
 
-		# 20us
+		# 50us
 		assert( dut_Fkeys[7] == 1'b0 );
 		$display( "SHIFT Left key test:" );
 		send_byte( 8'h12 );
-		# 20us
+		# 50us
 		assert( dut_Fkeys[7] == 1'b1 );
 		# 200us
 
 		send_byte( 8'hF0 );
 		send_byte( 8'h12 );
-		# 20us
+		# 50us
 		assert( dut_Fkeys[7] == 1'b0 );
 		# 200us
 
 		ff_line_no = `__LINE__;
 		$display( "SHIFT Right key test:" );
 		send_byte( 8'h59 );
-		# 20us
+		# 50us
 		assert( dut_Fkeys[7] == 1'b1 );
 		# 200us
 
 		send_byte( 8'hF0 );
 		send_byte( 8'h59 );
-		# 20us
+		# 50us
 		assert( dut_Fkeys[7] == 1'b0 );
 		# 200us
 
@@ -605,52 +609,52 @@ module tb;
 
 		@( posedge clkena );
 		PpiPortC <= 0;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111110 );
 		PpiPortC <= 1;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111101 );
 		PpiPortC <= 2;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111011 );
 		PpiPortC <= 3;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11110111 );
 		PpiPortC <= 4;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11101111 );
 		PpiPortC <= 5;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11011111 );
 		PpiPortC <= 6;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b10111111 );
 		PpiPortC <= 7;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b01111111 );
 		PpiPortC <= 8;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111100 );
 		PpiPortC <= 9;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111010 );
 		PpiPortC <= 10;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11110110 );
 		PpiPortC <= 11;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11110101 );
 		PpiPortC <= 12;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 13;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 14;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 15;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11000000 );
 		# 200us
 
@@ -706,52 +710,52 @@ module tb;
 
 		@( posedge clkena );
 		PpiPortC <= 0;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 1;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 2;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 3;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 4;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 5;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 6;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 7;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 8;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 9;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 10;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 11;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 12;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 13;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 14;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 15;
-		repeat(4) @( posedge clkena );
+		# 50us
 		assert( dut_pKeyX == 8'b11111111 );
 		# 200us
 
@@ -760,43 +764,29 @@ module tb;
 		ff_org_pPs2Dat = 1'bZ;
 		ff_dut_pPs2Clk = 1'bZ;
 		ff_dut_pPs2Dat = 1'bZ;
-//		Caps = 1;
-//		$display( "dut_pPs2Clk === 1'b0" );
-//		@( dut_pPs2Clk === 1'b0 );
-//		$display( "dut_pPs2Clk === 1'bZ" );
-//		@( dut_pPs2Clk === 1'bZ );
-//		ff_org_pPs2Clk = 1'b1;
-//		ff_dut_pPs2Clk = 1'b1;
-//		recv_byte( ff_data );
-//		assert( ff_data == 8'hED );
-//		$display( "-- 0x%02X", ff_data );
-//
-//		# 200us
-//		recv_byte( ff_data );
-//		assert( ff_data == 8'hFF );
-//		$display( "-- 0x%02X", ff_data );
-//
-//		# 200us
-//
-//		ff_org_pPs2Clk = 1'bZ;
-//		ff_org_pPs2Dat = 1'bZ;
-//		ff_dut_pPs2Clk = 1'bZ;
-//		ff_dut_pPs2Dat = 1'bZ;
-//		Caps = 0;
-//		$display( "dut_pPs2Clk === 1'b0" );
-//		@( dut_pPs2Clk === 1'b0 );
-//		$display( "ff_dut_pPs2Clk === 1'bZ" );
-//		@( dut_pPs2Clk === 1'bZ );
-//		ff_org_pPs2Clk = 1'b1;
-//		ff_dut_pPs2Clk = 1'b1;
-//		recv_byte( ff_data );
-//		assert( ff_data == 8'hED );
-//		$display( "-- 0x%02X", ff_data );
-//
-//		# 200us
-//		recv_byte( ff_data );
-//		assert( ff_data == 8'hFF );
-//		$display( "-- 0x%02X", ff_data );
+
+		//	US Keymap
+		Kmap = 1'b1;
+
+		# 50us
+		PpiPortC <= 6;
+		assert( dut_Fkeys[7] == 1'b0 );
+		$display( "SHIFT Left key test:" );
+		send_byte( 8'h12 );
+		# 50us
+		assert( dut_Fkeys[7] == 1'b1 );
+		assert( dut_pKeyX == 8'b11111110 );
+		# 200us
+
+		# 50us
+		PpiPortC <= 1;
+		$display( "'2' key test ('@' Key test):" );
+		send_byte( 8'h1E );
+		# 200us
+		assert( dut_pKeyX == 8'b11011111 );
+		PpiPortC <= 6;
+		# 200us
+		assert( dut_pKeyX == 8'b11111111 );
 
 		# 200us
 		$finish;

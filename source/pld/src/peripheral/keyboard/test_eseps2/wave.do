@@ -17,7 +17,6 @@ add wave -noupdate /tb/u_eseps2/pPs2Dat
 add wave -noupdate /tb/u_eseps2/PpiPortC
 add wave -noupdate /tb/u_eseps2/pKeyX
 add wave -noupdate /tb/u_eseps2/CmtScro
-add wave -noupdate /tb/u_eseps2/debug_sig
 add wave -noupdate /tb/u_eseps2/ff_div
 add wave -noupdate /tb/u_eseps2/w_clkena
 add wave -noupdate /tb/u_eseps2/ff_timer
@@ -36,6 +35,7 @@ add wave -noupdate /tb/u_eseps2/w_ps2_rise_edge
 add wave -noupdate /tb/u_eseps2/w_ps2_fall_edge
 add wave -noupdate /tb/u_eseps2/w_ps2_led_change
 add wave -noupdate /tb/u_eseps2/ff_ps2_clk
+add wave -noupdate /tb/u_eseps2/ff_ps2_virtual_shift
 add wave -noupdate /tb/u_eseps2/ff_shift_key
 add wave -noupdate /tb/u_eseps2/ff_control_key
 add wave -noupdate /tb/u_eseps2/ff_numlk_key
@@ -61,7 +61,7 @@ add wave -noupdate /tb/u_eseps2/w_mask
 add wave -noupdate /tb/u_eseps2/w_matrix
 add wave -noupdate /tb/u_eseps2/ff_func_keys
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {5470494321 ps} 0}
+WaveRestoreCursors {{Cursor 1} {155428033939 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 218
 configure wave -valuecolwidth 100
@@ -77,4 +77,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {5414146778 ps} {6182252763 ps}
+WaveRestoreZoom {154659927955 ps} {156196139923 ps}

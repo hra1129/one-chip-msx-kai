@@ -75,6 +75,7 @@ module eseps2 #(
 	reg				ff_e0_detect;
 	reg				ff_e1_detect;
 	reg				ff_ps2_send;
+	reg				ff_ps2_virtual_shift;
 
 	// ------------------------------------------------------------------------
 	//	PS2 State Machine
@@ -90,8 +91,9 @@ module eseps2 #(
 	localparam		PS2_ST_SND_SETMON	= 4'd8;
 	localparam		PS2_ST_RCV_ACK3		= 4'd9;
 	localparam		PS2_ST_SND_OPT		= 4'd10;
-	localparam		PS2_ST_IDLE			= 4'd11;
-	localparam		PS2_ST_RCV_SCAN		= 4'd12;
+	localparam		PS2_ST_RCV_ACK4		= 4'd11;
+	localparam		PS2_ST_IDLE			= 4'd12;
+	localparam		PS2_ST_RCV_SCAN		= 4'd13;
 
 	localparam		PS2_SUB_IDLE		= 5'd0;
 	localparam		PS2_SUB_RCV_START	= 5'd1;
@@ -278,7 +280,19 @@ module eseps2 #(
 					begin
 						ff_ps2_send		<= 1'b0;
 						if( ff_ps2_sub_state == PS2_SUB_WAIT ) begin
-							ff_ps2_state	<= PS2_ST_IDLE;
+							ff_ps2_state	<= PS2_ST_RCV_ACK4;
+						end
+					end
+				PS2_ST_RCV_ACK4:
+					begin
+						if( ff_ps2_sub_state == PS2_SUB_WAIT ) begin
+							if( ff_ps2_rcv_dat == 8'hFA ) begin
+								ff_ps2_state	<= PS2_ST_IDLE;
+							end
+							else begin
+								ff_ps2_state	<= PS2_ST_SND_RESET;
+								ff_ps2_send		<= 1'b1;
+							end
 						end
 					end
 				PS2_ST_IDLE:
@@ -663,7 +677,7 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	//	MSX Key Matrix Updater
 	// ------------------------------------------------------------------------
-	localparam		MATUPD_ST_RESET0			= 5'd0;
+	localparam		MATUPD_ST_RESET0			= 5'd0;		// 0...15
 	localparam		MATUPD_ST_IDLE				= 5'd16;
 	localparam		MATUPD_ST_KEYMAP_READ		= 5'd17;
 	localparam		MATUPD_ST_MATRIX_READ_REQ	= 5'd18;
@@ -679,15 +693,17 @@ module eseps2 #(
 	wire	[7:0]	w_keymap_dat;
 	reg		[7:0]	ff_key_x;
 	wire	[7:0]	w_mask;
+	wire	[7:0]	w_matrix_pre;
 	wire	[7:0]	w_matrix;
 	reg		[5:0]	ff_func_keys;
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
-			ff_matupd_state	<= MATUPD_ST_RESET0;
-			ff_matupd_rows	<= 4'd0;
-			ff_matupd_we	<= 1'b1;
-			ff_matupd_keys	<= 8'hFF;
+			ff_matupd_state			<= MATUPD_ST_RESET0;
+			ff_matupd_rows			<= 4'd0;
+			ff_matupd_we			<= 1'b1;
+			ff_matupd_keys			<= 8'hFF;
+			ff_ps2_virtual_shift	<= 1'b0;
 		end
 		else begin
 			if( ff_matupd_state[4] == 1'b0 ) begin
@@ -726,10 +742,12 @@ module eseps2 #(
 				ff_matupd_state	<= MATUPD_ST_IDLE;
 				ff_matupd_we	<= 1'b1;
 				if( ff_key_unpress ) begin
-					ff_matupd_keys	<= w_matrix | w_mask;
+					ff_matupd_keys			<= w_matrix | w_mask;
+					ff_ps2_virtual_shift	<= ff_shift_key;
 				end
 				else begin
-					ff_matupd_keys	<= w_matrix & ~w_mask;
+					ff_matupd_keys			<= w_matrix & ~w_mask;
+					ff_ps2_virtual_shift	<= ff_key_bits[3];
 				end
 			end
 		end
@@ -777,16 +795,19 @@ module eseps2 #(
 			//	hold
 		end
 	end
-//	assign pKeyX = ff_key_x;
-	assign pKeyX = (ff_matupd_rows == 4'd14) ? { ff_ps2_sub_state[3:0], ff_ps2_state } : ff_key_x;
+	assign pKeyX = ff_key_x;
 
 	ram u_matrix_ram (
 	.adr	( { 4'd0, ff_matupd_rows }	),
 	.clk	( clk21m					),
 	.we		( ff_matupd_we				),
 	.dbo	( ff_matupd_keys			),
-	.dbi	( w_matrix					)
+	.dbi	( w_matrix_pre				)
 	);
+
+	assign w_matrix[7:1]	= w_matrix_pre[7:1];
+	assign w_matrix[0]		= ((Kmap == 1'b1) && (ff_matupd_rows == 4'd6)) ? ~ff_ps2_virtual_shift :		// Other Keymap
+	                  		  w_matrix_pre[0];
 
 	keymap u_keymap (
 	.adr	( ff_keymap_index	),
