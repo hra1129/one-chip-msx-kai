@@ -188,7 +188,7 @@ constant rom101 : rom_101 := (
 
 -- 101 keyboard (set 2) / Shift = ON
 --      PS/2 Scan code XX with Shift
-        X"FF", X"3F", X"FF", X"97", X"F6", X"D6", X"E6", X"0F", -- 00
+        X"FF", X"3F", X"FF", X"97", X"F6", X"D6", X"E6", X"8F", -- 00
         X"FF", X"2F", X"E7", X"A6", X"87", X"B7", X"B1", X"FF", -- 08
         X"FF", X"A6", X"86", X"C6", X"96", X"E4", X"90", X"FF", -- 10
         X"FF", X"FF", X"F5", X"85", X"E2", X"C5", X"51", X"FF", -- 18

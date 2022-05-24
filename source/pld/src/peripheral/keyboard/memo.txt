@@ -1,0 +1,7 @@
+(1) SHIFT + PRTSCR
+	SHIFT + ARROWS, SHIFT + /(NUMPAD)
+	--> Fixed.
+
+(2) F12 --> F12 double pressed
+
+(2) SHIFT+F12 --> SHIFT+F12 double pressed

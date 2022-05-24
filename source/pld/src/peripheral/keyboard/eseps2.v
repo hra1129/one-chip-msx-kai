@@ -168,12 +168,11 @@ module eseps2 #(
 			ff_ps2_send		<= 1'b0;
 		end
 		else if( w_clkena ) begin
-//			if( w_timeout && ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state != PS2_SUB_SND_REQUEST ) begin
-//				ff_ps2_state	<= PS2_ST_RESET;
-//				ff_ps2_send		<= 1'b0;
-//			end
-//			else begin
-			begin
+			if( w_timeout && ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state != PS2_SUB_SND_REQUEST ) begin
+				ff_ps2_state	<= PS2_ST_RESET;
+				ff_ps2_send		<= 1'b0;
+			end
+			else begin
 				case( ff_ps2_state )
 				PS2_ST_RESET:
 					begin
@@ -506,7 +505,7 @@ module eseps2 #(
 					//	Pause/Break == 'hE1:'h14:'h77:'hE1:'hF0:'h14:'hD0:'h77
 					ff_pause_toggle_key <= ~ff_pause_toggle_key;
 				end
-				if( ff_e1_detect == 1'b0 && ff_e0_detect == 1'b1 && ff_f0_detect == 1'b1 && ff_ps2_rcv_dat == 8'h12 ) begin
+				if( ff_e1_detect == 1'b0 && ff_e0_detect == 1'b1 && ff_f0_detect == 1'b1 && ff_ps2_rcv_dat == 8'h7C ) begin
 					//	PrintScreen == 'hE0:'12:'hE0:'h7C (pressed), 'hE0:'hF0:'h7C:'hE0:'hF0:'h12 (released)
 					ff_reso_toggle_key <= ~ff_reso_toggle_key;
 				end
