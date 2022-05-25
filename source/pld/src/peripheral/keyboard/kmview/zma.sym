@@ -1,0 +1,3 @@
+L1 equ 0c008h
+RESULT equ 0c013h
+START equ 0c000h

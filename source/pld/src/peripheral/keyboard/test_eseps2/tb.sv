@@ -607,6 +607,7 @@ module tb;
 		send_byte( 8'h07 );			//	F12
 		# 200us
 
+		ff_line_no = `__LINE__;
 		@( posedge clkena );
 		PpiPortC <= 0;
 		# 50us
@@ -658,6 +659,7 @@ module tb;
 		assert( dut_pKeyX == 8'b11000000 );
 		# 200us
 
+		ff_line_no = `__LINE__;
 		send_byte( 8'hF0 );
 		send_byte( 8'h45 );			//	0
 		send_byte( 8'hF0 );
@@ -708,6 +710,7 @@ module tb;
 		send_byte( 8'h07 );			//	F12
 		# 200us
 
+		ff_line_no = `__LINE__;
 		@( posedge clkena );
 		PpiPortC <= 0;
 		# 50us
@@ -759,6 +762,7 @@ module tb;
 		assert( dut_pKeyX == 8'b11111111 );
 		# 200us
 
+		ff_line_no = `__LINE__;
 		$display( "CAPS LED Control test:" );
 		ff_org_pPs2Clk = 1'bZ;
 		ff_org_pPs2Dat = 1'bZ;
@@ -787,8 +791,94 @@ module tb;
 		PpiPortC <= 6;
 		# 200us
 		assert( dut_pKeyX == 8'b11111111 );
-
 		# 200us
+
+		ff_line_no = `__LINE__;
+		$display( "PgUp key test:" );
+		send_byte( 8'hE0 );			//	PgUp (1st) press
+		send_byte( 8'h7D );			//	PgUp (2nd) press
+		# 200us
+		send_byte( 8'hE0 );			//	PgUp (1st) unpress
+		send_byte( 8'hF0 );			//	PgUp (2nd) unpress
+		send_byte( 8'h7D );			//	PgUp (3rd) unpress
+		# 200us
+		send_byte( 8'hE0 );			//	PgUp (1st) press
+		send_byte( 8'h7D );			//	PgUp (2nd) press
+		# 200us
+		send_byte( 8'hE0 );			//	PgUp (1st) unpress
+		send_byte( 8'hF0 );			//	PgUp (2nd) unpress
+		send_byte( 8'h7D );			//	PgUp (3rd) unpress
+		# 300us
+
+		ff_line_no = `__LINE__;
+		$display( "PgDn key test:" );
+		send_byte( 8'hE0 );			//	PgDn (1st) press
+		send_byte( 8'h7A );			//	PgDn (2nd) press
+		# 200us
+		send_byte( 8'hE0 );			//	PgDn (1st) unpress
+		send_byte( 8'hF0 );			//	PgDn (2nd) unpress
+		send_byte( 8'h7A );			//	PgDn (3rd) unpress
+		# 200us
+		send_byte( 8'hE0 );			//	PgDn (1st) press
+		send_byte( 8'h7A );			//	PgDn (2nd) press
+		# 200us
+		send_byte( 8'hE0 );			//	PgDn (1st) unpress
+		send_byte( 8'hF0 );			//	PgDn (2nd) unpress
+		send_byte( 8'h7A );			//	PgDn (3rd) unpress
+		# 300us
+
+		ff_line_no = `__LINE__;
+		$display( "F9 key test:" );
+		send_byte( 8'h01 );			//	F9 press
+		# 200us
+		send_byte( 8'hF0 );			//	F9 (1st) unpress
+		send_byte( 8'h01 );			//	F9 (2nd) unpress
+		# 200us
+		send_byte( 8'h01 );			//	F9 press
+		# 200us
+		send_byte( 8'hF0 );			//	F9 (1st) unpress
+		send_byte( 8'h01 );			//	F9 (2nd) unpress
+		# 300us
+
+		ff_line_no = `__LINE__;
+		$display( "F10 key test:" );
+		send_byte( 8'h09 );			//	F10 press
+		# 200us
+		send_byte( 8'hF0 );			//	F10 (1st) unpress
+		send_byte( 8'h09 );			//	F10 (2nd) unpress
+		# 200us
+		send_byte( 8'h09 );			//	F10 press
+		# 200us
+		send_byte( 8'hF0 );			//	F10 (1st) unpress
+		send_byte( 8'h09 );			//	F10 (2nd) unpress
+		# 300us
+
+		ff_line_no = `__LINE__;
+		$display( "F11 key test:" );
+		send_byte( 8'h78 );			//	F11 press
+		# 200us
+		send_byte( 8'hF0 );			//	F11 (1st) unpress
+		send_byte( 8'h78 );			//	F11 (2nd) unpress
+		# 200us
+		send_byte( 8'h78 );			//	F11 press
+		# 200us
+		send_byte( 8'hF0 );			//	F11 (1st) unpress
+		send_byte( 8'h78 );			//	F11 (2nd) unpress
+		# 300us
+
+		ff_line_no = `__LINE__;
+		$display( "F12 key test:" );
+		send_byte( 8'h07 );			//	F12 press
+		# 200us
+		send_byte( 8'hF0 );			//	F12 (1st) unpress
+		send_byte( 8'h07 );			//	F12 (2nd) unpress
+		# 200us
+		send_byte( 8'h07 );			//	F12 press
+		# 200us
+		send_byte( 8'hF0 );			//	F12 (1st) unpress
+		send_byte( 8'h07 );			//	F12 (2nd) unpress
+		# 300us
+
 		$finish;
 	end
 endmodule

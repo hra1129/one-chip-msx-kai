@@ -48,7 +48,7 @@ add wave -noupdate /tb/u_eseps2/ff_led_caps_lock
 add wave -noupdate /tb/u_eseps2/ff_led_kana_lock
 add wave -noupdate /tb/u_eseps2/ff_led_scroll_lock
 add wave -noupdate /tb/u_eseps2/ff_led_num_lock
-add wave -noupdate /tb/u_eseps2/ff_matupd_state
+add wave -noupdate -radix unsigned /tb/u_eseps2/ff_matupd_state
 add wave -noupdate /tb/u_eseps2/ff_matupd_we
 add wave -noupdate /tb/u_eseps2/ff_matupd_rows
 add wave -noupdate /tb/u_eseps2/ff_matupd_keys
@@ -61,7 +61,7 @@ add wave -noupdate /tb/u_eseps2/w_mask
 add wave -noupdate /tb/u_eseps2/w_matrix
 add wave -noupdate /tb/u_eseps2/ff_func_keys
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {155428033939 ps} 0}
+WaveRestoreCursors {{Cursor 1} {154784485682 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 218
 configure wave -valuecolwidth 100
@@ -77,4 +77,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {154659927955 ps} {156196139923 ps}
+WaveRestoreZoom {157490923979 ps} {157493267620 ps}

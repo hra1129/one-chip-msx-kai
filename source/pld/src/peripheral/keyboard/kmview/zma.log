@@ -1,0 +1,61 @@
+Z80 Macro Assembler ZMA v1.0.15
+=====================================================
+Programmed by t.hara
+
+<< code >>
+[	ORG 0XC000]
+	code address: 0x00c000
+
+[START ::]
+	global label address: 0x00c000
+
+[	DI] Z80:5cyc, R800:2cyc
+00c000: f3
+
+[	LD A , 0XF0] Z80:8cyc, R800:2cyc
+00c001: 3e f0
+
+[	LD C , 0XA9] Z80:8cyc, R800:2cyc
+00c003: 0e a9
+
+[	LD HL , RESULT] Z80:11cyc, R800:3cyc
+00c005: 21 13 c0
+
+[L1 :]
+	label address: 0x00c008
+
+[	OUT [ 0XAA ] , A] Z80:12cyc, R800:10 or 9cyc
+00c008: d3 aa
+
+[	IN B , [ C ]] Z80:14cyc, R800:10 or 9cyc
+00c00a: ed 40
+
+[	LD [ HL ] , B] Z80:8cyc, R800:4cyc
+00c00c: 70
+
+[	INC HL] Z80:7cyc, R800:1cyc
+00c00d: 23
+
+[	INC A] Z80:5cyc, R800:1cyc
+00c00e: 3c
+
+[	JR NZ , L1] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00c00f: 20 f7
+
+[	EI] Z80:5cyc, R800:1cyc
+00c011: fb
+
+[	RET] Z80:11cyc, R800:5cyc
+00c012: c9
+
+[RESULT ::]
+	global label address: 0x00c013
+
+[SPACE 16 , 0]
+	Allocate space: 16byte(s)
+		Fill value: 0
+
+<< label >>
+L1 49160 ( 0xc008 )
+RESULT 49171 ( 0xc013 )
+START 49152 ( 0xc000 )

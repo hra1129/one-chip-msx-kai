@@ -238,7 +238,7 @@ constant rom101 : rom_101 := (
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 60
         X"FF", X"C7", X"FF", X"C8", X"98", X"FF", X"FF", X"FF", -- 68
         X"A8", X"B8", X"E8", X"FF", X"F8", X"D8", X"FF", X"FF", -- 70
-        X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 78
+        X"FF", X"FF", X"CF", X"FF", X"FF", X"DF", X"FF", X"FF", -- 78
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 80
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 88
         X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", X"FF", -- 90

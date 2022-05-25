@@ -168,11 +168,12 @@ module eseps2 #(
 			ff_ps2_send		<= 1'b0;
 		end
 		else if( w_clkena ) begin
-			if( w_timeout && ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state != PS2_SUB_SND_REQUEST ) begin
-				ff_ps2_state	<= PS2_ST_RESET;
-				ff_ps2_send		<= 1'b0;
-			end
-			else begin
+//			if( w_timeout && ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state != PS2_SUB_SND_REQUEST ) begin
+//				ff_ps2_state	<= PS2_ST_RESET;
+//				ff_ps2_send		<= 1'b0;
+//			end
+//			else begin
+			begin
 				case( ff_ps2_state )
 				PS2_ST_RESET:
 					begin
@@ -703,6 +704,7 @@ module eseps2 #(
 			ff_matupd_we			<= 1'b1;
 			ff_matupd_keys			<= 8'hFF;
 			ff_ps2_virtual_shift	<= 1'b0;
+			ff_func_keys			<= 6'b000000;
 		end
 		else begin
 			if( ff_matupd_state[4] == 1'b0 ) begin
@@ -747,20 +749,11 @@ module eseps2 #(
 				else begin
 					ff_matupd_keys			<= w_matrix & ~w_mask;
 					ff_ps2_virtual_shift	<= ff_key_bits[3];
+					if( ff_matupd_rows == 4'hF ) begin
+						ff_func_keys <= ff_func_keys ^ w_mask[5:0];
+					end
 				end
 			end
-		end
-	end
-
-	always @( posedge reset or posedge clk21m ) begin
-		if( reset ) begin
-			ff_func_keys <= 6'b000000;
-		end
-		else if( ff_matupd_we && ff_matupd_rows == 4'hF ) begin
-			ff_func_keys <= ~ff_matupd_keys[5:0];
-		end
-		else begin
-			//	hold
 		end
 	end
 
