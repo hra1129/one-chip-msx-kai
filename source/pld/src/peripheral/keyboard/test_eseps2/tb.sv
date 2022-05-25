@@ -463,7 +463,24 @@ module tb;
 		send_byte( 8'hE1 );
 		send_byte( 8'hF0 );
 		send_byte( 8'h14 );
-		send_byte( 8'hD0 );
+		send_byte( 8'hF0 );
+		send_byte( 8'h77 );
+		for( i = 0; i < 16; i++ ) begin
+			PpiPortC <= i;
+			# 50us
+			assert( dut_pKeyX == 8'b11111111 );
+		end
+		PpiPortC <= i;
+		# 200us
+
+		$display( "Pause/Break key test2:" );
+		send_byte( 8'hE1 );
+		send_byte( 8'h14 );
+		send_byte( 8'h77 );
+		send_byte( 8'hE1 );
+		send_byte( 8'hF0 );
+		send_byte( 8'h14 );
+		send_byte( 8'hF0 );
 		send_byte( 8'h77 );
 		for( i = 0; i < 16; i++ ) begin
 			PpiPortC <= i;

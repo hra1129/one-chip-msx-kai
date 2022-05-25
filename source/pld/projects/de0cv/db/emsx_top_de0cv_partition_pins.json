@@ -144,14 +144,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "pLed[0]",
-					"strict" : false
-				},
-				{
-					"name" : "pLed[1]",
-					"strict" : false
-				},
-				{
 					"name" : "pLed[2]",
 					"strict" : false
 				},
@@ -205,6 +197,14 @@
 				},
 				{
 					"name" : "pStrB",
+					"strict" : false
+				},
+				{
+					"name" : "pLed[0]",
+					"strict" : false
+				},
+				{
+					"name" : "pLed[1]",
 					"strict" : false
 				},
 				{
@@ -620,15 +620,15 @@
 					"strict" : false
 				},
 				{
-					"name" : "pDip[0]",
-					"strict" : false
-				},
-				{
 					"name" : "pDip[6]",
 					"strict" : false
 				},
 				{
 					"name" : "pDip[7]",
+					"strict" : false
+				},
+				{
+					"name" : "pDip[0]",
 					"strict" : false
 				},
 				{
@@ -644,11 +644,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "pDip[1]",
+					"name" : "pDip[2]",
 					"strict" : false
 				},
 				{
-					"name" : "pDip[2]",
+					"name" : "pDip[1]",
 					"strict" : false
 				},
 				{

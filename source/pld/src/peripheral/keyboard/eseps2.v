@@ -502,7 +502,7 @@ module eseps2 #(
 					//	NumLk == 'h77
 					ff_numlk_key <= ~ff_numlk_key;
 				end
-				if( ff_e1_detect == 1'b1 && ff_f0_detect == 1'b1 && ff_ps2_rcv_dat == 8'hD0 ) begin
+				if( ff_e1_detect == 1'b1 && ff_f0_detect == 1'b1 && ff_ps2_rcv_dat == 8'h77 ) begin
 					//	Pause/Break == 'hE1:'h14:'h77:'hE1:'hF0:'h14:'hD0:'h77
 					ff_pause_toggle_key <= ~ff_pause_toggle_key;
 				end
@@ -637,7 +637,7 @@ module eseps2 #(
 				else begin
 					ff_f0_detect <= 1'b0;
 					ff_e0_detect <= 1'b0;
-					if( ff_ps2_rcv_dat != 8'h14 && ff_ps2_rcv_dat != 8'hD0 ) begin
+					if( ff_e1_detect && ff_f0_detect && ff_ps2_rcv_dat == 8'h77 ) begin
 						ff_e1_detect <= 1'b0;
 					end
 				end
