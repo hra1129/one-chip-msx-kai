@@ -33,7 +33,7 @@ module tb;
 	reg				ff_dut_pPs2Clk;
 	reg				ff_dut_pPs2Dat;
 
-	reg		[3:0]	ff_test_state;
+	reg		[15:0]	ff_test_state;
 	reg		[15:0]	ff_line_no;
 
 	reg		[7:0]	ff_data;
@@ -210,7 +210,7 @@ module tb;
 	);
 		reg ff_bit;
 
-		ff_test_state = 1;
+		ff_test_state = 101;
 		ff_org_pPs2Clk <= 1'bZ;
 		ff_dut_pPs2Clk <= 1'bZ;
 		ff_org_pPs2Dat <= 1'bZ;
@@ -219,38 +219,37 @@ module tb;
 		// start bit
 		@( dut_pPs2Clk === 1'b0 && dut_pPs2Dat === 1'b0 );
 		@( dut_pPs2Clk === 1'bZ );
-		ff_test_state = 2;
+		ff_test_state = 102;
 		recv_bit( ff_bit );
-		ff_test_state = 3;
+		ff_test_state = 103;
 		assert( ff_bit == 1'b0 );
 
 		// data bits
-		ff_test_state = 4;
 		recv_bit( data[0] );
-		ff_test_state = 5;
+		ff_test_state = 104;
 		recv_bit( data[1] );
-		ff_test_state = 6;
+		ff_test_state = 105;
 		recv_bit( data[2] );
-		ff_test_state = 7;
+		ff_test_state = 106;
 		recv_bit( data[3] );
-		ff_test_state = 8;
+		ff_test_state = 107;
 		recv_bit( data[4] );
-		ff_test_state = 9;
+		ff_test_state = 108;
 		recv_bit( data[5] );
-		ff_test_state = 10;
+		ff_test_state = 109;
 		recv_bit( data[6] );
-		ff_test_state = 11;
+		ff_test_state = 110;
 		recv_bit( data[7] );
-		ff_test_state = 12;
+		ff_test_state = 111;
 		// parity bit
 		recv_bit( ff_bit );
 		assert( ff_bit == ((^data) ^ 1'b1) );
 		//	ack
-		ff_test_state = 13;
+		ff_test_state = 112;
 		send_ack_bit( 1'b0 );
 
 		# 100us
-		ff_test_state = 14;
+		ff_test_state = 113;
 		ff_org_pPs2Clk <= 1'bZ;
 		ff_dut_pPs2Clk <= 1'bZ;
 		ff_org_pPs2Dat <= 1'bZ;

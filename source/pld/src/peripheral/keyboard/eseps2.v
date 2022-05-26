@@ -412,7 +412,7 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	//	Timer
 	// ------------------------------------------------------------------------
-	localparam		TIMER_102USEC = 15'd23;			//	4.469usec * 23clock    = 102.787usec
+	localparam		TIMER_102USEC = 15'd33;			//	4.469usec * 33clock    = 147.477usec
 	localparam		TIMER_146MSEC = 15'd32767;		//	4.469usec * 32767clock = 146.435msec
 
 	assign w_timeout	= (ff_timer == 15'h0000) ? 1'b1 : 1'b0;
@@ -534,7 +534,7 @@ module eseps2 #(
 		end
 		else if( w_clkena ) begin
 			if( ff_ps2_sub_state == PS2_SUB_SND_REQUEST ) begin
-				if( ff_timer == 16'd16 ) begin
+				if( ff_timer == 16'd10 ) begin		//	33 - 10 = 23 : 23clock = 102.787usec
 					ff_ps2_dat <= 1'b0;
 				end
 			end
