@@ -4,6 +4,26 @@
 			"name" : "Top",
 			"pins" : [
 				{
+					"name" : "p7SegLed5[2]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed5[6]",
+					"strict" : false
+				},
+				{
+					"name" : "pVideoHS_n",
+					"strict" : false
+				},
+				{
+					"name" : "pVideoVS_n",
+					"strict" : false
+				},
+				{
+					"name" : "pLed[9]",
+					"strict" : false
+				},
+				{
 					"name" : "p7SegLed0[0]",
 					"strict" : false
 				},
@@ -29,22 +49,6 @@
 				},
 				{
 					"name" : "p7SegLed0[6]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed5[2]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed5[6]",
-					"strict" : false
-				},
-				{
-					"name" : "pVideoHS_n",
-					"strict" : false
-				},
-				{
-					"name" : "pVideoVS_n",
 					"strict" : false
 				},
 				{
@@ -176,10 +180,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "pLed[9]",
-					"strict" : false
-				},
-				{
 					"name" : "p7SegLed5[0]",
 					"strict" : false
 				},
@@ -232,30 +232,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "p7SegLed2[0]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[2]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[3]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[4]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[5]",
-					"strict" : false
-				},
-				{
-					"name" : "p7SegLed2[6]",
-					"strict" : false
-				},
-				{
 					"name" : "p7SegLed3[0]",
 					"strict" : false
 				},
@@ -288,6 +264,30 @@
 					"strict" : false
 				},
 				{
+					"name" : "p7SegLed2[0]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed2[2]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed2[3]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed2[4]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed2[5]",
+					"strict" : false
+				},
+				{
+					"name" : "p7SegLed2[6]",
+					"strict" : false
+				},
+				{
 					"name" : "pSltDat[0]",
 					"strict" : false
 				},
@@ -317,6 +317,10 @@
 				},
 				{
 					"name" : "pSltDat[7]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltWr_n",
 					"strict" : false
 				},
 				{
@@ -381,10 +385,6 @@
 				},
 				{
 					"name" : "pSltAdr[15]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltWr_n",
 					"strict" : false
 				},
 				{

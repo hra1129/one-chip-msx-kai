@@ -1199,6 +1199,7 @@ reset => ff_keymap_index[7].OUTPUTSELECT
 reset => ff_keymap_index[8].OUTPUTSELECT
 reset => ff_keymap_index[9].OUTPUTSELECT
 reset => ff_keymap_index[10].OUTPUTSELECT
+reset => ff_matupd_ppi_c.ACLR
 reset => ff_func_keys[0].ACLR
 reset => ff_func_keys[1].ACLR
 reset => ff_func_keys[2].ACLR

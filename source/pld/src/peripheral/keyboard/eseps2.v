@@ -682,6 +682,7 @@ module eseps2 #(
 	localparam		MATUPD_ST_MATRIX_WRITE		= 5'd20;
 	reg		[4:0]	ff_matupd_state;
 	reg				ff_matupd_we;
+	reg				ff_matupd_ppi_c;
 	reg		[3:0]	ff_matupd_rows;
 	reg		[7:0]	ff_matupd_keys;
 	reg		[10:0]	ff_keymap_index;
@@ -702,6 +703,7 @@ module eseps2 #(
 			ff_matupd_keys			<= 8'hFF;
 			ff_ps2_virtual_shift	<= 1'b0;
 			ff_func_keys			<= 6'b000000;
+			ff_matupd_ppi_c			<= 1'b0;
 		end
 		else begin
 			if( ff_matupd_state[4] == 1'b0 ) begin
@@ -715,9 +717,11 @@ module eseps2 #(
 					ff_matupd_state	<= MATUPD_ST_KEYMAP_READ;
 					ff_key_unpress	<= ff_f0_detect;
 					ff_keymap_index	<= { ~Kmap, ff_shift_key & Kmap, ff_e0_detect, ff_ps2_rcv_dat };
+					ff_matupd_ppi_c	<= 1'b0;
 				end
 				else begin
 					ff_matupd_rows	<= PpiPortC[3:0];
+					ff_matupd_ppi_c	<= 1'b1;
 				end
 			end
 			else if( ff_matupd_state == MATUPD_ST_KEYMAP_READ ) begin
@@ -745,9 +749,11 @@ module eseps2 #(
 				end
 				else begin
 					ff_matupd_keys			<= w_matrix & ~w_mask;
-					ff_ps2_virtual_shift	<= ff_key_bits[3];
 					if( ff_matupd_rows == 4'hF ) begin
 						ff_func_keys <= ff_func_keys ^ w_mask[5:0];
+					end
+					else begin
+						ff_ps2_virtual_shift	<= ff_key_bits[3];
 					end
 				end
 			end
@@ -778,7 +784,12 @@ module eseps2 #(
 			ff_key_x <= 8'hFF;
 		end
 		else if( ff_matupd_state == MATUPD_ST_IDLE ) begin
-			ff_key_x <= w_matrix;
+			if( ff_matupd_ppi_c ) begin
+				ff_key_x <= w_matrix;
+			end
+			else begin
+				//	hold
+			end
 		end
 		else begin
 			//	hold
