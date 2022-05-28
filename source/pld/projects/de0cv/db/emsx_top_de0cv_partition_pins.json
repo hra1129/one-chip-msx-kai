@@ -144,6 +144,14 @@
 					"strict" : false
 				},
 				{
+					"name" : "pLed[0]",
+					"strict" : false
+				},
+				{
+					"name" : "pLed[1]",
+					"strict" : false
+				},
+				{
 					"name" : "pLed[2]",
 					"strict" : false
 				},
@@ -197,14 +205,6 @@
 				},
 				{
 					"name" : "pStrB",
-					"strict" : false
-				},
-				{
-					"name" : "pLed[0]",
-					"strict" : false
-				},
-				{
-					"name" : "pLed[1]",
 					"strict" : false
 				},
 				{
@@ -288,15 +288,35 @@
 					"strict" : false
 				},
 				{
-					"name" : "pSltIorq_n",
+					"name" : "pSltDat[0]",
 					"strict" : false
 				},
 				{
-					"name" : "pSltRd_n",
+					"name" : "pSltDat[1]",
 					"strict" : false
 				},
 				{
-					"name" : "pSltWr_n",
+					"name" : "pSltDat[2]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[3]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[4]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[5]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[6]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltDat[7]",
 					"strict" : false
 				},
 				{
@@ -361,6 +381,10 @@
 				},
 				{
 					"name" : "pSltAdr[15]",
+					"strict" : false
+				},
+				{
+					"name" : "pSltWr_n",
 					"strict" : false
 				},
 				{
@@ -508,6 +532,14 @@
 					"strict" : false
 				},
 				{
+					"name" : "pSltIorq_n",
+					"strict" : false
+				},
+				{
+					"name" : "pSltRd_n",
+					"strict" : false
+				},
+				{
 					"name" : "pSltCs1_n",
 					"strict" : false
 				},
@@ -576,38 +608,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "pSltDat[0]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[1]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[2]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[3]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[4]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[5]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[6]",
-					"strict" : false
-				},
-				{
-					"name" : "pSltDat[7]",
-					"strict" : false
-				},
-				{
 					"name" : "RESET_N",
 					"strict" : false
 				},
@@ -620,15 +620,15 @@
 					"strict" : false
 				},
 				{
+					"name" : "pDip[0]",
+					"strict" : false
+				},
+				{
 					"name" : "pDip[6]",
 					"strict" : false
 				},
 				{
 					"name" : "pDip[7]",
-					"strict" : false
-				},
-				{
-					"name" : "pDip[0]",
 					"strict" : false
 				},
 				{
@@ -644,11 +644,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "pDip[2]",
+					"name" : "pDip[1]",
 					"strict" : false
 				},
 				{
-					"name" : "pDip[1]",
+					"name" : "pDip[2]",
 					"strict" : false
 				},
 				{

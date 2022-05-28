@@ -168,12 +168,11 @@ module eseps2 #(
 			ff_ps2_send		<= 1'b0;
 		end
 		else if( w_clkena ) begin
-//			if( w_timeout && ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state != PS2_SUB_SND_REQUEST ) begin
-//				ff_ps2_state	<= PS2_ST_RESET;
-//				ff_ps2_send		<= 1'b0;
-//			end
-//			else begin
-			begin
+			if( w_timeout && ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state != PS2_SUB_SND_REQUEST ) begin
+				ff_ps2_state	<= PS2_ST_RESET;
+				ff_ps2_send		<= 1'b0;
+			end
+			else begin
 				case( ff_ps2_state )
 				PS2_ST_RESET:
 					begin
@@ -391,12 +390,12 @@ module eseps2 #(
 					end
 				PS2_SUB_SND_ACK:
 					begin
-						if( w_ps2_rise_edge ) begin
+//						if( w_ps2_rise_edge ) begin
 							ff_ps2_sub_state <= PS2_SUB_WAIT;
-						end
-						else begin
+//						end
+//						else begin
 							//	hold
-						end
+//						end
 					end
 				PS2_SUB_WAIT:
 					begin
@@ -412,14 +411,14 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	//	Timer
 	// ------------------------------------------------------------------------
-	localparam		TIMER_102USEC = 15'd33;			//	4.469usec * 33clock    = 147.477usec
+	localparam		TIMER_107USEC = 15'd24;			//	4.469usec * 24clock    = 107.256usec
 	localparam		TIMER_146MSEC = 15'd32767;		//	4.469usec * 32767clock = 146.435msec
 
 	assign w_timeout	= (ff_timer == 15'h0000) ? 1'b1 : 1'b0;
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
-			ff_timer <= TIMER_102USEC;
+			ff_timer <= TIMER_107USEC;
 		end
 		else if( w_clkena ) begin
 			if( w_timeout && ff_ps2_state == PS2_ST_RESET ) begin
@@ -430,7 +429,7 @@ module eseps2 #(
 			end
 			else if( ff_ps2_state != PS2_ST_RESET && ff_ps2_sub_state == PS2_SUB_IDLE ) begin
 				if( ff_ps2_send ) begin
-					ff_timer <= TIMER_102USEC;
+					ff_timer <= TIMER_107USEC;
 				end
 				else begin
 					ff_timer <= TIMER_146MSEC;
@@ -534,9 +533,7 @@ module eseps2 #(
 		end
 		else if( w_clkena ) begin
 			if( ff_ps2_sub_state == PS2_SUB_SND_REQUEST ) begin
-				if( ff_timer == 16'd10 ) begin		//	33 - 10 = 23 : 23clock = 102.787usec
-					ff_ps2_dat <= 1'b0;
-				end
+				ff_ps2_dat <= 1'b0;
 			end
 			else if( w_ps2_device_phase ) begin
 				case( ff_ps2_sub_state )
@@ -788,6 +785,9 @@ module eseps2 #(
 		end
 	end
 	assign pKeyX = ff_key_x;
+//	assign pKeyX = (PpiPortC[3:0] == 4'd12) ? ff_ps2_rcv_dat:
+//	               (PpiPortC[3:0] == 4'd13) ? { 3'd0, ff_ps2_sub_state }:
+//	               (PpiPortC[3:0] == 4'd14) ? { 4'd0, ff_ps2_state }:  ff_key_x;
 
 	ram u_matrix_ram (
 	.adr	( { 4'd0, ff_matupd_rows }	),

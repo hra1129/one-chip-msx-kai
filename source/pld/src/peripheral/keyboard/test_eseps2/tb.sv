@@ -188,10 +188,10 @@ module tb;
 	);
 		ff_org_pPs2Clk <= 1'b1;
 		ff_dut_pPs2Clk <= 1'b1;
-		#500ns
+		#20us
 		ff_org_pPs2Dat <= data;
 		ff_dut_pPs2Dat <= data;
-		#39500ns
+		#20us
 
 		ff_org_pPs2Clk <= 1'b0;
 		ff_dut_pPs2Clk <= 1'b0;
