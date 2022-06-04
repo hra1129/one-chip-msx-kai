@@ -296,7 +296,7 @@ module eseps2 #(
 					end
 				PS2_ST_IDLE:
 					begin
-						if( w_ps2_host_phase && w_ps2_led_change ) begin
+						if( w_ps2_host_phase && w_ps2_led_change && !ff_f0_detect && !ff_e0_detect && !ff_e1_detect ) begin
 							ff_ps2_state	<= PS2_ST_SND_SETMON;
 							ff_ps2_send		<= 1'b1;
 						end
@@ -676,10 +676,14 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	localparam		MATUPD_ST_RESET0			= 5'd0;		// 0...15
 	localparam		MATUPD_ST_IDLE				= 5'd16;
-	localparam		MATUPD_ST_KEYMAP_READ		= 5'd17;
-	localparam		MATUPD_ST_MATRIX_READ_REQ	= 5'd18;
-	localparam		MATUPD_ST_MATRIX_READ_RES	= 5'd19;
-	localparam		MATUPD_ST_MATRIX_WRITE		= 5'd20;
+	localparam		MATUPD_ST_KEYMAP_READ1		= 5'd17;
+	localparam		MATUPD_ST_MATRIX_READ1_REQ	= 5'd18;
+	localparam		MATUPD_ST_MATRIX_READ1_RES	= 5'd19;
+	localparam		MATUPD_ST_MATRIX_WRITE1		= 5'd20;
+	localparam		MATUPD_ST_KEYMAP_READ2		= 5'd21;
+	localparam		MATUPD_ST_MATRIX_READ2_REQ	= 5'd22;
+	localparam		MATUPD_ST_MATRIX_READ2_RES	= 5'd23;
+	localparam		MATUPD_ST_MATRIX_WRITE2		= 5'd24;
 	reg		[4:0]	ff_matupd_state;
 	reg				ff_matupd_we;
 	reg				ff_matupd_ppi_c;
@@ -714,9 +718,9 @@ module eseps2 #(
 			else if( ff_matupd_state == MATUPD_ST_IDLE ) begin
 				ff_matupd_we	<= 1'b0;
 				if( w_clkena && (ff_ps2_state == PS2_ST_RCV_SCAN) && (ff_ps2_sub_state == PS2_SUB_WAIT) && !ff_e1_detect ) begin
-					ff_matupd_state	<= MATUPD_ST_KEYMAP_READ;
+					ff_matupd_state	<= MATUPD_ST_KEYMAP_READ1;
 					ff_key_unpress	<= ff_f0_detect;
-					ff_keymap_index	<= { ~Kmap, ff_shift_key & Kmap, ff_e0_detect, ff_ps2_rcv_dat };
+					ff_keymap_index	<= { ~Kmap, ~ff_shift_key & Kmap, ff_e0_detect, ff_ps2_rcv_dat };
 					ff_matupd_ppi_c	<= 1'b0;
 				end
 				else begin
@@ -724,23 +728,50 @@ module eseps2 #(
 					ff_matupd_ppi_c	<= 1'b1;
 				end
 			end
-			else if( ff_matupd_state == MATUPD_ST_KEYMAP_READ ) begin
-				ff_matupd_state	<= MATUPD_ST_MATRIX_READ_REQ;
+			//	Keymap によって [SHIFT] の有無で対応する MSX側マトリクスアドレスが変わることがある。
+			//	キーの解放順序によってその不整合が発生しないように、現在押された/放されたキーの [SHIFT]キーの逆転キーに対応する MSXマトリクス
+			//	ビットを、一旦放された状態に変更する。
+			else if( ff_matupd_state == MATUPD_ST_KEYMAP_READ1 ) begin
+				ff_matupd_state	<= MATUPD_ST_MATRIX_READ1_REQ;
 			end
-			else if( ff_matupd_state == MATUPD_ST_MATRIX_READ_REQ ) begin
+			else if( ff_matupd_state == MATUPD_ST_MATRIX_READ1_REQ ) begin
 				if( w_keymap_dat == 8'hFF ) begin
-					ff_matupd_state	<= MATUPD_ST_IDLE;
+					ff_matupd_state	<= MATUPD_ST_KEYMAP_READ2;
 				end
 				else begin
-					ff_matupd_state	<= MATUPD_ST_MATRIX_READ_RES;
+					ff_matupd_state	<= MATUPD_ST_MATRIX_READ1_RES;
 					ff_matupd_rows	<= w_keymap_dat[3:0];
 					ff_key_bits		<= w_keymap_dat[7:4];
 				end
 			end
-			else if( ff_matupd_state == MATUPD_ST_MATRIX_READ_RES ) begin
-				ff_matupd_state	<= MATUPD_ST_MATRIX_WRITE;
+			else if( ff_matupd_state == MATUPD_ST_MATRIX_READ1_RES ) begin
+				ff_matupd_state	<= MATUPD_ST_MATRIX_WRITE1;
 			end
-			else if( ff_matupd_state == MATUPD_ST_MATRIX_WRITE ) begin
+			else if( ff_matupd_state == MATUPD_ST_MATRIX_WRITE1 ) begin
+				ff_matupd_state	<= MATUPD_ST_KEYMAP_READ2;
+				ff_matupd_we	<= 1'b1;
+				ff_matupd_keys	<= w_matrix | w_mask;
+				ff_keymap_index	<= { ~Kmap, ff_shift_key & Kmap, ff_e0_detect, ff_ps2_rcv_dat };
+			end
+			//	ここからは、現在押された/放されたキーに対応する MSXマトリクスのビットを適切な値で上書きする
+			else if( ff_matupd_state == MATUPD_ST_KEYMAP_READ2 ) begin
+				ff_matupd_we	<= 1'b0;
+				ff_matupd_state	<= MATUPD_ST_MATRIX_READ2_REQ;
+			end
+			else if( ff_matupd_state == MATUPD_ST_MATRIX_READ2_REQ ) begin
+				if( w_keymap_dat == 8'hFF ) begin
+					ff_matupd_state	<= MATUPD_ST_IDLE;
+				end
+				else begin
+					ff_matupd_state	<= MATUPD_ST_MATRIX_READ2_RES;
+					ff_matupd_rows	<= w_keymap_dat[3:0];
+					ff_key_bits		<= w_keymap_dat[7:4];
+				end
+			end
+			else if( ff_matupd_state == MATUPD_ST_MATRIX_READ2_RES ) begin
+				ff_matupd_state	<= MATUPD_ST_MATRIX_WRITE2;
+			end
+			else if( ff_matupd_state == MATUPD_ST_MATRIX_WRITE2 ) begin
 				ff_matupd_state	<= MATUPD_ST_IDLE;
 				ff_matupd_we	<= 1'b1;
 				if( ff_key_unpress ) begin

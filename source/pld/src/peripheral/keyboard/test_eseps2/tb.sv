@@ -895,6 +895,56 @@ module tb;
 		send_byte( 8'h07 );			//	F12 (2nd) unpress
 		# 300us
 
+		send_byte( 8'hF0 );			//	SHIFT unpress
+		send_byte( 8'h12 );			//	SHIFT unpress
+		# 200us
+
+		//	US Keymap
+		ff_line_no = `__LINE__;
+		Kmap = 1'b1;
+		$display( "[SHIFT + 2] key test:" );
+		send_byte( 8'h12 );			//	SHIFT press
+		# 200us
+
+		PpiPortC <= 0;
+		# 50us
+		assert( dut_pKeyX == 8'b11111111 );
+		PpiPortC <= 1;
+		# 50us
+		assert( dut_pKeyX == 8'b11111111 );
+
+		send_byte( 8'h1E );			//	2 press
+		# 200us
+
+		PpiPortC <= 0;
+		# 50us
+		assert( dut_pKeyX == 8'b11111111 );
+		PpiPortC <= 1;
+		# 50us
+		assert( dut_pKeyX == 8'b11011111 );
+
+		send_byte( 8'hF0 );			//	SHIFT (1st) unpress
+		send_byte( 8'h12 );			//	SHIFT (2nd) unpress
+		# 200us
+
+		PpiPortC <= 0;
+		# 50us
+		assert( dut_pKeyX == 8'b11111111 );
+		PpiPortC <= 1;
+		# 50us
+		assert( dut_pKeyX == 8'b11111111 );
+
+		send_byte( 8'hF0 );			//	2 (1st) unpress
+		send_byte( 8'h1E );			//	2 (2nd) unpress
+		# 200us
+
+		PpiPortC <= 0;
+		# 50us
+		assert( dut_pKeyX == 8'b11111111 );
+		PpiPortC <= 1;
+		# 50us
+		assert( dut_pKeyX == 8'b11111111 );
+
 		$finish;
 	end
 endmodule

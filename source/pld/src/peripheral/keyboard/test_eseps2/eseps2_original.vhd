@@ -108,7 +108,13 @@ architecture RTL of eseps2_original is
   signal ff_Reso : std_logic;
   signal ff_Scro : std_logic;
   signal ff_Fkeys: std_logic_vector(7 downto 0);
- 
+
+  signal ff_Ps2Vshi : std_logic; -- debug
+  signal ff_Ps2Shif : std_logic; -- debug
+  type typMtxSeq is (MtxIdle, MtxSettle, MtxClean, MtxRead, MtxWrite, MtxEnd, MtxReset);
+  signal ff_MtxSeq : typMtxSeq;
+  signal ff_KeyId   : std_logic_vector(8 downto 0);
+
   component ram is
     port (
       adr : in  std_logic_vector(7 downto 0);
@@ -157,7 +163,7 @@ begin
 
     variable KeyId   : std_logic_vector(8 downto 0);
 
-    type typMtxSeq is (MtxIdle, MtxSettle, MtxClean, MtxRead, MtxWrite, MtxEnd, MtxReset);
+--  type typMtxSeq is (MtxIdle, MtxSettle, MtxClean, MtxRead, MtxWrite, MtxEnd, MtxReset);
     variable MtxSeq : typMtxSeq;
     variable MtxTmp : std_logic_vector(3 downto 0);
 
@@ -213,9 +219,11 @@ begin
 
               KeyId := Ps2xE0 & Ps2Dat;
               if Kmap = '1' then
+                -- USレイアウトの場合 
                 MtxSeq := MtxSettle;
                 MtxIdx <= "0" & (not Ps2Shif) & KeyId;
               else
+                -- JPレイアウトの場合
                 MtxSeq := MtxRead;
                 MtxIdx <= "10" & KeyId;
               end if;
@@ -478,6 +486,10 @@ begin
 
     ff_Fkeys <= oFkeys;
 
+    ff_Ps2Vshi <= Ps2Vshi;
+    ff_Ps2Shif <= Ps2Shif;
+    ff_MtxSeq <= MtxSeq;
+    ff_KeyId <= KeyId;
   end process;
 
   pPs2Clk <= 'Z';
