@@ -809,6 +809,28 @@ module tb;
 		assert( dut_pKeyX == 8'b11111111 );
 		# 200us
 
+		send_byte( 8'hF0 );
+		send_byte( 8'h1E );
+
+		PpiPortC <= 1;
+		# 200us
+		assert( dut_pKeyX == 8'b11111111 );
+		PpiPortC <= 6;
+		# 200us
+		assert( dut_pKeyX == 8'b11111110 );
+		# 200us
+
+		send_byte( 8'hF0 );
+		send_byte( 8'h12 );
+
+		PpiPortC <= 1;
+		# 200us
+		assert( dut_pKeyX == 8'b11111111 );
+		PpiPortC <= 6;
+		# 200us
+		assert( dut_pKeyX == 8'b11111111 );
+		# 200us
+
 		ff_line_no = `__LINE__;
 		$display( "PgUp key test:" );
 		send_byte( 8'hE0 );			//	PgUp (1st) press
@@ -932,7 +954,7 @@ module tb;
 		assert( dut_pKeyX == 8'b11111111 );
 		PpiPortC <= 1;
 		# 50us
-		assert( dut_pKeyX == 8'b11111111 );
+		assert( dut_pKeyX == 8'b11011111 );		// シフトキーを解放したが、仮想シフトキーを押してる状態なので @ が押されたまま。
 
 		send_byte( 8'hF0 );			//	2 (1st) unpress
 		send_byte( 8'h1E );			//	2 (2nd) unpress
