@@ -598,14 +598,12 @@ module eseps2 #(
 		else if( w_clkena ) begin
 			if( w_ps2_fall_edge ) begin
 				case( ff_ps2_sub_state )
-				PS2_SUB_RCV_START:	ff_ps2_rcv_dat[0] <= pPs2Dat;
-				PS2_SUB_RCV_D0:		ff_ps2_rcv_dat[1] <= pPs2Dat;
-				PS2_SUB_RCV_D1:		ff_ps2_rcv_dat[2] <= pPs2Dat;
-				PS2_SUB_RCV_D2:		ff_ps2_rcv_dat[3] <= pPs2Dat;
-				PS2_SUB_RCV_D3:		ff_ps2_rcv_dat[4] <= pPs2Dat;
-				PS2_SUB_RCV_D4:		ff_ps2_rcv_dat[5] <= pPs2Dat;
-				PS2_SUB_RCV_D5:		ff_ps2_rcv_dat[6] <= pPs2Dat;
-				PS2_SUB_RCV_D6:		ff_ps2_rcv_dat[7] <= pPs2Dat;
+				PS2_SUB_RCV_START, 
+				PS2_SUB_RCV_D0, PS2_SUB_RCV_D1, PS2_SUB_RCV_D2, PS2_SUB_RCV_D3, 
+				PS2_SUB_RCV_D4, PS2_SUB_RCV_D5, PS2_SUB_RCV_D6:	
+					begin
+						ff_ps2_rcv_dat <= { pPs2Dat, ff_ps2_rcv_dat[7:1] };
+					end
 				default:
 					begin
 						//	hold
@@ -675,17 +673,17 @@ module eseps2 #(
 	// ------------------------------------------------------------------------
 	//	MSX Key Matrix Updater
 	// ------------------------------------------------------------------------
-	localparam		MATUPD_ST_RESET0			= 5'd0;		// 0...15
-	localparam		MATUPD_ST_IDLE				= 5'd16;
-	localparam		MATUPD_ST_KEYMAP_READ1		= 5'd17;
-	localparam		MATUPD_ST_MATRIX_READ1_REQ	= 5'd18;
-	localparam		MATUPD_ST_MATRIX_READ1_RES	= 5'd19;
-	localparam		MATUPD_ST_MATRIX_WRITE1		= 5'd20;
-	localparam		MATUPD_ST_KEYMAP_READ2		= 5'd21;
-	localparam		MATUPD_ST_MATRIX_READ2_REQ	= 5'd22;
-	localparam		MATUPD_ST_MATRIX_READ2_RES	= 5'd23;
-	localparam		MATUPD_ST_MATRIX_WRITE2		= 5'd24;
-	reg		[4:0]	ff_matupd_state;
+	localparam		MATUPD_ST_RESET				= 4'd0;
+	localparam		MATUPD_ST_IDLE				= 4'd1;
+	localparam		MATUPD_ST_KEYMAP_READ1		= 4'd2;
+	localparam		MATUPD_ST_MATRIX_READ1_REQ	= 4'd3;
+	localparam		MATUPD_ST_MATRIX_READ1_RES	= 4'd4;
+	localparam		MATUPD_ST_MATRIX_WRITE1		= 4'd5;
+	localparam		MATUPD_ST_KEYMAP_READ2		= 4'd6;
+	localparam		MATUPD_ST_MATRIX_READ2_REQ	= 4'd7;
+	localparam		MATUPD_ST_MATRIX_READ2_RES	= 4'd8;
+	localparam		MATUPD_ST_MATRIX_WRITE2		= 4'd9;
+	reg		[3:0]	ff_matupd_state;
 	reg				ff_matupd_we;
 	reg				ff_matupd_ppi_c;
 	reg		[3:0]	ff_matupd_rows;
@@ -702,7 +700,7 @@ module eseps2 #(
 
 	always @( posedge reset or posedge clk21m ) begin
 		if( reset ) begin
-			ff_matupd_state			<= MATUPD_ST_RESET0;
+			ff_matupd_state			<= MATUPD_ST_RESET;
 			ff_matupd_rows			<= 4'd0;
 			ff_matupd_we			<= 1'b1;
 			ff_matupd_keys			<= 8'hFF;
@@ -711,10 +709,12 @@ module eseps2 #(
 			ff_matupd_ppi_c			<= 1'b0;
 		end
 		else begin
-			if( ff_matupd_state[4] == 1'b0 ) begin
-				//	MATUPD_ST_RESET0 ... 15: Clear all keys to unpressed state.
-				ff_matupd_rows	<= ff_matupd_state[3:0];
-				ff_matupd_state	<= ff_matupd_state + 5'd1;
+			if( ff_matupd_state == MATUPD_ST_RESET ) begin
+				//	MATUPD_ST_RESET: Clear all keys to unpressed state.
+				ff_matupd_rows	<= ff_matupd_rows + 4'd1;
+				if( ff_matupd_rows == 4'd15 ) begin
+					ff_matupd_state	<= MATUPD_ST_IDLE;
+				end
 			end
 			else if( ff_matupd_state == MATUPD_ST_IDLE ) begin
 				ff_matupd_we	<= 1'b0;
