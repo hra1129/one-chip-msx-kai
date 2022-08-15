@@ -72,12 +72,11 @@ architecture rtl of psg_wave is
   signal PsgVolChC   : std_logic_vector(  4 downto 0 );
   signal PsgFreqEnv  : std_logic_vector( 15 downto 0 );
   signal PsgShapeEnv : std_logic_vector(  3 downto 0 );
-  signal PsgMix      : std_logic_vector(  9 downto 0 );
 
-  alias hold         : std_logic is PsgShapeEnv(0);
-  alias alter        : std_logic is PsgShapeEnv(1);
-  alias attack       : std_logic is PsgShapeEnv(2);
-  alias cont         : std_logic is PsgShapeEnv(3);
+  alias hold   : std_logic is PsgShapeEnv(0);
+  alias alter  : std_logic is PsgShapeEnv(1);
+  alias attack : std_logic is PsgShapeEnv(2);
+  alias cont   : std_logic is PsgShapeEnv(3);
 
 begin
 
@@ -139,9 +138,9 @@ begin
       PsgFreqChC   <= (others => '1');
       PsgFreqNoise <= (others => '1');
       PsgChanSel   <= (others => '1');
-      PsgVolChA    <= (others => '1');
-      PsgVolChB    <= (others => '1');
-      PsgVolChC    <= (others => '1');
+      PsgVolChA    <= "01111";
+      PsgVolChB    <= "01111";
+      PsgVolChC    <= "01111";
       PsgFreqEnv   <= (others => '1');
       PsgShapeEnv  <= (others => '1');
       PsgEnvReq    <= '0';
@@ -345,45 +344,44 @@ begin
   ----------------------------------------------------------------
   process(clk21m, reset)
 
-    variable PsgDisableNoise : std_logic;
-    variable PsgDisableTone  : std_logic;
-    variable PsgEdge         : std_logic;
-    variable PsgVol          : std_logic_vector(4 downto 0);
-    variable PsgIndex        : std_logic_vector(3 downto 0);
-    variable PsgTable        : std_logic_vector(7 downto 0);
+    variable PsgEnaNoise : std_logic;
+    variable PsgEnaTone  : std_logic;
+    variable PsgEdge     : std_logic;
+    variable PsgVol      : std_logic_vector(4 downto 0);
+    variable PsgIndex    : std_logic_vector(3 downto 0);
+    variable PsgTable    : std_logic_vector(7 downto 0);
+    variable PsgMix      : std_logic_vector(9 downto 0);
 
   begin
 
     if (reset = '1') then
 
-      PsgMix <= (others => '0');
+      PsgMix := (others => '0');
       wave   <= (others => '0');
 
     elsif (clk21m'event and clk21m = '1') then
 
       case PsgClkEna(1 downto 0) is
         when "11"   =>
-          PsgDisableTone  := PsgChanSel(0); PsgEdge  := PsgEdgeChA;
-          PsgDisableNoise := PsgChanSel(3); PsgVol   := PsgVolChA;
+          PsgEnaTone  := PsgChanSel(0); PsgEdge  := PsgEdgeChA;
+          PsgEnaNoise := PsgChanSel(3); PsgVol   := PsgVolChA;
         when "10"   =>
-          PsgDisableTone  := PsgChanSel(1); PsgEdge  := PsgEdgeChB;
-          PsgDisableNoise := PsgChanSel(4); PsgVol   := PsgVolChB;
+          PsgEnaTone  := PsgChanSel(1); PsgEdge  := PsgEdgeChB;
+          PsgEnaNoise := PsgChanSel(4); PsgVol   := PsgVolChB;
         when "01"   =>
-          PsgDisableTone  := PsgChanSel(2); PsgEdge  := PsgEdgeChC;
-          PsgDisableNoise := PsgChanSel(5); PsgVol   := PsgVolChC;
+          PsgEnaTone  := PsgChanSel(2); PsgEdge  := PsgEdgeChC;
+          PsgEnaNoise := PsgChanSel(5); PsgVol   := PsgVolChC;
         when others =>
-          PsgDisableTone  := '1';           PsgEdge  := '1';
-          PsgDisableNoise := '1';           PsgVol   := "00000";
+          PsgEnaTone  := '1';           PsgEdge  := '1';
+          PsgEnaNoise := '1';           PsgVol   := "00000";
       end case;
 
-      if ( (((not PsgDisableTone) and PsgEdge) or ((not PsgDisableNoise) and PsgNoise)) = '1') then
-        if (PsgVol(4) = '0') then
-          PsgIndex := PsgVol(3 downto 0);
-        else
-          PsgIndex := PsgVolEnv;
-        end if;
-      else
+      if (((PsgEnaTone or PsgEdge) and (PsgEnaNoise or PsgNoise)) = '0') then
         PsgIndex := (others => '0');
+      elsif (PsgVol(4) = '0') then
+        PsgIndex := PsgVol(3 downto 0);
+      else
+        PsgIndex := PsgVolEnv;
       end if;
 
       case PsgIndex is
@@ -407,11 +405,9 @@ begin
 
       if (clkena = '1') then
         case PsgClkEna(1 downto 0) is
-          when "00"   =>
-              wave               <= PsgMix(9 downto 2);
-              PsgMix(9 downto 2) <= (others => '0');
-          when others => 
-              PsgMix             <= "00" & PsgTable + PsgMix;
+          when "00"   => wave   <= PsgMix(9 downto 2);
+                         PsgMix(9 downto 2) := (others => '0');
+          when others => PsgMix := "00" & PsgTable + PsgMix;
         end case;
       end if;
 
