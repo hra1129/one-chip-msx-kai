@@ -138,10 +138,10 @@ begin
       PsgFreqChC   <= (others => '1');
       PsgFreqNoise <= (others => '1');
       PsgChanSel   <= (others => '1');
-      PsgVolChA    <= "01111";
-      PsgVolChB    <= "01111";
-      PsgVolChC    <= "01111";
-      PsgFreqEnv   <= (others => '1');
+      PsgVolChA    <= (others => '1');
+      PsgVolChB    <= (others => '1');
+      PsgVolChC    <= (others => '1');
+      PsgFreqEnv   <= (others => '0');
       PsgShapeEnv  <= (others => '1');
       PsgEnvReq    <= '0';
 

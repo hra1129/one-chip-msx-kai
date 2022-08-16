@@ -1,5 +1,5 @@
 Analysis & Synthesis report for emsx_top_de0cv
-Tue Aug 16 08:30:05 2022
+Tue Aug 16 23:21:44 2022
 Quartus Prime Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
 
 
@@ -187,7 +187,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                  ;
 +---------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Tue Aug 16 08:30:05 2022       ;
+; Analysis & Synthesis Status     ; Successful - Tue Aug 16 23:21:43 2022       ;
 ; Quartus Prime Version           ; 21.1.0 Build 842 10/21/2021 SJ Lite Edition ;
 ; Revision Name                   ; emsx_top_de0cv                              ;
 ; Top-level Entity Name           ; emsx_top_de0cv                              ;
@@ -302,14 +302,14 @@ https://fpgasoftware.intel.com/eula.
 ; Number detected on machine ; 8           ;
 ; Maximum allowed            ; 4           ;
 ;                            ;             ;
-; Average used               ; 2.43        ;
+; Average used               ; 2.44        ;
 ; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;  48.5%      ;
-;     Processor 3            ;  48.5%      ;
-;     Processor 4            ;  45.9%      ;
+;     Processor 2            ;  48.9%      ;
+;     Processor 3            ;  48.9%      ;
+;     Processor 4            ;  46.2%      ;
 +----------------------------+-------------+
 
 
@@ -1581,7 +1581,7 @@ Encoding Type:  One-Hot
 ; emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|dbi[1]                     ; 1       ;
 ; emsx_top:U92|megaram:u_megaram_for_slot2|scc_wave:SccCh|dbi[1]                     ; 1       ;
 ; emsx_top:U92|megaram:u_megaram_for_slot1|scc_wave:SccCh|dbi[2]                     ; 1       ;
-; Total number of inverted registers = 459*                                          ;         ;
+; Total number of inverted registers = 446*                                          ;         ;
 +------------------------------------------------------------------------------------+---------+
 * Table truncated at 100 items. To change the number of inverted registers reported, set the "Number of Inverted Registers Reported" option under Assignments->Settings->Analysis and Synthesis Settings->More Settings
 
@@ -1945,7 +1945,7 @@ Encoding Type:  One-Hot
 ; 4:1                ; 18 bits   ; 36 LEs        ; 36 LEs               ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_SPRITE:U_SPRITE|VDPS5S6SPCOLLISIONYV                                 ;
 ; 7:1                ; 3 bits    ; 12 LEs        ; 6 LEs                ; 6 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|VDP:u_v9958|VDP_SPRITE:U_SPRITE|SPSTATE                                              ;
 ; 3:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; Yes        ; |emsx_top_de0cv|emsx_top:U92|psg:u_psg|psg_wave:u_psgch|PsgVolEnv[0]                                              ;
-; 4:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|psg:u_psg|psg_wave:u_psgch|Mux85                                                     ;
+; 4:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|psg:u_psg|psg_wave:u_psgch|Mux83                                                     ;
 ; 3:1                ; 5 bits    ; 10 LEs        ; 10 LEs               ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|psg:u_psg|psg_wave:u_psgch|PsgPtrEnv                                                 ;
 ; 3:1                ; 16 bits   ; 32 LEs        ; 32 LEs               ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|psg:u_psg|psg_wave:u_psgch|PsgCntEnv                                                 ;
 ; 3:1                ; 12 bits   ; 24 LEs        ; 24 LEs               ; 0 LEs                  ; No         ; |emsx_top_de0cv|emsx_top:U92|psg:u_psg|psg_wave:u_psgch|PsgCntChA                                                 ;
@@ -5238,7 +5238,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:01:20     ;
+; Top            ; 00:01:19     ;
 +----------------+--------------+
 
 
@@ -5248,7 +5248,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
-    Info: Processing started: Tue Aug 16 08:28:13 2022
+    Info: Processing started: Tue Aug 16 23:19:55 2022
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off emsx_top_de0cv -c emsx_top_de0cv
 Info (16303): Aggressive Area optimization mode selected -- logic area will be prioritized at the potential cost of reduced timing performance
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
@@ -6600,10 +6600,10 @@ Info (21057): Implemented 15409 device resources after synthesis - the final res
     Info (21065): Implemented 3 PLLs
     Info (21062): Implemented 21 DSP elements
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 253 warnings
-    Info: Peak virtual memory: 5079 megabytes
-    Info: Processing ended: Tue Aug 16 08:30:05 2022
-    Info: Elapsed time: 00:01:52
-    Info: Total CPU time (on all processors): 00:03:40
+    Info: Peak virtual memory: 5094 megabytes
+    Info: Processing ended: Tue Aug 16 23:21:44 2022
+    Info: Elapsed time: 00:01:49
+    Info: Total CPU time (on all processors): 00:03:29
 
 
 +------------------------------------------+
