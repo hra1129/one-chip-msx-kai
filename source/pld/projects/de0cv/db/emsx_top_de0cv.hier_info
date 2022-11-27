@@ -62281,7 +62281,7 @@ txd <= ff_txd.DB_MAX_OUTPUT_PORT_TYPE
 txrdy <= ff_txrdy.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|i8251_receiver:comb_427
+|emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|i8251_receiver:u_receiver
 reset => ff_rx_remain_bit[0].ACLR
 reset => ff_rx_remain_bit[1].ACLR
 reset => ff_rx_remain_bit[2].ACLR

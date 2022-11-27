@@ -115,14 +115,14 @@ ff_state.state_sync_char1 0 0 1 1
 ff_state.state_sync_char2 0 1 0 1 
 ff_state.state_command 1 0 0 1 
 
-State Machine - |emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|i8251_receiver:comb_427|ff_state
+State Machine - |emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|i8251_receiver:u_receiver|ff_state
 Name ff_state.state_command ff_state.state_sync_char2 ff_state.state_sync_char1 ff_state.state_mode 
 ff_state.state_mode 0 0 0 0 
 ff_state.state_sync_char1 0 0 1 1 
 ff_state.state_sync_char2 0 1 0 1 
 ff_state.state_command 1 0 0 1 
 
-State Machine - |emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|i8251_receiver:comb_427|ff_rx_state
+State Machine - |emsx_top_de0cv|emsx_top:U92|tr_midi:u_tr_midi|i8251:u_8251|i8251_receiver:u_receiver|ff_rx_state
 Name ff_rx_state.rx_state_parity_bit ff_rx_state.rx_state_data_bit ff_rx_state.rx_state_start_bit ff_rx_state.rx_state_idle ff_rx_state.rx_state_stop_bit 
 ff_rx_state.rx_state_idle 0 0 0 0 0 
 ff_rx_state.rx_state_start_bit 0 0 1 1 0 
