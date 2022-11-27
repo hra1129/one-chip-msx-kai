@@ -29,12 +29,13 @@
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-//-----------------------------------------------------------------------------------------------------
-// OCM-PLD Pack v3.9 by KdL (2021.06.11) / MSX2+ Stable Release for SM-X and SX-2 / MSXtR Experimental
+//---------------------------------------------------------------------------------
+// OCM-PLD Pack v3.9.1 by KdL (2022.09.24)
+// MSX2+ Stable Release for SM-X (regular) and SX-2 / MSXtR Experimental
 // Special thanks to t.hara, caro, mygodess & all MRC users (http://www.msx.org)
-//-----------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 // Setup for XTAL 50.00000MHz
-//-----------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 // History
 //     June/27th/2020
 //       Converted to VerilogHDL by t.hara
@@ -225,6 +226,7 @@ module emsx_top(
 	wire			iSlt2_linear;
 	wire			Slot0_req;											// here to reduce LEs
 	wire			Slot0Mode;
+	wire			iPsg2_ena;
 
 	// OCM-Kai Control Device		Added by t.hara in May/11th/2020
 	wire	[7:0]	okaictrl_dbi;
@@ -407,6 +409,8 @@ module emsx_top(
 	wire			ntsc_pal_type;
 	wire			forced_v_mode;
 	reg				ff_legacy_vga;
+	wire	[4:0]	VDP_ID;
+	wire	[6:0]	OFFSET_Y;
 
 	// Video signals
 	wire	[5:0]	VideoR;								// RGB Red
@@ -423,6 +427,11 @@ module emsx_top(
 	wire			PsgReq;
 	wire	[7:0]	PsgDbi;
 	wire	[7:0]	PsgAmp;
+
+	// PSG signals
+	wire			Psg2Req;
+	wire	[7:0]	Psg2Dbi;
+	wire	[7:0]	Psg2Amp;
 
 	// SCC signals
 	wire			Scc1Req;
@@ -895,6 +904,7 @@ module emsx_top(
 		.MmcDbi					( MmcDbi				),
 		.VdpDbi					( VdpDbi				),
 		.PsgDbi					( PsgDbi				),
+		.Psg2Dbi				( Psg2Dbi				),
 		.PpiDbi					( PpiDbi				),
 		.KanDbi					( KanDbi				),
 		.PanaDbi				( PanaDbi				),
@@ -924,6 +934,7 @@ module emsx_top(
 		.Slot2Mode				( ff_Slot2Mode			),
 		.rom_mode				( w_rom_mode			),
 		.opl3_enabled			( opl3_enabled			),
+		.iPsg2_ena				( iPsg2_ena				),
 		.mem_slot0_0			( w_mem_slot0_0			),
 		.mem_slot0_1			( w_mem_slot0_1			),
 		.mem_slot0_2			( w_mem_slot0_2			),
@@ -946,6 +957,7 @@ module emsx_top(
 		.OpllReq				( OpllReq				),
 		.VdpReq					( VdpReq				),
 		.PsgReq					( PsgReq				),
+		.Psg2Req				( Psg2Req				),
 		.PpiReq					( PpiReq				),
 		.KanReq					( KanReq				),
 		.MapReq					( MapReq				),
@@ -1036,6 +1048,7 @@ module emsx_top(
 		.Fkeys				( FKeys				),
 		.vFkeys				( vFKeys			),
 		.PsgAmp				( PsgAmp			),
+		.Psg2Amp			( Psg2Amp			),
 		.OpllAmp			( OpllAmp			),
 		.Scc1Amp			( Scc1AmpL			),
 		.Scc2Amp			( Scc2AmpL			),
@@ -1279,43 +1292,7 @@ module emsx_top(
 		.ramdbo				( 						)
 	);
 
-//	vdp u_v9958 (
-//		.clk21m				( clk21m							),
-//		.reset				( reset								),
-//		.req				( VdpReq							),
-//		.ack				( 									),
-//		.wrt				( wrt								),
-//		.adr				( adr								),
-//		.dbi				( VdpDbi							),
-//		.dbo				( dbo								),
-//		.int_n				( pVdpInt_n							),
-//		.pRamOe_n			( 									),
-//		.pRamWe_n			( WeVdp_n							),
-//		.pRamAdr			( VdpAdr							),
-//		.pRamDbi			( VrmDbi							),
-//		.pRamDbo			( VrmDbo							),
-//		.VdpSpeedMode		( VdpSpeedMode | ~ff_hybridclk_n	),	// for V9958 MSX2+/tR VDP
-//		.RatioMode			( RatioMode							),	// for V9958 MSX2+/tR VDP
-//		.centerYJK_R25_n 	( centerYJK_R25_n					),	// for V9958 MSX2+/tR VDP
-//		.pVideo_H_CNT		( 									),	// DEBUG by t.hara
-//		.pVideo_V_CNT		( 									),	// DEBUG by t.hara
-//		.pVideoR			( VideoR							),
-//		.pVideoG			( VideoG							),
-//		.pVideoB			( VideoB							),
-//		.pVideoHS_n			( VideoHS_n							),
-//		.pVideoVS_n			( VideoVS_n							),
-//		.pVideoCS_n			( VideoCS_n							),
-//		.pVideoDHClk		( VideoDHClk						),
-//		.pVideoDLClk		( VideoDLClk						),
-////		.pVideoSC			( 									),
-////		.pVideoSYNC			( 									),
-//		.DispReso			( Reso_v							),
-//		.ntsc_pal_type		( ntsc_pal_type						),
-//		.forced_v_mode		( forced_v_mode						),
-//		.legacy_vga			( ff_legacy_vga						)
-//	);
-
-	//	VDP instance for OCM-PLD 3.8.1 version
+	//	VDP
 	VDP u_v9958 (
 		.CLK21M				( clk21m							),
 		.RESET				( reset								),
@@ -1346,7 +1323,9 @@ module emsx_top(
 		.DISPRESO			( Reso_v							),
 		.NTSC_PAL_TYPE		( ntsc_pal_type						),
 		.FORCED_V_MODE		( forced_v_mode						),
-		.LEGACY_VGA			( ff_legacy_vga						)
+		.LEGACY_VGA			( ff_legacy_vga						),
+		.VDP_ID				( VDP_ID							),
+		.OFFSET_Y			( OFFSET_Y							)
 	);
 
 	vencode u_video_encoder (
@@ -1362,7 +1341,7 @@ module emsx_top(
 		.videoV				( videoV				)
 	);
 
-	psg u_psg (
+	psg u_psg1 (
 		.clk21m				( clk21m				),
 		.reset				( reset					),
 		.clkena				( clkena				),
@@ -1382,6 +1361,28 @@ module emsx_top(
 		.cmtin				( CmtIn					),
 		.keymode			( w_key_mode			),
 		.wave				( PsgAmp				)
+	);
+
+	psg u_psg2 (
+		.clk21m				( clk21m				),
+		.reset				( reset					),
+		.clkena				( clkena				),
+		.req				( Psg2Req				),
+		.ack				( 						),
+		.wrt				( wrt					),
+		.adr				( adr					),
+		.dbi				( Psg2Dbi				),
+		.dbo				( dbo					),
+		.joya_in			( 6'b111111				),
+		.joya_out			( 						),
+		.stra				( 						),
+		.joyb_in			( 6'b111111				),
+		.joyb_out			( 						),
+		.strb				( 						),
+		.kana				( 						),
+		.cmtin				( 1'b0					),
+		.keymode			( 1'b0					),
+		.wave				( Psg2Amp				)
 	);
 
 	megaram u_megaram_for_slot1 (
@@ -1677,7 +1678,11 @@ module emsx_top(
 		.Slot0_req			( Slot0_req			),	// here to reduce LEs
 		.Slot0Mode			( Slot0Mode			),
 		.vga_scanlines		(					),
-		.btn_scan			(					)
+		.btn_scan			(					),
+		.iPsg2_ena			( iPsg2_ena			),
+
+		.VDP_ID				( VDP_ID			),
+		.OFFSET_Y			( OFFSET_Y			)
 	);
 
 	// OCM-Kai Control Device		Added by t.hara in May/11th/2020

@@ -1254,7 +1254,7 @@
 		12'h4e5:	ff_dbi <= 8'h76;
 		12'h4e6:	ff_dbi <= 8'h2e;
 		12'h4e7:	ff_dbi <= 8'h32;
-		12'h4e8:	ff_dbi <= 8'h37;
+		12'h4e8:	ff_dbi <= 8'h38;
 		12'h4e9:	ff_dbi <= 8'h74;
 		12'h4ea:	ff_dbi <= 8'h68;
 		12'h4eb:	ff_dbi <= 8'h2e;

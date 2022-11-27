@@ -2299,11 +2299,11 @@ Programmed by t.hara
 [MESSAGE_INITIAL_TEXT3 ::]
 	global label address: 0x00f4be
 
-[	DS "OCM-Kai Build date Nov.27th.2022 "]
+[	DS "OCM-Kai Build date Nov.28th.2022 "]
 00f4be: 4f 43 4d 2d 4b 61 69 20
 00f4c6: 42 75 69 6c 64 20 64 61
 00f4ce: 74 65 20 4e 6f 76 2e 32
-00f4d6: 37 74 68 2e 32 30 32 32
+00f4d6: 38 74 68 2e 32 30 32 32
 00f4de: 20
 
 [	DB 0]

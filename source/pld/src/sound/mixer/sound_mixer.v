@@ -45,6 +45,7 @@ module sound_mixer #(
 	input	[ 7:0]			Fkeys,
 	output	[ 7:0]			vFkeys,
 	input	[ 7:0]			PsgAmp,
+	input	[ 7:0]			Psg2Amp,
 	input	[ 9:0]			OpllAmp,
 	input	[14:0]			Scc1Amp,
 	input	[14:0]			Scc2Amp,
@@ -75,15 +76,19 @@ module sound_mixer #(
 	reg		[ 7:0]						ff_vFkeys;
 
 	reg		[ c_prepsg_high: 0]			ff_prepsg;
+	reg		[ c_prepsg_high: 0]			ff_prepsg2;
 	reg		[ 15: 0]					ff_prescc;
 
 	wire	[ c_prepsg_high: 0]			chPsg;
+	wire	[ c_prepsg_high: 0]			chPsg2;
 	reg		[  3: 0]					c_Psg;		// combine PsgVol and MstrVol
 	reg		[  3: 0]					c_Scc;		// combine SccVol and MstrVol
 	reg		[  3: 0]					c_Opll;		// combine OpllVol and MstrVol
 
 	wire	[ c_DACin_high - 2 : 0]		w_psg;
+	wire	[ c_DACin_high - 2 : 0]		w_psg2;
 	reg		[ c_DACin_high + 2 : 0]		ff_psg;
+	reg		[ c_DACin_high + 2 : 0]		ff_psg2;
 	reg		[ c_DACin_high + 2 : 0]		ff_scc;
 	reg		[ c_DACin_high + 2 : 0]		ff_opl3;
 	wire	[ 18: 0]					w_scc;
@@ -116,9 +121,17 @@ module sound_mixer #(
 						( c_Psg > (m_thrd - x_thrd) ) ? { 1'b0,  ff_prepsg[ c_prepsg_high : 1 ] } :
 														{ 2'b00, ff_prepsg[ c_prepsg_high : 2 ] };
 
+	assign chPsg2	=	( c_Psg > h_thrd            ) ? ff_prepsg2 :
+						( c_Psg > (m_thrd - x_thrd) ) ? { 1'b0,  ff_prepsg2[ c_prepsg_high : 1 ] } :
+														{ 2'b00, ff_prepsg2[ c_prepsg_high : 2 ] };
+
 	assign w_psg	=	( c_Psg > h_thrd            ) ? ((chPsg * (PsgVol - MstrVol + h_ramp + x_thrd)) + chPsg[ c_prepsg_high - 4 : 0 ]) :
 						( c_Psg > (m_thrd - x_thrd) ) ? ((chPsg * (PsgVol - MstrVol + m_ramp + x_thrd)) + chPsg[ c_prepsg_high - 4 : 0 ]) :
 													    ((chPsg * (PsgVol - MstrVol + l_ramp + x_thrd)) + chPsg[ c_prepsg_high - 4 : 0 ]);
+
+	assign w_psg2	=	( c_Psg > h_thrd            ) ? ((chPsg2 * (PsgVol - MstrVol + h_ramp + x_thrd)) + chPsg2[ c_prepsg_high - 4 : 0 ]) :
+						( c_Psg > (m_thrd - x_thrd) ) ? ((chPsg2 * (PsgVol - MstrVol + m_ramp + x_thrd)) + chPsg2[ c_prepsg_high - 4 : 0 ]) :
+													    ((chPsg2 * (PsgVol - MstrVol + l_ramp + x_thrd)) + chPsg2[ c_prepsg_high - 4 : 0 ]);
 
 	assign w_opll_amplitude	=	( OpllAmp < c_opll_zero ) ? (c_opll_zero - OpllAmp) : (OpllAmp - c_opll_zero);
 	assign chOpll			=	( c_Opll > h_thrd ) ? {       (w_opll_amplitude * (OpllVol - MstrVol + h_ramp)), 3'b000} :
@@ -131,7 +144,6 @@ module sound_mixer #(
 		// amplitude ramp of the PSG (full range)
 		ff_prepsg	<= { 1'b0, PsgAmp } + { KeyClick, 5'b00000 };
 		c_Psg		<= { 1'b1, PsgVol } - { 1'b0, MstrVol };
-//		if( PsgVol == 3'b000 || MstrVol == 3'b111 || SdPaus == 1'b1 )begin				// dismissed
 		if( PsgVol == 3'b000 || MstrVol == 3'b111 )begin
 			ff_psg		<= 'd0;
 		end
@@ -139,10 +151,18 @@ module sound_mixer #(
 			ff_psg	<= { 2'b00, w_psg, 2'b00 };
 		end
 
+		// amplitude ramp of the PSG2 (full range)
+		ff_prepsg2	<= { 1'b0, Psg2Amp };
+		if( PsgVol == 3'b000 || MstrVol == 3'b111 )begin
+			ff_psg2		<= 'd0;
+		end
+		else begin
+			ff_psg2	<= { 2'b00, w_psg2, 2'b00 };
+		end
+
 		// amplitude ramp of the SCC-I (full range)
 		ff_prescc	<= { Scc1Amp[14], Scc1Amp } + { Scc2Amp[14], Scc2Amp };
 		c_Scc		<= { 1'b1, SccVol } - { 1'b0, MstrVol };
-//		if( SccVol == 3'b000 || MstrVol == 3'b111 || SdPaus == 1'b1 ) begin				// dismissed
 		if( SccVol == 3'b000 || MstrVol == 3'b111 ) begin
 			m_SccVol	<= 3'b000;
 			ff_scc		<= { (c_DACin_high + 3) { w_scc[18] } };
@@ -162,7 +182,6 @@ module sound_mixer #(
 
 		// amplitude ramp of the OPLL (full range)
 		c_Opll		<= { 1'b1, OpllVol} - {1'b0, MstrVol};
-//		if( OpllVol == 3'b000 || MstrVol == 3'b111 || SdPaus == 1'b1 ) begin			// dismissed
 		if( OpllVol == 3'b000 || MstrVol == 3'b111 )begin
 			ff_opll <= c_opll_offset;
 		end
@@ -222,7 +241,7 @@ module sound_mixer #(
 
 	always @( posedge clk21m ) begin
 		// ff_pre_dacin assignment
-		ff_pre_dacin <= (~ff_psg) + ff_scc + ff_opll + ff_tr_pcm + ff_opl3;
+		ff_pre_dacin <= (~ff_psg) + (~ff_psg2) + ff_scc + ff_opll + ff_tr_pcm + ff_opl3;
 
 		// amplitude limiter
 		case( ff_pre_dacin[ c_DACin_high + 2 : c_DACin_high ] )

@@ -44,6 +44,9 @@
 //		Added rom_mode port.
 //		When rom_mode=0, some segments of MemoryMapper will be write-protected.
 //
+//	Nov/07th/2022 t.hara
+//		Added PSG2 decoder.
+//
 module ocm_bus_selector (
 	input			reset,
 	input			clk21m,
@@ -94,6 +97,7 @@ module ocm_bus_selector (
 	input	[ 7:0]	MmcDbi,
 	input	[ 7:0]	VdpDbi,
 	input	[ 7:0]	PsgDbi,
+	input	[ 7:0]	Psg2Dbi,
 	input	[ 7:0]	PpiDbi,
 	input	[ 7:0]	KanDbi,
 	input	[ 7:0]	PanaDbi,
@@ -123,6 +127,7 @@ module ocm_bus_selector (
 	input	[ 1:0]	Slot2Mode,
 	input			rom_mode,					//	0: DRAM mode, 1: ROM mode
 	input			opl3_enabled,
+	input			iPsg2_ena,
 	output			mem_slot0_0,
 	output			mem_slot0_1,
 	output			mem_slot0_2,
@@ -145,6 +150,7 @@ module ocm_bus_selector (
 	output			OpllReq,
 	output			VdpReq,
 	output			PsgReq,
+	output			Psg2Req,
 	output			PpiReq,
 	output			KanReq,
 	output			MapReq,
@@ -306,6 +312,9 @@ module ocm_bus_selector (
 			end
 			else if( !w_mem && { ff_iSltAdr[ 7:2 ], 2'd0 } == 8'hA0                        ) begin		// PSG (AY-3-8910)
 				ff_dlydbi <= PsgDbi;
+			end
+			else if( !w_mem && { ff_iSltAdr[ 7:2 ], 2'd0 } == 8'h10 && iPsg2_ena == 1'b1   ) begin		// PSG 2nd (AY-3-8910)
+				ff_dlydbi <= Psg2Dbi;
 			end
 			else if( !w_mem && { ff_iSltAdr[ 7:1 ], 1'd0 } == 8'hA4                        ) begin		// turboR PCM device		// 2019/11/29 t.hara added
 				ff_dlydbi <= tr_pcm_dbi;                                                          									// 2019/11/29 t.hara added
@@ -673,6 +682,7 @@ module ocm_bus_selector (
 	assign OpllReq				=	w_OpllReq;
 	assign VdpReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'h98                           ) ? req : 1'b0;					// I/O:98-9Bh	/ VDP (V9938/V9958)
 	assign PsgReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'hA0                           ) ? req : 1'b0;					// I/O:A0-A3h	/ PSG (AY-3-8910)
+	assign Psg2Req				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'h10 && iPsg2_ena == 1'b1      ) ? req : 1'b0;					// I/O:10-13h	/ PSG (AY-3-8910)
 	assign PpiReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'hA8                           ) ? req : 1'b0;					// I/O:A8-ABh	/ PPI (8255)
 	assign opl3_req				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:3], 3'd0 } == 8'hD0 && opl3_enabled           ) ? req : 1'b0;					// I/O:D0-D7h	/ OPL3
 	assign KanReq				=	( !ff_iSltIorq_n && { ff_iSltAdr[7:2], 2'd0 } == 8'hD8                           ) ? req : 1'b0;					// I/O:D8-DBh	/ Kanji-data
