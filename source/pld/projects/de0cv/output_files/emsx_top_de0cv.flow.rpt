@@ -1,5 +1,5 @@
 Flow report for emsx_top_de0cv
-Sun Nov 27 09:34:13 2022
+Sun Nov 27 21:35:32 2022
 Quartus Prime Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
 
 
@@ -41,15 +41,15 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------------------------------------------------+
 ; Flow Summary                                                                  ;
 +---------------------------------+---------------------------------------------+
-; Flow Status                     ; Successful - Sun Nov 27 09:33:29 2022       ;
+; Flow Status                     ; Successful - Sun Nov 27 21:34:55 2022       ;
 ; Quartus Prime Version           ; 21.1.0 Build 842 10/21/2021 SJ Lite Edition ;
 ; Revision Name                   ; emsx_top_de0cv                              ;
 ; Top-level Entity Name           ; emsx_top_de0cv                              ;
 ; Family                          ; Cyclone V                                   ;
 ; Device                          ; 5CEBA4F23C7                                 ;
 ; Timing Models                   ; Final                                       ;
-; Logic utilization (in ALMs)     ; 7,700 / 18,480 ( 42 % )                     ;
-; Total registers                 ; 5554                                        ;
+; Logic utilization (in ALMs)     ; 7,713 / 18,480 ( 42 % )                     ;
+; Total registers                 ; 5578                                        ;
 ; Total pins                      ; 195 / 224 ( 87 % )                          ;
 ; Total virtual pins              ; 0                                           ;
 ; Total block memory bits         ; 50,848 / 3,153,920 ( 2 % )                  ;
@@ -68,7 +68,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 11/27/2022 09:26:53 ;
+; Start date & time ; 11/27/2022 21:28:36 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; emsx_top_de0cv      ;
 +-------------------+---------------------+
@@ -80,7 +80,7 @@ https://fpgasoftware.intel.com/eula.
 ; Assignment Name                         ; Value                                                 ; Default Value                        ; Entity Name ; Section Id ;
 +-----------------------------------------+-------------------------------------------------------+--------------------------------------+-------------+------------+
 ; ALM_REGISTER_PACKING_EFFORT             ; High                                                  ; Medium                               ; --          ; --         ;
-; COMPILER_SIGNATURE_ID                   ; 79871140848936.166950881223252                        ; --                                   ; --          ; --         ;
+; COMPILER_SIGNATURE_ID                   ; 79871140848936.166955211625228                        ; --                                   ; --          ; --         ;
 ; FITTER_EFFORT                           ; Standard Fit                                          ; Auto Fit                             ; --          ; --         ;
 ; IP_SEARCH_PATHS                         ; d:\download\de0-cv\ocm-pld\emsxcv\pld\src\sound\opl3  ; --                                   ; --          ; --         ;
 ; MAX_CORE_JUNCTION_TEMP                  ; 85                                                    ; --                                   ; --          ; --         ;
@@ -112,11 +112,11 @@ https://fpgasoftware.intel.com/eula.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:01:38     ; 2.4                     ; 5092 MB             ; 00:02:21                           ;
-; Fitter               ; 00:04:30     ; 1.3                     ; 6746 MB             ; 00:08:15                           ;
-; Assembler            ; 00:00:17     ; 1.0                     ; 4960 MB             ; 00:00:08                           ;
-; Timing Analyzer      ; 00:00:42     ; 2.4                     ; 5451 MB             ; 00:00:58                           ;
-; Total                ; 00:07:07     ; --                      ; --                  ; 00:11:42                           ;
+; Analysis & Synthesis ; 00:01:38     ; 2.6                     ; 5076 MB             ; 00:02:22                           ;
+; Fitter               ; 00:04:14     ; 1.3                     ; 6749 MB             ; 00:07:26                           ;
+; Assembler            ; 00:00:15     ; 1.0                     ; 4964 MB             ; 00:00:07                           ;
+; Timing Analyzer      ; 00:00:35     ; 2.4                     ; 5452 MB             ; 00:00:55                           ;
+; Total                ; 00:06:42     ; --                      ; --                  ; 00:10:50                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
