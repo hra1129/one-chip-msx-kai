@@ -1,7 +1,7 @@
 --
 -- Z80 compatible microprocessor core, asynchronous top level
 --
--- Version : 0250 (+k03)
+-- Version : 0250_T80 (+k04)
 --
 -- Copyright (c) 2001-2002 Daniel Wallner (jesus@opencores.org)
 --
@@ -45,31 +45,20 @@
 -- File history :
 --
 --  0208 : First complete release
---
 --  0211 : Fixed interrupt cycle
---
 --  0235 : Updated for T80 interface change
---
 --  0238 : Updated for T80 interface change
---
 --  0240 : Updated for T80 interface change
---
 --  0242 : Updated for T80 interface change
---
 --  0247 : Fixed bus req/ack cycle
---
 --  0247a: 7th of September, 2003 by Kazuhiro Tsujikawa (tujikawa@hat.hi-ho.ne.jp)
 --         Fixed IORQ_n, RD_n, WR_n bus timing
---
---  +k01 : Added RstKeyLock and swioRESET_n by KdL 2010.10.25
---
 --  0250 : Added R800 Multiplier by TobiFlex 2017.10.15
 --
+--  +k01 : Added RstKeyLock and swioRESET_n by KdL 2010.10.25
 --  +k02 : Added R800_mode signal by KdL 2018.05.14
---
 --  +k03 : RstKeyLock and swioRESET_n were put back outside of T80 by KdL 2019.05.20
---
---  +h04 : Added output signal p_PC by t.hara 2020.07.28
+--  +k04 : Separation of T800 from T80 by KdL 2021.02.01
 --
 
 library IEEE;
@@ -80,12 +69,10 @@ use work.T80_Pack.all;
 entity T80a is
     generic(
         Mode        : integer := 0;     -- 0 => Z80, 1 => Fast Z80, 2 => 8080, 3 => GB
-        R800_MULU   : integer := 1;     -- 0 => no MULU, 1=> R800 MULU
         IOWait      : integer := 1      -- 0 => Single I/O cycle, 1 => Std I/O cycle
     );
     port(
         RESET_n     : in std_logic;
-        R800_mode   : in std_logic;
         CLK_n       : in std_logic;
         WAIT_n      : in std_logic;
         INT_n       : in std_logic;
@@ -161,7 +148,6 @@ begin
     u0 : T80
         generic map(
             Mode => Mode,
-            R800_MULU => R800_MULU,
             IOWait => IOWait)
         port map(
             CEN => CEN,
@@ -185,7 +171,6 @@ begin
             MC => MCycle,
             TS => TState,
             IntCycle_n => IntCycle_n,
-            R800_mode => R800_mode,
             p_PC => p_PC                 -- Added by t.hara 2020.07.28
         );
 

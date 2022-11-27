@@ -2,7 +2,7 @@ BLOCK		START ADDRESS		END ADDRESS
 
 ocm_msx2_nextor.hex		0x00500000		0x005401FF
 ocm_msx2_dos2.hex		0x00200000		0x002501FF
-Page_0		0x00000000		0x0010EF7D
+Page_0		0x00000000		0x0010E056
 
 
 Configuration device: EPCS64
@@ -12,6 +12,6 @@ Quad-Serial configuration device dummy clock cycle: 12
 
 Notes:
 
-- Data checksum for this conversion is 0x6C71100D
+- Data checksum for this conversion is 0x6C800FA1
 
 - All the addresses in this file are byte addresses

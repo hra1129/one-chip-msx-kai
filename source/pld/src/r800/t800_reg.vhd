@@ -1,7 +1,7 @@
 --
 -- T800 Registers, technology independent
 --
--- Version : 0250 (+k03)
+-- Version : 0250_T800 (+k04)
 --
 -- Copyright (c) 2002 Daniel Wallner (jesus@opencores.org)
 --
@@ -45,14 +45,13 @@
 -- File history :
 --
 --  0242 : Initial release
---
 --  0244 : Changed to single register file
---
 --  0250 : Version alignment by KdL 2017.10.23
 --
+--  +k01 : Version alignment by KdL 2010.10.25
 --  +k02 : Version alignment by KdL 2018.05.14
---
 --  +k03 : Version alignment by KdL 2019.05.20
+--  +k04 : Separation of T800 from T80 by KdL 2021.02.01
 --
 
 library IEEE;

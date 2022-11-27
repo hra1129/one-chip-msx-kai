@@ -1,7 +1,7 @@
 --
 -- Z80 compatible microprocessor core
 --
--- Version : 0250 (+k03)
+-- Version : 0250_T800 (+k05)
 --
 -- Copyright (c) 2001-2002 Daniel Wallner (jesus@opencores.org)
 --
@@ -45,38 +45,25 @@
 -- File history :
 --
 --  0208 : First complete release
---
 --  0210 : Fixed wait and halt
---
 --  0211 : Fixed Refresh addition and IM 1
---
 --  0214 : Fixed mostly flags, only the block instructions now fail the zex regression test
---
 --  0232 : Removed refresh address output for Mode > 1 and added DJNZ M1_n fix by Mike Johnson
---
 --  0235 : Added clock enable and IM 2 fix by Mike Johnson
---
 --  0237 : Changed 8080 I/O address output, added IntE output
---
 --  0238 : Fixed (IX/IY+d) timing and 16 bit ADC and SBC zero flag
---
 --  0240 : Added interrupt ack fix by Mike Johnson, changed (IX/IY+d) timing and changed flags in GB mode
---
 --  0242 : Added I/O wait, fixed refresh address, moved some registers to RAM
---
 --  0247 : Fixed bus req/ack cycle
---
 --  0248 : Added undocumented DDCB and FDCB opcodes by TobiFlex 2010.04.20
---
 --  0249 : Added undocumented XY-Flags for CPI/CPD by TobiFlex 2012.07.22
---
 --  0250 : Added R800 Multiplier by TobiFlex 2017.10.15
 --
+--  +k01 : Version alignment by KdL 2010.10.25
 --  +k02 : Added R800_mode signal by KdL 2018.05.14
---
 --  +k03 : Version alignment by KdL 2019.05.20
---
---  +h04 : Added output signal p_PC by t.hara 2020.07.28
+--  +k04 : Separation of T800 from T80 by KdL 2021.02.01
+--  +k05 : Fixed a bug in which the flag register was not changing in "LD A,I" and "LD A,R". by t.hara 2022.11.05
 --
 
 library IEEE;
@@ -638,9 +625,25 @@ begin
 					when "00" =>
 						ACC <= I;
 						F(Flag_P) <= IntE_FF2;
+                        F(Flag_N) <= '0';           -- Added by t.hara, 2022/Nov/05th
+                        F(Flag_H) <= '0';           -- Added by t.hara, 2022/Nov/05th
+                        F(Flag_S) <= I(7);          -- Added by t.hara, 2022/Nov/05th
+                        if I = "00000000" then      -- Added by t.hara, 2022/Nov/05th
+                            F(Flag_Z) <= '1';
+                        else
+                            F(Flag_Z) <= '0';
+                        end if;
 					when "01" =>
 						ACC <= std_logic_vector(R);
 						F(Flag_P) <= IntE_FF2;
+                        F(Flag_N) <= '0';                           -- Added by t.hara, 2022/Nov/05th
+                        F(Flag_H) <= '0';                           -- Added by t.hara, 2022/Nov/05th
+                        F(Flag_S) <= std_logic_vector(R)(7);        -- Added by t.hara, 2022/Nov/05th
+                        if std_logic_vector(R) = "00000000" then    -- Added by t.hara, 2022/Nov/05th
+                            F(Flag_Z) <= '1';
+                        else
+                            F(Flag_Z) <= '0';
+                        end if;
 					when "10" =>
 						I <= ACC;
 					when others =>

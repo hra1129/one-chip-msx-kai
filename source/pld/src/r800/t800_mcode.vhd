@@ -1,7 +1,7 @@
 --
 -- Z80 compatible microprocessor core
 --
--- Version : 0250 (+k03)
+-- Version : 0250_T800 (+k04)
 --
 -- Copyright (c) 2001-2002 Daniel Wallner (jesus@opencores.org)
 --
@@ -45,33 +45,23 @@
 -- File history :
 --
 --  0208 : First complete release
---
 --  0211 : Fixed IM 1
---
 --  0214 : Fixed mostly flags, only the block instructions now fail the zex regression test
---
 --  0235 : Added IM 2 fix by Mike Johnson
---
 --  0238 : Added NoRead signal
---
 --  0238b: Fixed instruction timing for POP and DJNZ
---
 --  0240 : Added (IX/IY+d) states, removed op-codes from mode 2 and added all remaining mode 3 op-codes
---
 --  0242 : Fixed I/O instruction timing, cleanup
---
 --  0242a: 31st of August, 2003 by Kazuhiro Tsujikawa (tujikawa@hat.hi-ho.ne.jp)
 --         Fixed INI, IND, INIR, INDR, OUTI, OUTD, OTIR, OTDR instructions
---
 --  0248 : Added undocumented DDCB and FDCB opcodes by TobiFlex 2010.04.20
---
 --  0249 : Added undocumented XY-Flags for CPI/CPD by TobiFlex 2012.07.22
---
 --  0250 : Added R800 Multiplier by TobiFlex 2017.10.15
 --
+--  +k01 : Version alignment by KdL 2010.10.25
 --  +k02 : Added R800_mode signal by KdL 2018.05.14
---
 --  +k03 : Version alignment by KdL 2019.05.20
+--  +k04 : Separation of T800 from T80 by KdL 2021.02.01
 --
 
 library IEEE;

@@ -1,7 +1,7 @@
 --
 -- Z80 compatible microprocessor core
 --
--- Version : 0250 (+h04)
+-- Version : 0250_T800 (+k04)
 --
 -- Copyright (c) 2001-2002 Daniel Wallner (jesus@opencores.org)
 --
@@ -46,11 +46,10 @@
 --
 --  0250 : Version alignment by KdL 2017.10.23
 --
+--  +k01 : Version alignment by KdL 2010.10.25
 --  +k02 : Added R800_mode signal by KdL 2018.05.14
---
 --  +k03 : Version alignment by KdL 2019.05.20
---
---  +h04 : Added output signal p_PC by t.hara 2020.07.28
+--  +k04 : Separation of T800 from T80 by KdL 2021.02.01
 --
 
 library IEEE;

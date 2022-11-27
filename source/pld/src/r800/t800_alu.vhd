@@ -1,7 +1,7 @@
 --
 -- Z80 compatible microprocessor core
 --
--- Version : 0250 (+k03)
+-- Version : 0250_T800 (+k04)
 --
 -- Copyright (c) 2001-2002 Daniel Wallner (jesus@opencores.org)
 --
@@ -45,22 +45,17 @@
 -- File history :
 --
 --  0214 : Fixed mostly flags, only the block instructions now fail the zex regression test
---
 --  0238 : Fixed zero flag for 16 bit SBC and ADC
---
 --  0240 : Added GB operations
---
 --  0242 : Cleanup
---
 --  0247 : Cleanup
---
 --  0249 : Added undocumented XY-Flags for CPI/CPD by TobiFlex 2012.07.22
---
 --  0250 : Version alignment by KdL 2017.10.23
 --
+--  +k01 : Version alignment by KdL 2010.10.25
 --  +k02 : Version alignment by KdL 2018.05.14
---
 --  +k03 : Version alignment by KdL 2019.05.20
+--  +k04 : Separation of T800 from T80 by KdL 2021.02.01
 --
 
 library IEEE;

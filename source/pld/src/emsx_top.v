@@ -1121,7 +1121,6 @@ module emsx_top(
 
 	t80a u_z80 (
 		.RESET_n		( (pSltRst_n | RstKeyLock) & swioRESET_n ),
-		.R800_mode		( portF4_mode				),
 		.CLK_n			( trueClk					),
 		.WAIT_n			( wait_n_s					),
 		.INT_n			( w_pSltInt_n				),
