@@ -12,7 +12,7 @@ using namespace std;
 // --------------------------------------------------------------------
 static void usage( const char *p_name ){
 
-	cout << "Usage>" << p_name << " <input.bin> <output.v>" << endl;
+	cout << "Usage>" << p_name << " <input.bin> <output.v> <bits>" << endl;
 }
 
 // --------------------------------------------------------------------
@@ -20,7 +20,7 @@ int main( int argc, char *argv[] ) {
 
 	cout << "bin2v" << endl;
 	cout << "==========================================================" << endl;
-	cout << "(C)2020 t.hara" << endl;
+	cout << "(C)2023 t.hara" << endl;
 
 	if( argc < 3 ){
 		usage( argv[ 0 ] );
@@ -41,12 +41,13 @@ int main( int argc, char *argv[] ) {
 
 	char d;
 	int address = 0;
+	int bits = atoi( argv[ 3 ] );
 	for( ;; ){
 		ifile.read( &d, 1 );
 		if( ifile.eof() ){
 			break;
 		}
-		ofile << "\t\t11'h" << setfill( '0' ) << hex << setw( 3 ) << address << ":\tff_dbi <= 8'h" << setw( 2 ) << ( (int)d & 255 ) << ";" << endl;
+		ofile << "\t\t" << dec << bits << "'h" << setfill( '0' ) << hex << setw( 3 ) << address << ":\tff_dbi <= 8'h" << setw( 2 ) << ( (int)d & 255 ) << ";" << endl;
 		address++;
 	}
 
