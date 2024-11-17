@@ -67,7 +67,7 @@ module i8253 (
 
 	//	BUS interface
 	input			cs_n,
-	output			rd_n,
+	input			rd_n,
 	input			wr_n,
 	input	[ 1:0]	a,
 	input	[ 7:0]	d,
@@ -142,7 +142,7 @@ module i8253 (
 	wire			w_rd;
 
 	assign q	= w_q0 & w_q1 & w_q2;
-	assign rd_n	= ~w_rd;
+	assign w_rd	= ~rd_n;
 
 	// --------------------------------------------------------------------
 	//	Counter0
