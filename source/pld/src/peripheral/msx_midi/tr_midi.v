@@ -84,6 +84,7 @@ module tr_midi #(
 	reg				ff_timer_intr_n;
 	wire			w_dsr_n;
 	wire			w_dtr_n;
+	wire			w_txrdy;
 	wire			w_rxrdy;
 
 	wire			i8251_cs_n;
@@ -217,6 +218,7 @@ module tr_midi #(
 		.rxd				( pMidiRxD			),
 		.rxrdy				( w_rxrdy			),
 		.cts_n				( 1'b0				),
+		.rts_n				( 					),
 		.dsr_n				( w_dsr_n			),
 		.dtr_n				( w_dtr_n			)
 	);
